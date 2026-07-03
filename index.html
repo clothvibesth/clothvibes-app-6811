@@ -318,7 +318,7 @@ const store={
 };
 function blank(){ return {prices:{},branches:{},vatMode:"inc",hideCost:false}; }
 let data=Object.assign(blank(),store.read());
-data.prices=data.prices||{}; data.branches=data.branches||{}; data.vatMode=data.vatMode||"inc"; data.hideCost=!!data.hideCost; data.gpPct=data.gpPct||0; data.wages=data.wages||0;
+data.prices=data.prices||{}; data.branches=data.branches||{}; data.vatMode=data.vatMode||"inc"; data.hideCost=!!data.hideCost; data.gpPct=data.gpPct||0; data.wages=data.wages||0; data.ts=data.ts||{};
 
 const fmt=n=>Number(n).toLocaleString("th-TH",{maximumFractionDigits:0});
 const fmt2=n=>Number(n).toLocaleString("th-TH",{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -369,6 +369,7 @@ function backToBranch(){
 /* ---------- data per branch/date/variant ---------- */
 function dayMap(){ return (data.branches[currentBranch] && data.branches[currentBranch][currentDate]) || {}; }
 function qtyVar(vid){ return dayMap()[vid]||0; }
+function stampTs(br,dt){ data.ts=data.ts||{}; data.ts[br]=data.ts[br]||{}; data.ts[br][dt]=Date.now(); }
 function setQtyVar(vid,q){
   q=Math.max(0,Math.floor(q||0));
   if(!data.branches[currentBranch]) data.branches[currentBranch]={};
@@ -376,6 +377,7 @@ function setQtyVar(vid,q){
   const d=data.branches[currentBranch][currentDate];
   if(q===0) delete d[vid]; else d[vid]=q;
   if(Object.keys(d).length===0) delete data.branches[currentBranch][currentDate];
+  stampTs(currentBranch,currentDate);
   store.write(data);
 }
 
@@ -500,6 +502,7 @@ document.getElementById("clearBtn").onclick=()=>{
   if(Object.keys(dayMap()).length===0){ toast("วันนี้ยังไม่มีรายการ"); return; }
   if(confirm("ล้างรายการขายของ "+currentBranch+"\n"+thaiDate(currentDate)+" ?")){
     if(data.branches[currentBranch]) delete data.branches[currentBranch][currentDate];
+    stampTs(currentBranch,currentDate);
     store.write(data); renderLines(); refreshSummary(); fitBottomPad(); toast("ล้างเรียบร้อย");
   }
 };
@@ -552,10 +555,29 @@ function backup(){ try{ const a=document.createElement("a"); a.href=URL.createOb
 function mergeData(into,inc){
   inc=inc||{};
   into.prices=Object.assign(into.prices||{},inc.prices||{});
-  into.branches=into.branches||{};
-  const ib=inc.branches||{};
-  for(const br in ib){ into.branches[br]=into.branches[br]||{};
-    for(const dt in ib[br]){ into.branches[br][dt]=Object.assign(into.branches[br][dt]||{},ib[br][dt]||{}); } }
+  if(inc.vatMode) into.vatMode=inc.vatMode;
+  if(typeof inc.hideCost==="boolean") into.hideCost=inc.hideCost;
+  if(inc.gpPct!==undefined) into.gpPct=inc.gpPct;
+  if(inc.wages!==undefined) into.wages=inc.wages;
+  into.branches=into.branches||{}; into.ts=into.ts||{};
+  const ib=inc.branches||{}, its=inc.ts||{};
+  const brs=new Set([].concat(Object.keys(into.branches),Object.keys(ib),Object.keys(into.ts),Object.keys(its)));
+  brs.forEach(br=>{
+    into.branches[br]=into.branches[br]||{}; into.ts[br]=into.ts[br]||{};
+    const incB=ib[br]||{}, incT=its[br]||{};
+    const dts=new Set([].concat(Object.keys(into.branches[br]),Object.keys(incB),Object.keys(into.ts[br]),Object.keys(incT)));
+    dts.forEach(dt=>{
+      const hasLocal=(dt in into.branches[br])||(dt in into.ts[br]);
+      const hasInc=(dt in incB)||(dt in incT);
+      const lt=into.ts[br][dt]||0, it=incT[dt]||0;
+      // ล่าสุดชนะ ระดับวัน: incoming ชนะเมื่อเป็นวันใหม่ หรือ ts ใหม่กว่า
+      if(hasInc && (!hasLocal || it>lt)){
+        if(dt in incB) into.branches[br][dt]=incB[dt]; else delete into.branches[br][dt];
+        into.ts[br][dt]=it;
+      }
+    });
+  });
+  return into;
 }
 function onRestoreFile(e){
   const f=e.target.files&&e.target.files[0]; if(!f) return;
