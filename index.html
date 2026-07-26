@@ -104,6 +104,73 @@
   .report-entry.ghost{background:var(--card);color:var(--accent-deep);box-shadow:var(--shadow);}
   .imp-hint{font-size:11.5px;color:var(--ink-soft);margin:2px 4px 6px;line-height:1.5;}
   .imp-hint b{color:var(--accent-deep);font-weight:600;}
+
+  /* ===== Dashboard ธีมดำ ===== */
+  #screen-dash{display:none;position:fixed;inset:0;z-index:50;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:100vh;background:#0a1628;background:linear-gradient(160deg,#0a1628,#0d1f3a 45%,#0a1a30);color:#dce9f7;padding:0 0 50px;}
+  body.dash-open{background:#0a1628;}
+  .dash-head{display:flex;align-items:center;gap:12px;padding:16px 16px 12px;position:relative;}
+  .dash-back{background:rgba(255,255,255,.08);border:none;color:#8fd6ff;width:38px;height:38px;border-radius:12px;font-size:22px;cursor:pointer;flex:none;}
+  .dash-title{flex:1;text-align:center;font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:18px;color:#fff;letter-spacing:.5px;}
+  .dash-upd{font-size:10px;color:#5a7ba0;position:absolute;right:16px;bottom:-4px;}
+  .dash-ctrl{display:flex;gap:9px;padding:4px 16px 16px;flex-wrap:wrap;}
+  .dash-field{flex:1;min-width:90px;}
+  .dash-field label{display:block;font-size:10.5px;color:#5a7ba0;margin-bottom:4px;}
+  .dash-field select{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(120,180,240,.18);color:#dce9f7;border-radius:10px;padding:9px 10px;font-family:inherit;font-size:13px;}
+  .dash-field select:focus{outline:none;border-color:#3fb2e8;}
+  .dash-chan-row{padding:0 16px 4px;}
+  .dash-chan-lbl{display:block;font-size:10.5px;color:#5a7ba0;margin-bottom:7px;}
+  .dash-chan-lbl small{color:#456;}
+  .dash-branchbox{background:rgba(255,255,255,.03);border:1px solid rgba(120,180,240,.14);border-radius:12px;padding:10px;max-height:230px;overflow-y:auto;}
+  .dbb-tools{display:flex;gap:8px;margin-bottom:8px;}
+  .dbb-tools button{flex:1;background:rgba(63,178,232,.12);border:1px solid rgba(63,178,232,.3);color:#8fd6ff;border-radius:8px;padding:6px;font-size:11.5px;font-family:inherit;cursor:pointer;}
+  .dbb-ghead{display:flex;justify-content:space-between;align-items:center;margin:10px 2px 6px;font-size:12px;color:#8fd6ff;font-weight:600;}
+  .dbb-ghead:first-of-type{margin-top:2px;}
+  .dbb-ghead .gtoggle{background:none;border:1px solid rgba(120,180,240,.25);color:#7fa8d4;border-radius:7px;padding:3px 9px;font-size:10.5px;font-family:inherit;cursor:pointer;font-weight:400;}
+  .dbb-wrap{display:flex;flex-wrap:wrap;gap:7px;}
+  .dbb-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.05);border:1.5px solid rgba(120,180,240,.18);border-radius:16px;padding:6px 11px;font-size:12px;color:#c3d5ea;cursor:pointer;user-select:none;}
+  .dbb-chip .dot{width:8px;height:8px;border-radius:2px;flex:none;}
+  .dbb-chip input{display:none;}
+  .dbb-chip.on{background:rgba(63,178,232,.22);border-color:#3fb2e8;color:#fff;font-weight:600;}
+  /* KPI */
+  .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding:0 16px;}
+  .kpi{background:linear-gradient(145deg,rgba(28,58,99,.55),rgba(16,38,68,.4));border:1px solid rgba(120,180,240,.14);border-radius:16px;padding:15px 16px;}
+  .kpi-hero{grid-column:1/-1;background:linear-gradient(145deg,rgba(7,127,197,.28),rgba(45,164,220,.12));border-color:rgba(63,178,232,.35);text-align:center;}
+  .kpi-lbl{font-size:11.5px;color:#7fa8d4;margin-bottom:6px;}
+  .kpi-big{font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:34px;color:#fff;line-height:1.1;}
+  .kpi-val{font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:22px;color:#fff;}
+  .kpi-cmp{font-size:11px;margin-top:6px;color:#5a7ba0;}
+  .kpi-cmp .up{color:#42d392;} .kpi-cmp .down{color:#ff6b6b;}
+  /* card */
+  .dash-card{background:linear-gradient(145deg,rgba(20,44,78,.5),rgba(13,31,58,.35));border:1px solid rgba(120,180,240,.12);border-radius:16px;margin:14px 16px 0;padding:15px;}
+  .dash-card-t{font-family:"Bai Jamjuree",sans-serif;font-weight:600;font-size:14px;color:#8fd6ff;margin-bottom:14px;}
+  /* bars */
+  .cbar{margin-bottom:13px;}
+  .cbar:last-child{margin-bottom:0;}
+  .cbar-top{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px;}
+  .cbar-top .nm{color:#c3d5ea;} .cbar-top .vl{font-family:"Bai Jamjuree",sans-serif;font-weight:600;color:#fff;}
+  .cbar-track{height:9px;background:rgba(255,255,255,.06);border-radius:6px;overflow:hidden;}
+  .cbar-fill{height:100%;border-radius:6px;transition:width .5s;}
+  /* donut */
+  .donut-wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center;}
+  .donut-legend{flex:1;min-width:150px;display:flex;flex-direction:column;gap:8px;}
+  .donut-legend .lg{display:flex;align-items:center;gap:9px;font-size:12.5px;}
+  .donut-legend .sw{width:12px;height:12px;border-radius:3px;flex:none;}
+  .donut-legend .lg .nm{flex:1;color:#c3d5ea;}
+  .donut-legend .lg .vl{font-family:"Bai Jamjuree",sans-serif;font-weight:600;color:#fff;text-align:right;}
+  .donut-legend .lg .pc{color:#7fa8d4;font-size:11px;margin-left:5px;}
+  /* top list */
+  .toprow{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid rgba(120,180,240,.08);}
+  .toprow:last-child{border-bottom:none;}
+  .toprow .rk{width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:12px;flex:none;background:rgba(255,255,255,.08);color:#8fd6ff;}
+  .toprow:nth-child(1) .rk{background:linear-gradient(135deg,#ffd700,#ffaa00);color:#3a2800;}
+  .toprow:nth-child(2) .rk{background:linear-gradient(135deg,#c8d4e0,#9aa8b8);color:#1a2530;}
+  .toprow:nth-child(3) .rk{background:linear-gradient(135deg,#cd7f32,#a86420);color:#fff;}
+  .toprow .nm{flex:1;min-width:0;font-size:13px;color:#dce9f7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .toprow .q{font-size:11px;color:#7fa8d4;margin-right:8px;}
+  .toprow .vl{font-family:"Bai Jamjuree",sans-serif;font-weight:600;font-size:13px;color:#fff;}
+  .dash-empty{text-align:center;padding:60px 20px;color:#5a7ba0;}
+  .dash-empty .ico{font-size:48px;margin-bottom:12px;}
+
   .import-section{max-width:580px;width:calc(100% - 28px);margin:20px auto 0;background:var(--card);border-radius:18px;padding:14px;box-shadow:var(--shadow);}
   .import-title{font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:14px;color:var(--ink);margin:2px 4px 10px;}
   .imp-btn{display:flex;align-items:center;gap:13px;width:100%;background:#f5fafe;border:1px solid var(--line);border-radius:14px;padding:13px 14px;margin-bottom:9px;cursor:pointer;font-family:inherit;text-align:left;transition:all .12s;}
@@ -467,6 +534,73 @@
   </div>
   <div id="expList"></div>
   <div class="foot">สาขาหลัก = ไม่มี GP (มีค่าเช่า/ค่าไฟ) · บูท = มี GP (ไม่มีค่าเช่า/ค่าไฟ)</div>
+</div>
+
+<!-- ===== Dashboard ภาพรวมยอดขาย (ธีมดำ) ===== -->
+<div id="screen-dash">
+  <div class="dash-head">
+    <button class="dash-back" id="dashBack">‹</button>
+    <div class="dash-title">ภาพรวมข้อมูลยอดขาย</div>
+    <div class="dash-upd" id="dashUpd"></div>
+  </div>
+  <div class="dash-ctrl">
+    <div class="dash-field"><label>เดือน</label><select id="dashMonth"></select></div>
+    <div class="dash-field"><label>ปี</label><select id="dashYear"></select></div>
+  </div>
+  <div class="dash-chan-row">
+    <label class="dash-chan-lbl">เลือกสาขา/ช่องทาง <small>(ติ๊กได้อิสระ · ไม่ติ๊ก = ทุกสาขา)</small></label>
+    <div class="dash-branchbox" id="dashBranchBox"></div>
+  </div>
+
+  <!-- KPI -->
+  <div class="kpi-grid">
+    <div class="kpi kpi-hero">
+      <div class="kpi-lbl">ยอดขายที่มีผล (รวม VAT)</div>
+      <div class="kpi-big" id="kpiSales">฿0</div>
+      <div class="kpi-cmp" id="kpiSalesCmp"></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">กำไรสุทธิ</div>
+      <div class="kpi-val" id="kpiProfit">฿0</div>
+      <div class="kpi-cmp" id="kpiProfitCmp"></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">จำนวนชิ้น</div>
+      <div class="kpi-val" id="kpiPieces">0</div>
+      <div class="kpi-cmp" id="kpiPiecesCmp"></div>
+    </div>
+  </div>
+
+  <!-- ยอดขายแยกช่องทาง -->
+  <div class="dash-card">
+    <div class="dash-card-t">ยอดขายแยกช่องทาง</div>
+    <div id="dashChanBars"></div>
+  </div>
+
+  <!-- โครงสร้างเงิน (donut) -->
+  <div class="dash-card">
+    <div class="dash-card-t">โครงสร้างยอดขาย</div>
+    <div class="donut-wrap">
+      <canvas id="dashDonut" width="240" height="240"></canvas>
+      <div class="donut-legend" id="dashDonutLegend"></div>
+    </div>
+  </div>
+
+  <!-- Top รุ่นขายดี -->
+  <div class="dash-card">
+    <div class="dash-card-t">อันดับรุ่นขายดี (Top 10)</div>
+    <div id="dashTop"></div>
+  </div>
+
+  <!-- แนวโน้มรายวัน -->
+  <div class="dash-card">
+    <div class="dash-card-t">แนวโน้มยอดขายรายวัน</div>
+    <canvas id="dashTrend" width="700" height="240"></canvas>
+  </div>
+
+  <div id="dashEmpty" class="dash-empty" style="display:none">
+    <div class="ico">📊</div><div>ยังไม่มีข้อมูลเดือนนี้</div>
+  </div>
 </div>
 
 <div id="screen-report" class="wrap">
@@ -1125,7 +1259,7 @@ function branchLabel(){
 function repFilter(){ const f=document.getElementById("repFrom").value||"0000-00-00",t=document.getElementById("repTo").value||"9999-99-99";
   const lo=f<=t?f:t,hi=f<=t?t:f; return (br,dt)=> branchPassed(br) && dt>=lo && dt<=hi; }
 document.getElementById("reportBtnSimpleH").onclick=()=>openReport("simple");
-document.getElementById("reportBtnDetailH").onclick=()=>openReport("detailed");
+document.getElementById("reportBtnDetailH").onclick=openDashboard;
 document.querySelectorAll(".chan-btn").forEach(b=>b.onclick=()=>openChannel(b.dataset.chan));
 document.getElementById("backHome").onclick=backHome;
 document.getElementById("backReport").onclick=backFromReport;
@@ -1252,8 +1386,8 @@ function expenseForRange(lo,hi,branchesInRange){
   let rent=0,elec=0,wage=0,comm=0,gpAmt=0;
   // ไล่ทุกเดือนที่คร่อมช่วง
   const months=new Set();
-  let cur=monthOf(lo);
-  while(cur<=monthOf(hi)){ months.add(cur); cur=(()=>{const [y,m]=cur.split("-").map(Number); const d=new Date(y,m,1); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");})(); }
+  let cur=monthOf(lo), _g=0;
+  while(cur<=monthOf(hi)){ months.add(cur); if(++_g>240) break; cur=(()=>{const [y,m]=cur.split("-").map(Number); const d=new Date(y,m,1); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");})(); }
   months.forEach(ym=>{
     const {days,dim}=overlapDays(ym,lo,hi); if(days<=0) return;
     const ratio=days/dim;                                  // สัดส่วนวันในเดือนนั้น
@@ -1283,8 +1417,8 @@ function setFee(plat,ym,f,v){
 function onlineFeesForRange(lo,hi,branchesInRange){
   let comm=0,txn=0,service=0,ship=0,order=0,est=false;
   const months=new Set();
-  let cur=monthOf(lo);
-  while(cur<=monthOf(hi)){ months.add(cur); cur=(()=>{const [y,m]=cur.split("-").map(Number); const d=new Date(y,m,1); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");})(); }
+  let cur=monthOf(lo), guard=0;
+  while(cur<=monthOf(hi)){ months.add(cur); if(++guard>240) break; cur=(()=>{const [y,m]=cur.split("-").map(Number); const d=new Date(y,m,1); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");})(); }
   months.forEach(ym=>{
     const {days,dim}=overlapDays(ym,lo,hi); if(days<=0) return;
     const ratio=days/dim;
@@ -2029,6 +2163,218 @@ document.getElementById("onImportBtn").onclick=()=>{
   if(onlinePlatform==="Shopee") document.getElementById("shOrderInput").click();
   else document.getElementById("tkOrderInput").click();
 };
+
+/* ---------- Dashboard ภาพรวมยอดขาย ---------- */
+const CHAN_META={main:{n:"สาขาหลัก",c:"#1ba672"},booth:{n:"บูท",c:"#ff1a1a"},shopee:{n:"Shopee",c:"#ee4d2d"},tiktok:{n:"TikTok",c:"#3fb2e8"}};
+const dashPickedBranches=new Set();   // สาขาที่ติ๊ก (ว่าง = ทุกสาขา)
+function buildDashBranchBox(){
+  const box=document.getElementById("dashBranchBox"); box.innerHTML="";
+  const tools=document.createElement("div"); tools.className="dbb-tools";
+  tools.innerHTML='<button type="button" id="dbbAll">เลือกทั้งหมด</button><button type="button" id="dbbNone">ล้าง</button>';
+  box.appendChild(tools);
+  // จัดกลุ่มตามช่องทาง (main/booth/shopee/tiktok)
+  Object.keys(CHANNELS).forEach(key=>{
+    const ch=CHANNELS[key], m=CHAN_META[key]||{c:"#3fb2e8"};
+    const names=[]; ch.groups.forEach(g=>g.items.forEach(n=>names.push(n)));
+    if(!names.length) return;
+    const head=document.createElement("div"); head.className="dbb-ghead";
+    const allOn=names.every(n=>dashPickedBranches.has(n));
+    head.innerHTML='<span>'+ch.icon+' '+ch.label+'</span><button type="button" class="gtoggle" data-grp="'+key+'">'+(allOn?"ล้างกลุ่ม":"เลือกทั้งกลุ่ม")+'</button>';
+    box.appendChild(head);
+    const wrap=document.createElement("div"); wrap.className="dbb-wrap";
+    names.forEach(n=>{
+      const on=dashPickedBranches.has(n);
+      const chip=document.createElement("label"); chip.className="dbb-chip"+(on?" on":"");
+      chip.innerHTML='<span class="dot" style="background:'+m.c+'"></span><input type="checkbox" '+(on?"checked":"")+' data-br="'+n.replace(/"/g,"&quot;")+'">'+n;
+      wrap.appendChild(chip);
+    });
+    box.appendChild(wrap);
+  });
+  // toggle รายสาขา
+  box.querySelectorAll('input[data-br]').forEach(cb=>{
+    cb.onchange=()=>{ const n=cb.dataset.br;
+      if(cb.checked) dashPickedBranches.add(n); else dashPickedBranches.delete(n);
+      cb.closest(".dbb-chip").classList.toggle("on",cb.checked); renderDashboard(); };
+  });
+  // toggle ทั้งกลุ่ม
+  box.querySelectorAll('.gtoggle').forEach(btn=>{
+    btn.onclick=()=>{ const key=btn.dataset.grp; const names=[];
+      CHANNELS[key].groups.forEach(g=>g.items.forEach(n=>names.push(n)));
+      const allOn=names.every(n=>dashPickedBranches.has(n));
+      names.forEach(n=>{ if(allOn) dashPickedBranches.delete(n); else dashPickedBranches.add(n); });
+      buildDashBranchBox(); renderDashboard(); };
+  });
+  const ba=document.getElementById("dbbAll"), bn=document.getElementById("dbbNone");
+  if(ba) ba.onclick=()=>{ allBranchNames().forEach(n=>dashPickedBranches.add(n)); buildDashBranchBox(); renderDashboard(); };
+  if(bn) bn.onclick=()=>{ dashPickedBranches.clear(); buildDashBranchBox(); renderDashboard(); };
+}
+
+function openDashboard(){
+  const mSel=document.getElementById("dashMonth"), ySel=document.getElementById("dashYear");
+  mSel.innerHTML=TH_MONTHS.map((m,i)=>'<option value="'+String(i+1).padStart(2,"0")+'">'+m+'</option>').join("");
+  const years=new Set([todayISO.slice(0,4)]);
+  Object.keys(data.branches).forEach(br=>Object.keys(data.branches[br]||{}).forEach(d=>years.add(d.slice(0,4))));
+  ySel.innerHTML=[...years].sort().map(y=>'<option value="'+y+'">'+y+'</option>').join("");
+  // เดือนล่าสุดที่มีข้อมูล
+  let allD=[]; Object.keys(data.branches).forEach(br=>allD.push(...Object.keys(data.branches[br]||{})));
+  allD.sort();
+  if(allD.length){ const last=allD[allD.length-1]; ySel.value=last.slice(0,4); mSel.value=last.slice(5,7); }
+  else { ySel.value=todayISO.slice(0,4); mSel.value=todayISO.slice(5,7); }
+  buildDashBranchBox();
+  document.getElementById("dashUpd").textContent="อัปเดต: "+new Date().toLocaleString("th-TH");
+  document.getElementById("screen-home").style.display="none";
+  document.body.classList.add("dash-open");
+  document.getElementById("screen-dash").style.display="block";
+  renderDashboard(); window.scrollTo(0,0);
+}
+function backFromDash(){
+  document.getElementById("screen-dash").style.display="none";
+  document.body.classList.remove("dash-open");
+  document.getElementById("screen-home").style.display="flex";
+  window.scrollTo(0,0);
+}
+
+// รวมข้อมูลของเดือน+ช่องทางที่เลือก
+function dashBranchPass(br){ return dashPickedBranches.size===0 || dashPickedBranches.has(br); }
+function dashData(ym){
+  const perChan={};   // key -> {sales,base,vat,cost,pieces}
+  const byModel={}, byDay={};
+  Object.keys(data.branches).forEach(br=>{
+    const ch=chanOfBranch(br);
+    if(!dashBranchPass(br)) return;
+    const days=data.branches[br]||{};
+    Object.keys(days).forEach(dt=>{
+      if(dt.slice(0,7)!==ym) return;
+      Object.keys(days[dt]).forEach(vid=>{
+        const v=VAR[vid]; if(!v) return; const q=days[dt][vid]; if(q<=0) return;
+        const pr=priceOfVar(vid,br,dt), sale=q*pr;
+        (perChan[ch]=perChan[ch]||{sales:0,base:0,cost:0,pieces:0}).sales+=sale;
+        perChan[ch].base+=sale/(1+VAT); perChan[ch].cost+=q*v.cost; perChan[ch].pieces+=q;
+        const k=v.modelId; (byModel[k]=byModel[k]||{name:v.modelName,q:0,amt:0}); byModel[k].q+=q; byModel[k].amt+=sale;
+        byDay[dt]=(byDay[dt]||0)+sale;
+      });
+    });
+  });
+  // ค่าใช้จ่าย/ค่าธรรมเนียม/GP ต่อช่องทาง
+  const lo=ym+"-01", hi=ym+"-"+String(daysInMonth(ym)).padStart(2,"0");
+  // สร้าง byBranch สำหรับ expenseForRange/onlineFeesForRange
+  const brInRange={};
+  Object.keys(data.branches).forEach(br=>{
+    const ch=chanOfBranch(br); if(!dashBranchPass(br)) return;
+    let baseByMonth={}; baseByMonth[ym]=0;
+    const days=data.branches[br]||{};
+    Object.keys(days).forEach(dt=>{ if(dt.slice(0,7)!==ym) return;
+      Object.keys(days[dt]).forEach(vid=>{ const v=VAR[vid]; if(!v) return; const q=days[dt][vid]; if(q<=0) return;
+        baseByMonth[ym]+=q*priceOfVar(vid,br,dt)/(1+VAT); }); });
+    if(baseByMonth[ym]>0) brInRange[br]={baseByMonth};
+  });
+  const E=expenseForRange(lo,hi,brInRange);       // {rent,elec,wage,comm,gpAmt}
+  const F=onlineFeesForRange(lo,hi,brInRange);    // {comm,txn,service,ship,order,est}
+  let sales=0,base=0,cost=0,pieces=0;
+  Object.values(perChan).forEach(x=>{ sales+=x.sales; base+=x.base; cost+=x.cost; pieces+=x.pieces; });
+  const vat=sales-base;
+  const feeOnline=F.comm+F.txn+F.service+F.ship+F.order;
+  const gp=E.gpAmt;
+  const opex=E.rent+E.elec+E.wage+E.comm;
+  const profit=base-gp-feeOnline-opex-cost;
+  return {ym,sales,base,vat,cost,pieces,gp,feeOnline,opex,profit,perChan,byModel,byDay,est:F.est};
+}
+function prevYm(ym){ const [y,m]=ym.split("-").map(Number); const d=new Date(y,m-2,1); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); }
+
+function renderDashboard(){
+ try{
+  const ym=document.getElementById("dashYear").value+"-"+document.getElementById("dashMonth").value;
+  const D=dashData(ym);
+  const has=D.pieces>0;
+  document.getElementById("dashEmpty").style.display=has?"none":"block";
+  ["kpi-grid","dashChanBars"].forEach(()=>{});
+  document.querySelectorAll("#screen-dash .dash-card, .kpi-grid").forEach(el=>el.style.display=has?"":"none");
+  if(!has) return;
+  const P=dashData(prevYm(ym));   // เดือนก่อน (เทียบ)
+  const cmp=(cur,prev)=>{ if(prev<=0) return ""; const d=(cur-prev)/prev*100;
+    return '<span class="'+(d>=0?"up":"down")+'">'+(d>=0?"▲":"▼")+' '+Math.abs(d).toFixed(1)+'% เทียบเดือนก่อน</span>'; };
+  document.getElementById("kpiSales").textContent="฿"+fmt2(D.sales);
+  document.getElementById("kpiSalesCmp").innerHTML=cmp(D.sales,P.sales);
+  document.getElementById("kpiProfit").textContent="฿"+fmt2(D.profit);
+  document.getElementById("kpiProfitCmp").innerHTML=cmp(D.profit,P.profit);
+  document.getElementById("kpiPieces").textContent=fmt(D.pieces);
+  document.getElementById("kpiPiecesCmp").innerHTML=cmp(D.pieces,P.pieces);
+
+  // ยอดขายแยกช่องทาง (แท่ง)
+  const chans=Object.keys(D.perChan).sort((a,b)=>D.perChan[b].sales-D.perChan[a].sales);
+  const maxS=Math.max(...chans.map(c=>D.perChan[c].sales),1);
+  document.getElementById("dashChanBars").innerHTML=chans.map(c=>{
+    const m=CHAN_META[c]||{n:c,c:"#3fb2e8"}, x=D.perChan[c];
+    return '<div class="cbar"><div class="cbar-top"><span class="nm">'+m.n+' · '+fmt(x.pieces)+' ชิ้น</span><span class="vl">฿'+fmt(x.sales)+'</span></div>'+
+      '<div class="cbar-track"><div class="cbar-fill" style="width:'+(x.sales/maxS*100)+'%;background:'+m.c+'"></div></div></div>';
+  }).join("");
+
+  // โครงสร้างเงิน (donut)
+  const parts=[
+    {n:"กำไรสุทธิ",v:Math.max(D.profit,0),c:"#42d392"},
+    {n:"ต้นทุนสินค้า",v:D.cost,c:"#3fb2e8"},
+    {n:"ค่าธรรมเนียม/GP",v:D.gp+D.feeOnline,c:"#ffaa33"},
+    {n:"ค่าใช้จ่าย (เช่า/ไฟ/จ้าง)",v:D.opex,c:"#c9459b"},
+    {n:"VAT ขาย",v:D.vat,c:"#8fd6ff"},
+  ].filter(x=>x.v>0.5);
+  drawDonut("dashDonut","dashDonutLegend",parts,D.sales);
+
+  // Top รุ่น
+  const mk=Object.keys(D.byModel).sort((a,b)=>D.byModel[b].amt-D.byModel[a].amt).slice(0,10);
+  document.getElementById("dashTop").innerHTML=mk.map((k,i)=>{const x=D.byModel[k];
+    return '<div class="toprow"><span class="rk">'+(i+1)+'</span><span class="nm">'+x.name+'</span>'+
+      '<span class="q">'+fmt(x.q)+' ชิ้น</span><span class="vl">฿'+fmt(x.amt)+'</span></div>';}).join("");
+
+  // แนวโน้มรายวัน
+  drawTrend("dashTrend",D.byDay,ym);
+ }catch(err){
+  console.error("dashboard error:",err);
+  const em=document.getElementById("dashEmpty");
+  if(em){ em.style.display="block"; em.innerHTML='<div class="ico">⚠️</div><div>เกิดข้อผิดพลาดในการแสดงผล</div><small style="color:#7fa8d4">'+String(err.message||err).slice(0,80)+'</small>'; }
+ }
+}
+
+function drawDonut(cvId,lgId,parts,total){
+  const cv=document.getElementById(cvId),ctx=cv.getContext("2d");
+  ctx.clearRect(0,0,cv.width,cv.height);
+  const cx=120,cy=120,r=110,sum=parts.reduce((s,p)=>s+p.v,0)||1; let a=-Math.PI/2;
+  parts.forEach(p=>{ const ang=p.v/sum*Math.PI*2;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,a,a+ang);ctx.closePath();ctx.fillStyle=p.c;ctx.fill();a+=ang;});
+  ctx.beginPath();ctx.arc(cx,cy,r*0.58,0,Math.PI*2);ctx.fillStyle="#0d1f3a";ctx.fill();
+  ctx.fillStyle="#fff";ctx.textAlign="center";ctx.font="700 17px 'Bai Jamjuree',sans-serif";
+  ctx.fillText("฿"+(total>=1000?fmt(Math.round(total/1000))+"K":fmt(total)),cx,cy-3);
+  ctx.font="400 11px 'Prompt',sans-serif";ctx.fillStyle="#7fa8d4";ctx.fillText("ยอดขาย",cx,cy+15);
+  document.getElementById(lgId).innerHTML=parts.map(p=>
+    '<div class="lg"><span class="sw" style="background:'+p.c+'"></span><span class="nm">'+p.n+'</span>'+
+    '<span class="vl">฿'+fmt(p.v)+'<span class="pc">'+(p.v/total*100).toFixed(1)+'%</span></span></div>').join("");
+}
+
+function drawTrend(cvId,byDay,ym){
+  const cv=document.getElementById(cvId),ctx=cv.getContext("2d");
+  const W=cv.width,H=cv.height,pad=36,dim=daysInMonth(ym);
+  ctx.clearRect(0,0,W,H);
+  const vals=[]; for(let d=1;d<=dim;d++){ vals.push(byDay[ym+"-"+String(d).padStart(2,"0")]||0); }
+  const max=Math.max(...vals,1);
+  // grid
+  ctx.strokeStyle="rgba(120,180,240,.1)";ctx.lineWidth=1;ctx.fillStyle="#5a7ba0";ctx.font="10px 'Prompt'";ctx.textAlign="right";
+  for(let i=0;i<=4;i++){ const y=pad+(H-pad*1.5-pad)*i/4; ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(W-8,y);ctx.stroke();
+    ctx.fillText(fmt(Math.round(max*(4-i)/4)),pad-4,y+3); }
+  const x=d=>pad+(W-pad-14)*(d)/(dim-1||1), y=v=>pad+(H-pad*1.5-pad)*(1-v/max);
+  // area+line
+  ctx.beginPath(); vals.forEach((v,i)=>{ const px=x(i),py=y(v); i?ctx.lineTo(px,py):ctx.moveTo(px,py); });
+  ctx.strokeStyle="#3fb2e8";ctx.lineWidth=2.5;ctx.stroke();
+  ctx.lineTo(x(dim-1),H-pad*1.5);ctx.lineTo(x(0),H-pad*1.5);ctx.closePath();
+  const grad=ctx.createLinearGradient(0,pad,0,H-pad);grad.addColorStop(0,"rgba(63,178,232,.3)");grad.addColorStop(1,"rgba(63,178,232,0)");
+  ctx.fillStyle=grad;ctx.fill();
+  // dots + x labels (ทุก 5 วัน)
+  ctx.fillStyle="#3fb2e8"; vals.forEach((v,i)=>{ if(v>0){ctx.beginPath();ctx.arc(x(i),y(v),2.5,0,Math.PI*2);ctx.fill();} });
+  ctx.fillStyle="#5a7ba0";ctx.textAlign="center";ctx.font="9px 'Prompt'";
+  for(let d=1;d<=dim;d+=5){ ctx.fillText(d,x(d-1),H-pad*0.6); }
+}
+
+document.getElementById("dashBack").onclick=backFromDash;
+document.getElementById("dashMonth").onchange=renderDashboard;
+document.getElementById("dashYear").onchange=renderDashboard;
 
 /* ---------- init ---------- */
 document.getElementById("logoHome").src=LOGO_SRC;
