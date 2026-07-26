@@ -1438,11 +1438,14 @@ function buildImport(rows){
   if(ftype==="tiktok_order"){ alert("ไฟล์ TikTok Order — กรุณาใช้ปุ่มนำเข้า TikTok (ต้องใช้คู่กับไฟล์ Income)"); return; }
   if(ftype==="tiktok_income"){ alert("ไฟล์ TikTok Income — กรุณาใช้ปุ่มนำเข้า TikTok (ต้องใช้คู่กับไฟล์ Order)"); return; }
   // ===== POS =====
-  const kOrder=keys.find(k=>/เลขที่ออเดอร์|order/i.test(k)) || keys[0];
+  const kOrder=keys.find(k=>/หมายเลขออเดอร์|เลขที่ออเดอร์|order/i.test(k)) || keys[0];
   const kOnl  =keys.find(k=>/ออนไลน์|เลขที่คำสั่ง|online/i.test(k)) || keys[1];
-  const kProd =keys.find(k=>/สินค้า|product/i.test(k)) || keys[2];
-  const kAmt  =keys.find(k=>/ยอด|จำนวนเงิน|amount|รวม/i.test(k)) || keys[6];
-  const kPay  =keys.find(k=>/ชำระ|payment|จ่าย/i.test(k)) || keys[9];
+  const kProd =keys.find(k=>/^สินค้า$|product/i.test(k)) || keys[2];
+  // ยอดเงิน: เจาะจง "จำนวนเงินที่ควรได้รับ" (ไม่เอา "ยอดที่ชำระแล้ว")
+  const kAmt  =keys.find(k=>/ควรได้รับ|จำนวนเงิน|amount/i.test(k)) || keys[6];
+  // วิธีชำระ: ต้องเป็น "วิธีการชำระเงิน" เท่านั้น (กันชนกับ "ยอดที่ชำระแล้ว")
+  const kPay  =keys.find(k=>/วิธีการชำระเงิน|วิธีชำระ|payment method/i.test(k))
+             || keys.find(k=>/วิธี.*ชำระ|payment/i.test(k)) || keys[9];
 
   // dedupe ตามเลขออเดอร์ (ไฟล์ POS มีแถวซ้ำ)
   const orders={};
