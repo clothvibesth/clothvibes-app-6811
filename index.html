@@ -66,14 +66,18 @@
   .sync-status{text-align:center;font-size:12px;color:var(--ink-soft);margin-top:8px;}
   #screen-home{min-height:100vh;display:flex;flex-direction:column;}
   #screen-branch{display:none;}
-  .chan-wrap{max-width:580px;margin:0 auto;width:100%;padding:0 14px;display:flex;flex-direction:column;gap:12px;}
-  .chan-btn{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid transparent;border-radius:20px;padding:20px 18px;cursor:pointer;box-shadow:var(--shadow-lg);font-family:inherit;text-align:left;transition:transform .1s;}
-  .chan-btn:active{transform:scale(.98);}
-  .chan-btn .ic{font-size:30px;flex:none;}
-  .chan-btn .tx{flex:1;min-width:0;}
-  .chan-btn .tx b{display:block;font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:18px;color:var(--ink);}
-  .chan-btn .tx small{display:block;font-size:12px;color:var(--ink-soft);margin-top:2px;}
-  .chan-btn .chev{font-size:22px;color:var(--accent);flex:none;}
+  .chan-wrap{max-width:580px;margin:0 auto;width:100%;padding:0 14px;display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .chan-btn{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:11px;background:var(--cc,var(--accent));border:none;border-radius:20px;padding:18px 16px 16px;cursor:pointer;box-shadow:0 8px 20px rgba(10,110,190,.22);font-family:inherit;text-align:left;transition:transform .1s,box-shadow .15s,filter .15s;overflow:hidden;min-height:132px;}
+  .chan-btn:active{transform:scale(.97);}
+  .chan-btn:hover{filter:brightness(1.06);box-shadow:0 12px 26px rgba(0,0,0,.24);}
+  .chan-btn[data-c="main"]{--cc:#1ba672;}
+  .chan-btn[data-c="booth"]{--cc:#ff1a1a;}
+  .chan-btn[data-c="shopee"]{--cc:#ee4d2d;}
+  .chan-btn[data-c="tiktok"]{--cc:#141414;}
+  .chan-btn .ic{font-size:30px;flex:none;width:54px;height:54px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.22);border-radius:15px;backdrop-filter:blur(2px);}
+  .chan-btn .tx{flex:1;min-width:0;width:100%;}
+  .chan-btn .tx b{display:block;font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:17px;color:#fff;}
+  .chan-btn .tx small{display:block;font-size:11px;color:rgba(255,255,255,.82);margin-top:3px;line-height:1.4;}
   :root{--shopee:#ee4d2d;--tiktok:#000000;}
   .home-back{width:auto;padding:8px 14px;font-size:13px;font-weight:600;color:var(--ink-soft);position:absolute;left:14px;top:16px;}
   .b-head{position:relative;}
@@ -281,25 +285,21 @@
     <p>สาขาหลัก หรือ บูท</p>
   </div>
   <div class="chan-wrap">
-    <button class="chan-btn" data-chan="main">
+    <button class="chan-btn" data-chan="main" data-c="main">
       <span class="ic">🏬</span>
-      <span class="tx"><b>สาขาหลัก</b><small>ไม่มี GP · มีค่าเช่า/ค่าไฟ</small></span>
-      <span class="chev">›</span>
+      <span class="tx"><b>สาขาหลัก</b><small>ไม่มี GP · มีค่าเช่า/ไฟ</small></span>
     </button>
-    <button class="chan-btn" data-chan="booth">
+    <button class="chan-btn" data-chan="booth" data-c="booth">
       <span class="ic">🛍️</span>
       <span class="tx"><b>บูท</b><small>หัก GP ตามห้าง</small></span>
-      <span class="chev">›</span>
     </button>
-    <button class="chan-btn" data-chan="shopee">
+    <button class="chan-btn" data-chan="shopee" data-c="shopee">
       <span class="ic">🛒</span>
       <span class="tx"><b>Shopee</b><small>ออนไลน์ · หักค่าธรรมเนียม</small></span>
-      <span class="chev">›</span>
     </button>
-    <button class="chan-btn" data-chan="tiktok">
+    <button class="chan-btn" data-chan="tiktok" data-c="tiktok">
       <span class="ic">🎵</span>
       <span class="tx"><b>TikTok</b><small>ออนไลน์ · หักค่าธรรมเนียม</small></span>
-      <span class="chev">›</span>
     </button>
   </div>
   <button class="report-entry" id="reportBtnSimpleH">📊 รายงาน / ดึงข้อมูลตามช่วงเวลา</button>
@@ -425,8 +425,12 @@
   <div class="rep-ctrl">
     <div class="rep-row">
       <div class="rep-field"><label>ลงที่สาขา</label><select id="impBranch"></select></div>
-      <div class="rep-field"><label>เดือนในไฟล์</label><input type="text" id="impMonth" readonly></div>
     </div>
+    <div class="rep-row" style="margin-top:10px">
+      <div class="rep-field"><label>เดือน</label><select id="impMonthSel"></select></div>
+      <div class="rep-field"><label>ปี</label><select id="impYearSel"></select></div>
+    </div>
+    <div class="imp-hint" id="impDateHint"></div>
   </div>
   <div class="rep-total" id="impSummary"></div>
   <div id="impIssuesWrap" style="display:none">
@@ -1486,7 +1490,12 @@ function showImportOnline(){
   const sel=document.getElementById("impBranch");
   sel.innerHTML='<option value="'+impData.platform+'">'+impData.platform+'</option>';
   sel.disabled=true;
-  document.getElementById("impMonth").value=impData.ym||"—";
+  // ออนไลน์ยึดเดือนจากไฟล์ (settlement) — ตั้ง dropdown ให้ตรงและล็อกไว้
+  fillImportMonthYear(impData.ym);
+  const mS=document.getElementById("impMonthSel"), yS=document.getElementById("impYearSel");
+  if(mS) mS.disabled=true; if(yS) yS.disabled=true;
+  const hint=document.getElementById("impDateHint");
+  if(hint) hint.innerHTML='เดือนจากไฟล์: <b>'+(impData.ym||"—")+'</b>';
   const lg=document.getElementById("logoImp"); if(lg) lg.src=LOGO_SRC;
   document.getElementById("screen-home").style.display="none";
   document.getElementById("screen-import").style.display="block";
@@ -1739,10 +1748,28 @@ function priceLabel(vid, br){   // ราคาป้าย (ไม่รวม 
   return M.price;
 }
 
+function fillImportMonthYear(defYm){
+  const mSel=document.getElementById("impMonthSel"), ySel=document.getElementById("impYearSel");
+  mSel.innerHTML=TH_MONTHS.map((m,i)=>'<option value="'+String(i+1).padStart(2,"0")+'">'+m+'</option>').join("");
+  const years=new Set([todayISO.slice(0,4)]);
+  if(defYm) years.add(defYm.slice(0,4));
+  Object.keys(data.branches).forEach(br=>Object.keys(data.branches[br]||{}).forEach(d=>years.add(d.slice(0,4))));
+  const yl=[...years].sort();
+  ySel.innerHTML=yl.map(y=>'<option value="'+y+'">'+y+'</option>').join("");
+  if(defYm && /^\d{4}-\d{2}$/.test(defYm)){ ySel.value=defYm.slice(0,4); mSel.value=defYm.slice(5,7); }
+  else { ySel.value=todayISO.slice(0,4); mSel.value=todayISO.slice(5,7); }
+}
+function importChosenYm(){
+  return document.getElementById("impYearSel").value+"-"+document.getElementById("impMonthSel").value;
+}
 function showImportScreen(){
-  const sel=document.getElementById("impBranch");
+  const mS=document.getElementById("impMonthSel"), yS=document.getElementById("impYearSel");
+  if(mS) mS.disabled=false; if(yS) yS.disabled=false;
+  const sel=document.getElementById("impBranch"); sel.disabled=false;
   sel.innerHTML=allBranchNames().map(n=>'<option value="'+n.replace(/"/g,"&quot;")+'">'+n+'</option>').join("");
-  document.getElementById("impMonth").value=impData.ym||"—";
+  fillImportMonthYear(impData.ym);
+  const hint=document.getElementById("impDateHint");
+  if(hint) hint.innerHTML = impData.ym ? ('เดือนที่ตรวจพบในไฟล์: <b>'+impData.ym+'</b> — เลือกใหม่ได้') : 'เลือกเดือนที่ต้องการลงข้อมูล';
   const lg=document.getElementById("logoImp"); if(lg) lg.src=LOGO_SRC;
   document.getElementById("screen-home").style.display="none";
   document.getElementById("screen-import").style.display="block";
@@ -1769,7 +1796,7 @@ function renderImport(){
   });
   const base=calcTot/(1+VAT);
   document.getElementById("impSummary").innerHTML=
-    '<div class="lbl">'+br+' · '+chName+' · '+(impData.ym||"—")+'</div>'+
+    '<div class="lbl">'+br+' · '+chName+' · เดือน '+importChosenYm()+'</div>'+
     '<div class="big">฿'+fmt2(calcTot)+'</div>'+
     '<div class="sub">'+fmt(pieces)+' ชิ้น · '+impData.items.length+' ออเดอร์</div>'+
     '<div class="rep-vat">ก่อน VAT ฿'+fmt2(base)+' · VAT 7% ฿'+fmt2(calcTot-base)+'</div>'+
@@ -1804,15 +1831,25 @@ function renderImport(){
 function confirmImport(){
   if(impData && impData.platform) return confirmImportOnline();
   const br=document.getElementById("impBranch").value;
+  const chosenYm=importChosenYm();   // เดือนที่ผู้ใช้เลือก
   // รวมรายการที่ติ๊กเลือกจาก issues
   const picked=[];
   document.querySelectorAll('[data-iss]').forEach(cb=>{ if(cb.checked) picked.push(impData.issues[+cb.dataset.iss]); });
-  const all=impData.items.concat(picked);
+  let all=impData.items.concat(picked);
   if(!all.length){ toast("ไม่มีรายการให้นำเข้า"); return; }
+
+  // ใช้เดือนที่เลือก: คงวันเดิมในไฟล์ แต่เปลี่ยนเป็น ปี-เดือน ที่เลือก
+  const fileYm=impData.ym||"";
+  if(chosenYm && chosenYm!==fileYm){
+    const dim=daysInMonth(chosenYm);
+    all=all.map(o=>{ let day=parseInt(o.dt.slice(8,10))||1; if(day>dim) day=dim;
+      return Object.assign({},o,{dt:chosenYm+"-"+String(day).padStart(2,"0")}); });
+  }
 
   const dates=[...new Set(all.map(o=>o.dt))];
   const dup=dates.filter(d=>data.branches[br] && data.branches[br][d] && Object.keys(data.branches[br][d]).length);
-  let msg="นำเข้า "+all.length+" ออเดอร์ ลงที่ "+br+"\n"+dates.length+" วัน";
+  let msg="นำเข้า "+all.length+" ออเดอร์ ลงที่ "+br+"\nเดือน "+chosenYm+" · "+dates.length+" วัน";
+  if(chosenYm!==fileYm && fileYm) msg+="\n(ไฟล์ตรวจพบ "+fileYm+" → ลงเป็น "+chosenYm+")";
   if(dup.length) msg+="\n\n⚠️ "+dup.length+" วันมีข้อมูลอยู่แล้ว จะถูกแทนที่";
   if(!confirm(msg+"\n\nยืนยัน?")) return;
 
@@ -1857,6 +1894,8 @@ function backFromImport(){
 document.getElementById("importBtn").onclick=()=>document.getElementById("posInput").click();
 document.getElementById("posInput").onchange=e=>{ const f=e.target.files&&e.target.files[0]; if(f) readPOS(f); };
 document.getElementById("impBranch").onchange=renderImport;
+document.getElementById("impMonthSel").onchange=renderImport;
+document.getElementById("impYearSel").onchange=renderImport;
 document.getElementById("impConfirm").onclick=confirmImport;
 document.getElementById("impCancel").onclick=backFromImport;
 document.getElementById("backImport").onclick=backFromImport;
