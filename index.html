@@ -117,6 +117,9 @@
   .dash-field label{display:block;font-size:10.5px;color:#5a7ba0;margin-bottom:4px;}
   .dash-field select{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(120,180,240,.18);color:#dce9f7;border-radius:10px;padding:9px 10px;font-family:inherit;font-size:13px;}
   .dash-field select:focus{outline:none;border-color:#3fb2e8;}
+  /* ตัวเลือกใน dropdown (กันพื้นขาว-ตัวอักษรขาวจมหายบน Windows) */
+  .dash-field select option{background:#12233f;color:#eaf3fb;}
+  #screen-dash select option{background:#12233f;color:#eaf3fb;}
   .dash-chan-row{padding:0 16px 4px;}
   .dash-chan-lbl{display:block;font-size:10.5px;color:#5a7ba0;margin-bottom:7px;}
   .dash-chan-lbl small{color:#456;}
@@ -170,6 +173,8 @@
   .toprow .vl{font-family:"Bai Jamjuree",sans-serif;font-weight:600;font-size:13px;color:#fff;}
   .dash-empty{text-align:center;padding:60px 20px;color:#5a7ba0;}
   .dash-empty .ico{font-size:48px;margin-bottom:12px;}
+  .dash-copy-btn{display:block;margin:12px 16px 0;width:calc(100% - 32px);background:linear-gradient(135deg,rgba(63,178,232,.9),rgba(7,127,197,.9));color:#fff;border:none;border-radius:12px;padding:13px;font-family:inherit;font-weight:600;font-size:13.5px;cursor:pointer;box-shadow:0 6px 16px rgba(7,127,197,.3);}
+  .dash-copy-btn:active{transform:scale(.98);}
 
   .import-section{max-width:580px;width:calc(100% - 28px);margin:20px auto 0;background:var(--card);border-radius:18px;padding:14px;box-shadow:var(--shadow);}
   .import-title{font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:14px;color:var(--ink);margin:2px 4px 10px;}
@@ -377,25 +382,25 @@
       <span class="ic">📥</span>
       <span class="tx"><b>นำเข้า POS หน้าร้าน</b><small>ไฟล์ AllLiteDetailOrder จากเครื่อง POS (สาขาหลัก/บูท)</small></span>
     </button>
-    <input type="file" id="posInput" accept=".xlsx,.xls" hidden>
+    <input type="file" id="posInput" accept=".xlsx,.xls" hidden autocomplete="off">
     <button class="imp-btn" id="importShBtn">
       <span class="ic">🛒</span>
       <span class="tx"><b>นำเข้า Shopee</b><small>2 ไฟล์: Order.all + Income รายได้ที่โอนสำเร็จ</small></span>
     </button>
-    <input type="file" id="shOrderInput" accept=".xlsx,.xls" hidden>
-    <input type="file" id="shIncomeInput" accept=".xlsx,.xls" hidden>
+    <input type="file" id="shOrderInput" accept=".xlsx,.xls" hidden autocomplete="off">
+    <input type="file" id="shIncomeInput" accept=".xlsx,.xls" hidden autocomplete="off">
     <button class="imp-btn" id="importTkBtn">
       <span class="ic">🎵</span>
       <span class="tx"><b>นำเข้า TikTok</b><small>2 ไฟล์: ทั้งหมดคำสั่งซื้อ + income</small></span>
     </button>
-    <input type="file" id="tkOrderInput" accept=".xlsx,.xls" hidden>
-    <input type="file" id="tkIncomeInput" accept=".xlsx,.xls" hidden>
+    <input type="file" id="tkOrderInput" accept=".xlsx,.xls" hidden autocomplete="off">
+    <input type="file" id="tkIncomeInput" accept=".xlsx,.xls" hidden autocomplete="off">
   </div>
   <button class="report-entry ghost" id="expBtn">⚙️ ตั้งค่าค่าใช้จ่ายรายสาขา</button>
   <div class="home-tools">
     <button class="tool-btn" id="backupBtn">💾 เซฟไฟล์สำรอง</button>
     <button class="tool-btn" id="restoreBtn">📂 เปิดไฟล์สำรอง</button>
-    <input type="file" id="restoreInput" accept=".json,application/json" hidden>
+    <input type="file" id="restoreInput" accept=".json,application/json" hidden autocomplete="off">
   </div>
   <div class="save-status" id="saveStatus">กำลังตรวจสอบการบันทึก…</div>
   <div class="sync-box" id="syncBox"></div>
@@ -422,28 +427,28 @@
 
   <div class="datebar">
     <button class="nav" id="prevDay">‹</button>
-    <div class="datelabel"><div class="day"><span id="dayText">—</span><span class="today-tag" id="todayTag" style="display:none">วันนี้</span></div><input type="date" id="datePick"></div>
+    <div class="datelabel"><div class="day"><span id="dayText">—</span><span class="today-tag" id="todayTag" style="display:none">วันนี้</span></div><input type="date" id="datePick" autocomplete="off"></div>
     <button class="nav" id="nextDay">›</button>
   </div>
 
   <div class="addsale">
     <div class="ttl">+ บันทึกการขาย</div>
-    <div class="fld"><label>รุ่น</label><select id="selModel"></select></div>
+    <div class="fld"><label>รุ่น</label><select id="selModel" autocomplete="off"></select></div>
     <div class="row2">
-      <div class="fld"><label>ไซส์</label><select id="selSize"></select></div>
+      <div class="fld"><label>ไซส์</label><select id="selSize" autocomplete="off"></select></div>
       <div class="fld"><label>จำนวน</label>
         <div class="qtystep">
           <button class="qs-minus" id="qMinus">−</button>
-          <input id="formQty" type="number" inputmode="numeric" value="1">
+          <input id="formQty" type="number" inputmode="numeric" value="1" autocomplete="off">
           <button class="qs-plus" id="qPlus">+</button>
         </div>
       </div>
     </div>
-    <div class="fld" id="payField"><label>วิธีชำระ</label><select id="selPay">
+    <div class="fld" id="payField"><label>วิธีชำระ</label><select id="selPay" autocomplete="off">
       <option value="kshop">BTND KSHOP</option>
       <option value="cash">เงินสด</option>
     </select></div>
-    <div class="priceline">ราคาขาย/ชิ้น: ฿<input id="selPrice" type="number" inputmode="numeric"> (รวม VAT, แก้ได้)</div>
+    <div class="priceline">ราคาขาย/ชิ้น: ฿<input id="selPrice" type="number" inputmode="numeric" autocomplete="off"> (รวม VAT, แก้ได้)</div>
     <button class="add-btn" id="addLine">เพิ่มรายการขาย</button>
   </div>
 
@@ -463,8 +468,8 @@
   </header>
   <div class="rep-ctrl">
     <div class="rep-row">
-      <div class="rep-field"><label>เดือน</label><select id="onMonth"></select></div>
-      <div class="rep-field"><label>ปี</label><select id="onYear"></select></div>
+      <div class="rep-field"><label>เดือน</label><select id="onMonth" autocomplete="off"></select></div>
+      <div class="rep-field"><label>ปี</label><select id="onYear" autocomplete="off"></select></div>
     </div>
     <button class="report-entry ghost" id="onImportBtn" style="margin-top:10px">📥 นำเข้าไฟล์ (Order + Income)</button>
     <div class="imp-hint" id="onImportHint"></div>
@@ -491,11 +496,11 @@
   </header>
   <div class="rep-ctrl">
     <div class="rep-row">
-      <div class="rep-field"><label>ลงที่สาขา</label><select id="impBranch"></select></div>
+      <div class="rep-field"><label>ลงที่สาขา</label><select id="impBranch" autocomplete="off"></select></div>
     </div>
     <div class="rep-row" style="margin-top:10px">
-      <div class="rep-field"><label>เดือน</label><select id="impMonthSel"></select></div>
-      <div class="rep-field"><label>ปี</label><select id="impYearSel"></select></div>
+      <div class="rep-field"><label>เดือน</label><select id="impMonthSel" autocomplete="off"></select></div>
+      <div class="rep-field"><label>ปี</label><select id="impYearSel" autocomplete="off"></select></div>
     </div>
     <div class="imp-hint" id="impDateHint"></div>
   </div>
@@ -525,7 +530,7 @@
   </header>
   <div class="rep-ctrl">
     <div class="rep-row">
-      <div class="rep-field"><label>เดือน</label><input type="month" id="expMonth"></div>
+      <div class="rep-field"><label>เดือน</label><input type="month" id="expMonth" autocomplete="off"></div>
       <div class="rep-field" style="display:flex;align-items:flex-end">
         <button class="tool-btn" id="copyPrevBtn" style="width:100%">📋 คัดลอกจากเดือนก่อน</button>
       </div>
@@ -544,13 +549,14 @@
     <div class="dash-upd" id="dashUpd"></div>
   </div>
   <div class="dash-ctrl">
-    <div class="dash-field"><label>เดือน</label><select id="dashMonth"></select></div>
-    <div class="dash-field"><label>ปี</label><select id="dashYear"></select></div>
+    <div class="dash-field"><label>เดือน</label><select id="dashMonth" name="dm_nofill" autocomplete="new-password"></select></div>
+    <div class="dash-field"><label>ปี</label><select id="dashYear" name="dy_nofill" autocomplete="new-password"></select></div>
   </div>
   <div class="dash-chan-row">
     <label class="dash-chan-lbl">เลือกสาขา/ช่องทาง <small>(ติ๊กได้อิสระ · ไม่ติ๊ก = ทุกสาขา)</small></label>
     <div class="dash-branchbox" id="dashBranchBox"></div>
   </div>
+  <button class="dash-copy-btn" id="dashCopyBtn">📋 คัดลอกสรุปยอด (สำหรับแชร์)</button>
 
   <!-- KPI -->
   <div class="kpi-grid">
@@ -611,25 +617,25 @@
   </header>
   <div class="rep-ctrl">
     <div class="rep-row">
-      <div class="rep-field"><label>จากวันที่</label><input type="date" id="repFrom"></div>
-      <div class="rep-field"><label>ถึงวันที่</label><input type="date" id="repTo"></div>
+      <div class="rep-field"><label>จากวันที่</label><input type="date" id="repFrom" autocomplete="off"></div>
+      <div class="rep-field"><label>ถึงวันที่</label><input type="date" id="repTo" autocomplete="off"></div>
     </div>
-    <select id="repChan" style="display:none"><option value="__all__">ทุกช่องทาง</option></select>
+    <select id="repChan" style="display:none" autocomplete="off"><option value="__all__">ทุกช่องทาง</option></select>
     <div class="rep-field" style="margin-top:6px">
       <label>เลือกสาขา <small style="color:var(--ink-soft)">(ติ๊กได้อิสระ · ไม่ติ๊ก = ทุกสาขา)</small></label>
       <div class="branch-check" id="repBranchBox"></div>
     </div>
     <div id="detailInputs" style="display:none">
       <div class="rep-row" style="margin-top:10px" id="gpRow">
-        <div class="rep-field"><label>หัก GP % <small style="color:var(--ink-soft)">(บูท)</small></label><input type="number" inputmode="decimal" id="repGp" placeholder="เช่น 30"></div>
+        <div class="rep-field"><label>หัก GP % <small style="color:var(--ink-soft)">(บูท)</small></label><input type="number" inputmode="decimal" id="repGp" placeholder="เช่น 30" autocomplete="off"></div>
       </div>
       <div class="rep-row" id="rentRow">
-        <div class="rep-field"><label>ค่าเช่า (บาท)</label><input type="number" inputmode="numeric" id="repRent" placeholder="0"></div>
-        <div class="rep-field"><label>ค่าไฟ (บาท)</label><input type="number" inputmode="numeric" id="repElec" placeholder="0"></div>
+        <div class="rep-field"><label>ค่าเช่า (บาท)</label><input type="number" inputmode="numeric" id="repRent" placeholder="0" autocomplete="off"></div>
+        <div class="rep-field"><label>ค่าไฟ (บาท)</label><input type="number" inputmode="numeric" id="repElec" placeholder="0" autocomplete="off"></div>
       </div>
       <div class="rep-row">
-        <div class="rep-field"><label>ค่าจ้างพนักงาน (บาท)</label><input type="number" inputmode="numeric" id="repWage" placeholder="0"></div>
-        <div class="rep-field"><label>คอมมิชชั่น (บาท)</label><input type="number" inputmode="numeric" id="repComm" placeholder="0"></div>
+        <div class="rep-field"><label>ค่าจ้างพนักงาน (บาท)</label><input type="number" inputmode="numeric" id="repWage" placeholder="0" autocomplete="off"></div>
+        <div class="rep-field"><label>คอมมิชชั่น (บาท)</label><input type="number" inputmode="numeric" id="repComm" placeholder="0" autocomplete="off"></div>
       </div>
     </div>
   </div>
@@ -1116,7 +1122,7 @@ function buildReportControls(){
       const chip=document.createElement("label");
       chip.className="bchip"+(on?" on":"");
       chip.innerHTML='<span class="grp-dot" style="background:'+dot+'"></span>'+
-        '<input type="checkbox" '+(on?"checked":"")+' data-br="'+n.replace(/"/g,"&quot;")+'">'+n;
+        '<input type="checkbox" '+(on?"checked":"")+' data-br="'+n.replace(/"/g,"&quot;")+'" autocomplete="off">'+n;
       wrap.appendChild(chip);
     });
     box.appendChild(wrap);
@@ -1467,7 +1473,7 @@ function renderExp(){
           const tot=(e.comm||0)+(e.txn||0)+(e.service||0)+(e.order||0)+(e.ship||0);
           card.innerHTML='<div class="bn">'+br+' <small style="color:var(--ink-soft);font-weight:400">(ปกติดึงจากไฟล์นำเข้า)</small></div><div class="exp-fields">'+
             ONLINE_FEES.map(f=>'<div class="exp-f"><label>'+f[1]+' (บาท/เดือน)</label>'+
-              '<input type="number" inputmode="decimal" data-fee="'+br.replace(/"/g,"&quot;")+'" data-f="'+f[0]+'" value="'+(e[f[0]]||"")+'" placeholder="0"></div>').join("")+
+              '<input type="number" inputmode="decimal" data-fee="'+br.replace(/"/g,"&quot;")+'" data-f="'+f[0]+'" value="'+(e[f[0]]||"")+'" placeholder="0" autocomplete="off"></div>').join("")+
             '</div><div class="exp-tot"><span>ค่าธรรมเนียมรวม/เดือน</span><b>฿'+fmt(tot)+'</b></div>';
         } else {
           const e=expOf(ym,br), isMain=(key==="main");
@@ -1479,7 +1485,7 @@ function renderExp(){
           const tot=(e.rent||0)+(e.elec||0)+(e.wage||0)+(e.comm||0);
           card.innerHTML='<div class="bn">'+br+'</div><div class="exp-fields">'+
             fields.map(f=>'<div class="exp-f"><label>'+f[1]+(f[0]==="gp"?"":" (บาท/เดือน)")+'</label>'+
-              '<input type="number" inputmode="decimal" data-br="'+br.replace(/"/g,"&quot;")+'" data-f="'+f[0]+'" value="'+(e[f[0]]||"")+'" placeholder="0"></div>').join("")+
+              '<input type="number" inputmode="decimal" data-br="'+br.replace(/"/g,"&quot;")+'" data-f="'+f[0]+'" value="'+(e[f[0]]||"")+'" placeholder="0" autocomplete="off"></div>').join("")+
             '</div><div class="exp-tot"><span>ค่าใช้จ่ายคงที่รวม/เดือน</span><b>฿'+fmt(tot)+'</b></div>';
         }
         box.appendChild(card);
@@ -1942,7 +1948,7 @@ function renderImport(){
   if(impData.issues.length){
     iw.style.display="block";
     document.getElementById("impIssues").innerHTML=impData.issues.map((x,i)=>
-      '<div class="iss"><input type="checkbox" data-iss="'+i+'">'+
+      '<div class="iss"><input type="checkbox" data-iss="'+i+'" autocomplete="off">'+
       '<span class="d"><b>'+x.raw+'</b><small>'+x.dt+' · '+x.why+'</small></span>'+
       '<span class="amt">฿'+fmt2(x.amt)+'</span></div>').join("");
   } else iw.style.display="none";
@@ -2185,7 +2191,7 @@ function buildDashBranchBox(){
     names.forEach(n=>{
       const on=dashPickedBranches.has(n);
       const chip=document.createElement("label"); chip.className="dbb-chip"+(on?" on":"");
-      chip.innerHTML='<span class="dot" style="background:'+m.c+'"></span><input type="checkbox" '+(on?"checked":"")+' data-br="'+n.replace(/"/g,"&quot;")+'">'+n;
+      chip.innerHTML='<span class="dot" style="background:'+m.c+'"></span><input type="checkbox" '+(on?"checked":"")+' data-br="'+n.replace(/"/g,"&quot;")+'" autocomplete="off">'+n;
       wrap.appendChild(chip);
     });
     box.appendChild(wrap);
@@ -2372,6 +2378,58 @@ function drawTrend(cvId,byDay,ym){
   for(let d=1;d<=dim;d+=5){ ctx.fillText(d,x(d-1),H-pad*0.6); }
 }
 
+function dashCopySummary(){
+  const ym=document.getElementById("dashYear").value+"-"+document.getElementById("dashMonth").value;
+  const D=dashData(ym);
+  if(D.pieces<=0){ toast("ไม่มีข้อมูลเดือนนี้"); return; }
+  const P=dashData(prevYm(ym));
+  const moTxt=TH_MONTHS[+ym.slice(5,7)-1]+" "+ym.slice(0,4);
+  const pct=x=>D.sales>0?" ("+(x/D.sales*100).toFixed(1)+"%)":"";
+  const cmp=(cur,prev)=>{ if(prev<=0) return ""; const d=(cur-prev)/prev*100; return " "+(d>=0?"▲":"▼")+Math.abs(d).toFixed(1)+"%"; };
+  // ขอบเขตสาขาที่เลือก
+  let scope="ทุกสาขา";
+  if(dashPickedBranches.size>0) scope=[...dashPickedBranches].join(", ");
+  const L=[];
+  L.push("📊 สรุปยอดขาย CLOTHVIBES");
+  L.push("เดือน "+moTxt+" · "+scope);
+  L.push("──────────────");
+  L.push("ยอดขาย (รวม VAT): ฿"+fmt2(D.sales)+cmp(D.sales,P.sales));
+  L.push("ฐานภาษี: ฿"+fmt2(D.base)+" · VAT: ฿"+fmt2(D.vat));
+  L.push("จำนวน: "+fmt(D.pieces)+" ชิ้น"+cmp(D.pieces,P.pieces));
+  L.push("──────────────");
+  L.push("💰 โครงสร้างเงิน");
+  if(D.cost>0)      L.push("• ต้นทุนสินค้า: ฿"+fmt2(D.cost)+pct(D.cost));
+  if(D.gp+D.feeOnline>0) L.push("• ค่าธรรมเนียม/GP: ฿"+fmt2(D.gp+D.feeOnline)+pct(D.gp+D.feeOnline));
+  if(D.opex>0)      L.push("• ค่าใช้จ่าย(เช่า/ไฟ/จ้าง): ฿"+fmt2(D.opex)+pct(D.opex));
+  L.push("• VAT ขาย: ฿"+fmt2(D.vat)+pct(D.vat));
+  L.push("✅ กำไรสุทธิ: ฿"+fmt2(D.profit)+pct(D.profit)+cmp(D.profit,P.profit));
+  if(D.est) L.push("⚠️ ค่าธรรมเนียมบางส่วนเป็นตัวประมาณ");
+  // แยกช่องทาง
+  const chans=Object.keys(D.perChan).sort((a,b)=>D.perChan[b].sales-D.perChan[a].sales);
+  if(chans.length>1){
+    L.push("──────────────");
+    L.push("📍 แยกช่องทาง");
+    chans.forEach(c=>{ const m=CHAN_META[c]||{n:c}; L.push("• "+m.n+": ฿"+fmt(D.perChan[c].sales)+" ("+fmt(D.perChan[c].pieces)+" ชิ้น)"); });
+  }
+  // Top 5 รุ่น
+  const mk=Object.keys(D.byModel).sort((a,b)=>D.byModel[b].amt-D.byModel[a].amt).slice(0,5);
+  if(mk.length){
+    L.push("──────────────");
+    L.push("🏆 รุ่นขายดี Top 5");
+    mk.forEach((k,i)=>{ const x=D.byModel[k]; L.push((i+1)+". "+x.name+" — "+fmt(x.q)+" ชิ้น ฿"+fmt(x.amt)); });
+  }
+  const txt=L.join("\n");
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(()=>toast("คัดลอกสรุปแล้ว ✓")).catch(()=>fallbackCopy(txt));
+  } else fallbackCopy(txt);
+}
+function fallbackCopy(txt){
+  const ta=document.createElement("textarea"); ta.value=txt; ta.style.position="fixed"; ta.style.opacity="0";
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand("copy"); toast("คัดลอกสรุปแล้ว ✓"); }catch(e){ toast("คัดลอกไม่สำเร็จ"); }
+  document.body.removeChild(ta);
+}
+document.getElementById("dashCopyBtn").onclick=dashCopySummary;
 document.getElementById("dashBack").onclick=backFromDash;
 document.getElementById("dashMonth").onchange=renderDashboard;
 document.getElementById("dashYear").onchange=renderDashboard;
