@@ -1680,6 +1680,8 @@ function buildImport(rows){
   // วิธีชำระ: ต้องเป็น "วิธีการชำระเงิน" เท่านั้น (กันชนกับ "ยอดที่ชำระแล้ว")
   const kPay  =keys.find(k=>/วิธีการชำระเงิน|วิธีชำระ|payment method/i.test(k))
              || keys.find(k=>/วิธี.*ชำระ|payment/i.test(k)) || keys[9];
+  // ไฟล์ POS รุ่นใหม่มีคอลัมน์ "เวลาชำระเงิน" -> ใช้เป็นวันที่โดยตรง (แม่นกว่าดึงจากเลขออเดอร์)
+  const kTimeP=keys.find(k=>/เวลาชำระเงิน/.test(k));
 
   // dedupe ตามเลขออเดอร์ (ไฟล์ POS มีแถวซ้ำ)
   const orders={};
@@ -1687,14 +1689,16 @@ function buildImport(rows){
     const oid=String(r[kOrder]||"").trim(); if(!oid) return;
     orders[oid]={onl:String(r[kOnl]||""), prod:String(r[kProd]||""),
                  amt:parseFloat(String(r[kAmt]||"0").replace(/,/g,""))||0,
-                 pay:String(r[kPay]||"")};
+                 pay:String(r[kPay]||""),
+                 tm:kTimeP?xlTime(r[kTimeP]||""):""};
   });
 
   const items=[], issues=[], unmatched={};
   const months={};
   Object.keys(orders).forEach(oid=>{
     const o=orders[oid];
-    const dt=posDate(o.onl);
+    // วันที่: ใช้เวลาชำระเงินก่อน (YYYY-MM-DD HH:MM:SS -> ตัดเอาวันที่) ไม่มีค่อยดึงจากเลขออเดอร์
+    const dt=(o.tm && /^\d{4}-\d{2}-\d{2}/.test(o.tm)) ? o.tm.slice(0,10) : posDate(o.onl);
     months[dt.slice(0,7)]=(months[dt.slice(0,7)]||0)+1;
     const parts=o.prod.split(",").map(x=>x.trim()).filter(Boolean).map(parseSku);
     const list=[];
@@ -2625,10 +2629,22 @@ document.getElementById("cleanBtn").onclick=cleanJunkRun;
 
 /* ---------- สร้างไฟล์ส่งบัญชีจากไฟล์ POS (รายบิล + ต้นทุน + กำไรขั้นต้น) ---------- */
 function num(v){ return parseFloat(String(v==null?"0":v).replace(/,/g,""))||0; }
+// เวลาจาก Excel อาจมาเป็นเลข serial -> แปลงเป็น YYYY-MM-DD HH:MM:SS
+function xlTime(v){
+  if(v instanceof Date){ const p=x=>String(x).padStart(2,"0");
+    return v.getFullYear()+"-"+p(v.getMonth()+1)+"-"+p(v.getDate())+" "+p(v.getHours())+":"+p(v.getMinutes())+":"+p(v.getSeconds()); }
+  const sv=String(v==null?"":v).trim();
+  if(/^\d+(\.\d+)?$/.test(sv)){ const n=parseFloat(sv);
+    const d=new Date(Math.round((n-25569)*86400*1000)); const p=x=>String(x).padStart(2,"0");
+    return d.getUTCFullYear()+"-"+p(d.getUTCMonth()+1)+"-"+p(d.getUTCDate())+" "+p(d.getUTCHours())+":"+p(d.getUTCMinutes())+":"+p(d.getUTCSeconds()); }
+  return sv;
+}
 function buildAccountingFile(rows, keys){
   const K=name=>keys.find(k=>String(k).indexOf(name)>=0);
+  const cl=k=>String(k).replace(/[\u200b\ufeff]/g,"").trim();
   const kOrder=K("หมายเลขออเดอร์")||keys[0], kOnl=K("ออนไลน์")||keys[1],
-        kShop=K("ร้านค้า")||keys[5], kPaid=K("ยอดที่ชำระแล้ว")||keys[7],
+        kShop=keys.find(k=>cl(k)==="ร้านค้า")||K("ร้านค้า")||keys[5],
+        kPaid=K("ยอดที่ชำระแล้ว")||K("ควรได้รับ")||keys[7],
         kTime=K("เวลาชำระเงิน"),                       // มีเฉพาะบางไฟล์
         kPay=K("วิธีการชำระเงิน")||K("วิธีชำระ"),
         kSku=K("รหัสสินค้า")||keys[15], kName=K("ชื่อสินค้า")||keys[16],
@@ -2648,6 +2664,8 @@ function buildAccountingFile(rows, keys){
     const labelTot=items.reduce((s,r)=>s+num(r[kUnit])*num(r[kQty]),0);
     const tm=kTime?String(items[0][kTime]||"").trim():"";
     const dt=tm||dateOf(items[0][kOnl]);              // มีเวลาใช้เวลา ไม่มีใช้วันที่
+    const tmRaw=kTime?xlTime(items[0][kTime]||""):"";
+    const dtUse=tmRaw||dt;
     const payRaw=kPay?String(items[0][kPay]||""):"";
     const payTxt=payRaw?(payRaw.indexOf("เงินสด")>=0?"เงินสด":"KSHOP"):"";
     items.forEach(r=>{
@@ -2658,7 +2676,7 @@ function buildAccountingFile(rows, keys){
       if(!vid) unmatched[sku]=(unmatched[sku]||0)+q;
       const cost=vid?VAR[vid].cost*q:0;
       const F=x=>{const n=Math.round(x*100)/100; return Number.isInteger(n)?String(n):n.toFixed(2);};
-      out.push([String(r[kShop]||"").trim(), dt, String(r[kName]||""), sku,
+      out.push([String(r[kShop]||"").trim(), dtUse, String(r[kName]||""), sku,
                 F(lt), q, F(Math.max(lt-share,0)), F(share), F(cost), F(share-cost), payTxt]);
       totPaid+=share; totCost+=cost; nRows++;
       if(payTxt==="เงินสด") cashAmt+=share; else if(payTxt) kshopAmt+=share;
@@ -2683,16 +2701,6 @@ function buildAccountingFull(rows, keys, payMap){
     :["ร้านค้า","เวลาชำระเงิน","ชื่อสินค้า","รหัสสินค้า","ราคาสินค้าทั้งหมด","จํานวนสินค้าที่ขาย","ส่วนลดร้านค้า","ยอดที่ชำระแล้ว","ต้นทุนสินค้า","กำไรขั้นต้น"]];
   const unmatched={}; let totPaid=0, totCost=0, nRows=0, filled=0, cashAmt=0, kshopAmt=0, noPay=0;
   const F=x=>{const n=Math.round(x*100)/100; return Number.isInteger(n)?String(n):n.toFixed(2);};
-  // เวลาอาจมาเป็นเลข Excel serial -> แปลงเป็น YYYY-MM-DD HH:MM:SS
-  const xlTime=v=>{
-    if(v instanceof Date){ const p=x=>String(x).padStart(2,"0");
-      return v.getFullYear()+"-"+p(v.getMonth()+1)+"-"+p(v.getDate())+" "+p(v.getHours())+":"+p(v.getMinutes())+":"+p(v.getSeconds()); }
-    const sv=String(v).trim();
-    if(/^\d+(\.\d+)?$/.test(sv)){ const n=parseFloat(sv);
-      const d=new Date(Math.round((n-25569)*86400*1000)); const p=x=>String(x).padStart(2,"0");
-      return d.getUTCFullYear()+"-"+p(d.getUTCMonth()+1)+"-"+p(d.getUTCDate())+" "+p(d.getUTCHours())+":"+p(d.getUTCMinutes())+":"+p(d.getUTCSeconds()); }
-    return sv;
-  };
   rows.forEach(r=>{
     const q=parseInt(num(r[kQty]))||0; if(q<=0) return;
     const sku=String(r[kSku]||"").trim();
@@ -2747,7 +2755,19 @@ function accDownload(R, base, fmt){
     a.download=base+".csv"; a.click();
     toast("ดาวน์โหลดไฟล์ CSV แล้ว");
   }
+  askImportAfterAcc();
 }
+// ถามต่อ: นำยอดขายเข้าระบบด้วยไหม (ใช้เส้นทางนำเข้า POS เดิม มีหน้าตรวจสอบก่อนยืนยัน)
+function askImportAfterAcc(){
+  if(!accLiteRows||!accLiteRows.length) return;
+  setTimeout(()=>{
+    if(confirm("✅ ดาวน์โหลดไฟล์ส่งบัญชีแล้ว\n\nต้องการนำยอดขายนี้เข้าระบบด้วยไหม?\n(จะเข้าหน้าตรวจสอบ ให้เลือกสาขา/เดือน และดูสรุปก่อนยืนยัน)")){
+      const rows=accLiteRows; accLiteRows=null;
+      buildImport(rows);
+    } else accLiteRows=null;
+  }, 400);
+}
+let accLiteRows=null;   // แถวจากไฟล์ AllLiteDetailOrder (ใช้นำเข้ายอดขายต่อได้)
 function accReadOne(file){
   return new Promise((res,rej)=>{
     const rd=new FileReader();
@@ -2766,11 +2786,13 @@ function accFilesRun(fileList){
     let full=null, lite=null;
     parts.forEach(pt=>{
       const K=pt.keys.join("|");
-      const hasTime=/เวลาชำระเงิน/.test(K);
-      const hasPay=/วิธีการชำระเงิน|วิธีชำระ/.test(K);
-      if(hasTime && !full) full=pt;
-      else if(hasPay && !lite) lite=pt;
-      else if(!full && /รหัสสินค้า/.test(K)) full=pt;
+      // ไฟล์เต็ม (NewSaleOrderDetail): มีคอลัมน์จำนวนสินค้าที่ขาย/ต้นทุน/กำไรขั้นต้น
+      const isFull=/จ[ํำ]นวนสินค้าที่ขาย/.test(K) || (/ต้นทุนสินค้า/.test(K) && /กำไรขั้นต้น/.test(K));
+      // ไฟล์ Lite (AllLiteDetailOrder): มีวิธีการชำระเงิน
+      const isLite=/วิธีการชำระเงิน|วิธีชำระ/.test(K);
+      if(isFull && !full) full=pt;
+      else if(isLite && !lite) lite=pt;
+      else if(!full && /รหัสสินค้า/.test(K) && !isLite) full=pt;
       else if(!lite) lite=pt;
     });
     if(!full && !lite){ alert("ไม่พบไฟล์ POS ที่ใช้ได้\n\nต้องเป็นไฟล์ NewSaleOrderDetail และ/หรือ AllLiteDetailOrder"); return; }
@@ -2786,6 +2808,7 @@ function accFilesRun(fileList){
           if(pv && !payMap[oid]) payMap[oid]=(pv.indexOf("เงินสด")>=0?"เงินสด":"KSHOP"); });
       }
     }
+    accLiteRows=lite?lite.rows:null;   // เก็บไว้เผื่อผู้ใช้อยากนำยอดขายเข้าระบบต่อ
     let R;
     if(full){                       // มีไฟล์เต็ม -> ได้เวลาจริง (+วิธีชำระถ้ามี Lite)
       R=buildAccountingFull(full.rows, full.keys, payMap);
@@ -2798,6 +2821,10 @@ function accFilesRun(fileList){
   }).catch(err=>alert("อ่านไฟล์ไม่สำเร็จ: "+err.message));
 }
 function finishAccFile(R){
+  if(!R.nRows){
+    alert("⚠️ อ่านข้อมูลไม่ได้ (0 รายการ)\n\nตรวจว่าเลือกไฟล์ถูกต้อง:\n• NewSaleOrderDetail (มีคอลัมน์ จํานวนสินค้าที่ขาย)\n• AllLiteDetailOrder (มีคอลัมน์ วิธีการชำระเงิน)");
+    return;
+  }
   const uk=Object.keys(R.unmatched||{});
   let msg="📄 ไฟล์ส่งบัญชีพร้อมแล้ว\n"+R.nRows+" รายการ\nยอดชำระรวม ฿"+fmt2(R.totPaid)+"\nต้นทุนรวม ฿"+fmt2(R.totCost)+"\nกำไรขั้นต้น ฿"+fmt2(R.totPaid-R.totCost);
   if(R.cashAmt||R.kshopAmt) msg+="\n💵 เงินสด ฿"+fmt2(R.cashAmt||0)+" · KSHOP ฿"+fmt2(R.kshopAmt||0);
