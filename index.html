@@ -1019,6 +1019,13 @@ document.getElementById("lines").addEventListener("click",e=>{
 
 /* ---------- events: form ---------- */
 document.getElementById("selModel").addEventListener("change",fillSizes);
+["change","blur"].forEach(ev=>document.getElementById("selPrice").addEventListener(ev,e=>{
+  if(document.getElementById("dayPriceChk").checked){
+    const vid=document.getElementById("selSize").value;
+    const v=parseFloat(e.target.value);
+    if(vid && !isNaN(v)) setDayPrice(vid,v);
+  }
+}));
 document.getElementById("selPrice").addEventListener("input",e=>{
   const mid=document.getElementById("selModel").value; const v=parseFloat(e.target.value);
   if(document.getElementById("dayPriceChk").checked){
@@ -1103,15 +1110,17 @@ document.getElementById("dayPriceChk").addEventListener("change",e=>{
   }
 });
 // ใส่ % ลด -> คำนวณราคาสุทธิให้
-document.getElementById("discPct").addEventListener("input",e=>{
+function applyDiscPct(){
   const vid=document.getElementById("selSize").value; if(!vid) return;
   const base=basePriceNoPxn(vid,currentBranch);
-  const pct=parseFloat(e.target.value);
+  const pct=parseFloat(document.getElementById("discPct").value);
   const net=isNaN(pct)?base:Math.round(base*(1-pct/100)*100)/100;
   document.getElementById("discNet").textContent=fmt2(net);
   document.getElementById("selPrice").value=net;
-  setDayPrice(vid,net);
-});
+  setDayPrice(vid,net);            // เขียน pxn + renderLines ให้บรรทัดอัปเดตทันที
+}
+["input","change","blur","keyup"].forEach(ev=>
+  document.getElementById("discPct").addEventListener(ev, applyDiscPct));
 document.getElementById("discClr").onclick=()=>{
   const vid=document.getElementById("selSize").value;
   document.getElementById("dayPriceChk").checked=false;
