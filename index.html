@@ -181,6 +181,17 @@
   .dash-card{overflow:hidden;}
   .dash-copy-btn{display:block;margin:12px 16px 0;width:calc(100% - 32px);background:linear-gradient(135deg,rgba(63,178,232,.9),rgba(7,127,197,.9));color:#fff;border:none;border-radius:12px;padding:13px;font-family:inherit;font-weight:600;font-size:13.5px;cursor:pointer;box-shadow:0 6px 16px rgba(7,127,197,.3);}
   .dash-copy-btn:active{transform:scale(.98);}
+  .acc-fmt{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);padding:20px;}
+  .af-box{background:#fff;border-radius:20px;padding:22px 20px 18px;width:100%;max-width:340px;box-shadow:0 20px 50px rgba(0,0,0,.35);}
+  .af-t{font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:17px;color:#16324a;text-align:center;}
+  .af-s{font-size:12px;color:#7b8794;text-align:center;margin:5px 0 16px;}
+  .af-btn{display:block;width:100%;text-align:left;border:none;border-radius:14px;padding:14px 16px;margin-bottom:10px;cursor:pointer;font-family:inherit;color:#fff;}
+  .af-btn b{display:block;font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:15px;}
+  .af-btn small{display:block;font-size:11px;opacity:.85;margin-top:3px;}
+  .af-x{background:linear-gradient(135deg,#1ba672,#128a5c);}
+  .af-c{background:linear-gradient(135deg,#3fb2e8,#077fc5);}
+  .af-btn:active{transform:scale(.98);}
+  .af-cancel{display:block;width:100%;background:none;border:none;color:#7b8794;font-family:inherit;font-size:13px;padding:8px;cursor:pointer;}
   .copy-popup{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);animation:cpFade .2s;}
   @keyframes cpFade{from{opacity:0}to{opacity:1}}
   .cp-box{background:#fff;border-radius:20px;padding:26px 34px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.35);animation:cpPop .25s;}
@@ -408,6 +419,11 @@
     </button>
     <input type="file" id="tkOrderInput" accept=".xlsx,.xls" hidden autocomplete="off">
     <input type="file" id="tkIncomeInput" accept=".xlsx,.xls" hidden autocomplete="off">
+    <button class="imp-btn" id="accFileBtn">
+      <span class="ic">📄</span>
+      <span class="tx"><b>สร้างไฟล์ส่งบัญชี (สาขาหลัก)</b><small>เลือก 2 ไฟล์พร้อมกัน: NewSaleOrderDetail (เวลา) + AllLiteDetailOrder (เงินสด/KSHOP)</small></span>
+    </button>
+    <input type="file" id="accFileInput" accept=".xlsx,.xls" multiple hidden autocomplete="off">
   </div>
   <button class="report-entry ghost" id="expBtn">⚙️ ตั้งค่าค่าใช้จ่ายรายสาขา</button>
   <button class="report-entry ghost" id="cleanBtn">🧹 ตรวจ/ล้างข้อมูลเพี้ยน</button>
@@ -685,6 +701,16 @@
 </div>
 
 <div class="toast" id="toast"></div>
+<!-- เลือกรูปแบบไฟล์ส่งบัญชี -->
+<div id="accFmtBox" class="acc-fmt" style="display:none">
+  <div class="af-box">
+    <div class="af-t">เลือกรูปแบบไฟล์</div>
+    <div class="af-s" id="accFmtInfo"></div>
+    <button class="af-btn af-x" id="accFmtXlsx"><b>📊 Excel (.xlsx)</b><small>เปิดใน Excel ได้ทันที ตัวเลขคำนวณต่อได้</small></button>
+    <button class="af-btn af-c" id="accFmtCsv"><b>📄 CSV (.csv)</b><small>ไฟล์ข้อความ นำเข้าโปรแกรมบัญชีได้</small></button>
+    <button class="af-cancel" id="accFmtCancel">ยกเลิก</button>
+  </div>
+</div>
 <!-- popup ยืนยันคัดลอกสำเร็จ -->
 <div id="copyPopup" class="copy-popup" style="display:none">
   <div class="cp-box">
@@ -1057,26 +1083,28 @@ document.getElementById("copyBtn").onclick=()=>{
   navigator.clipboard?.writeText(txt).then(()=>toast("คัดลอกสรุปแล้ว")).catch(()=>prompt("คัดลอก:",txt));
 };
 function csvRows(filterFn, detailed){
-  if(detailed===undefined) detailed=true;
-  const head=detailed
-    ? ["สาขา","ช่องทาง","วันที่","รุ่น","ไซส์","SKU ตัวอย่าง","Code","จำนวน","เงินสด(ชิ้น)","KSHOP(ชิ้น)","ราคา/ชิ้น(รวมVAT)","มูลค่าก่อนVAT","VAT7%","รวม","ยอดเงินสด","ยอดKSHOP","ทุน/ชิ้น","ทุนรวม","กำไร","%margin"]
-    : ["สาขา","ช่องทาง","วันที่","รุ่น","ไซส์","SKU ตัวอย่าง","Code","จำนวน","เงินสด(ชิ้น)","KSHOP(ชิ้น)","ราคา/ชิ้น(รวมVAT)","ยอดขายรวม","ยอดเงินสด","ยอดKSHOP"];
+  // ฟอร์แมตตามไฟล์บัญชี: ร้านค้า/เวลาชำระเงิน/ชื่อสินค้า/รหัสสินค้า/ราคาสินค้าทั้งหมด/จำนวน/ส่วนลดร้านค้า/ยอดที่ชำระแล้ว/ต้นทุนสินค้า/กำไรขั้นต้น
+  const head=["ร้านค้า","เวลาชำระเงิน","ชื่อสินค้า","รหัสสินค้า","ราคาสินค้าทั้งหมด","จํานวนสินค้าที่ขาย","ส่วนลดร้านค้า","ยอดที่ชำระแล้ว","ต้นทุนสินค้า","กำไรขั้นต้น"];
   let out=[head];
   Object.keys(data.branches).sort().forEach(br=>{
     Object.keys(data.branches[br]).sort().forEach(dt=>{
+      if(!isDateKey(dt)) return;
       if(filterFn && !filterFn(br,dt)) return;
       const m=data.branches[br][dt];
       Object.keys(m).sort((a,b)=>(VARORDER[a]??1e9)-(VARORDER[b]??1e9)).forEach(vid=>{
         const v=VAR[vid]; if(!v) return; const q=m[vid]; if(q<=0) return;
-        const price=priceOfVar(vid,br,dt), inc=q*price, base=inc/(1+VAT), vat=inc-base, cost=q*v.cost, profit=base-cost, margin=base>0?profit/base:0;
-        const isMainBr=BRANCH_TYPE[br]==="main";
-        const pm=(data.pay[br]&&data.pay[br][dt]&&data.pay[br][dt][vid])||{cash:0,kshop:0};
-        const chName=isMainBr?"สาขาหลัก":"บูท";
-        // บูท: ไม่มีวิธีชำระ -> เว้นว่าง
-        const cQ=isMainBr?(pm.cash||0):"", kQ=isMainBr?(pm.kshop||0):"";
-        const cAmt=isMainBr?((pm.cash||0)*price).toFixed(2):"", kAmt=isMainBr?((pm.kshop||0)*price).toFixed(2):"";
-        if(detailed) out.push([br,chName,dt,v.modelName,v.size,skuOf(v),v.code,q,cQ,kQ,price,base.toFixed(2),vat.toFixed(2),inc.toFixed(2),cAmt,kAmt,v.cost,cost.toFixed(2),profit.toFixed(2),(margin*100).toFixed(1)+"%"]);
-        else out.push([br,chName,dt,v.modelName,v.size,skuOf(v),v.code,q,cQ,kQ,price,inc.toFixed(2),cAmt,kAmt]);
+        const actual=priceOfVar(vid,br,dt);          // ราคาขายจริง/ชิ้น (หลังส่วนลด)
+        // ราคาป้าย: ออนไลน์ใช้ราคาจริงจากแพลตฟอร์ม (ไม่มีป้ายบูท) / หน้าร้านใช้ราคาป้าย
+        let label=isOnline(br)?actual:((typeof priceLabel==="function")?priceLabel(vid,br):actual);
+        if(label<actual) label=actual;               // กันราคาป้ายต่ำกว่าราคาจริง (กรณีราคาป้ายเก่า)
+        const labelTot=label*q;
+        const paid=actual*q;                          // ยอดที่ชำระแล้ว
+        const disc=Math.max(labelTot-paid,0);         // ส่วนลดร้านค้า
+        const cost=q*v.cost;
+        const gross=paid-cost;                        // กำไรขั้นต้น (ตามฟอร์แมตไฟล์: ยอดชำระ − ทุน)
+        const F=x=>{const n=Math.round(x*100)/100; return Number.isInteger(n)?String(n):n.toFixed(2);};
+        out.push([br, dt, v.modelName, v.code+"-"+v.size, F(labelTot), q,
+                  F(disc), F(paid), F(cost), F(gross)]);
       });
     });
   });
@@ -2594,6 +2622,196 @@ function cleanJunkRun(){
   alert("✅ ล้างเสร็จ "+removed+" รายการ — ไฟล์สำรองถูกดาวน์โหลดไว้แล้ว\nถ้าตั้งซิงค์ไว้ ข้อมูลสะอาดจะถูกส่งขึ้นชีตให้เอง");
 }
 document.getElementById("cleanBtn").onclick=cleanJunkRun;
+
+/* ---------- สร้างไฟล์ส่งบัญชีจากไฟล์ POS (รายบิล + ต้นทุน + กำไรขั้นต้น) ---------- */
+function num(v){ return parseFloat(String(v==null?"0":v).replace(/,/g,""))||0; }
+function buildAccountingFile(rows, keys){
+  const K=name=>keys.find(k=>String(k).indexOf(name)>=0);
+  const kOrder=K("หมายเลขออเดอร์")||keys[0], kOnl=K("ออนไลน์")||keys[1],
+        kShop=K("ร้านค้า")||keys[5], kPaid=K("ยอดที่ชำระแล้ว")||keys[7],
+        kTime=K("เวลาชำระเงิน"),                       // มีเฉพาะบางไฟล์
+        kPay=K("วิธีการชำระเงิน")||K("วิธีชำระ"),
+        kSku=K("รหัสสินค้า")||keys[15], kName=K("ชื่อสินค้า")||keys[16],
+        kUnit=K("ราคาต่อหน่วย")||keys[17],
+        kQty=keys.find(k=>String(k).trim()==="จำนวน")||K("จำนวน")||keys[18];
+  const dateOf=onl=>{ const m=String(onl||"").match(/(20\d{6})/); return m?m[1].slice(0,4)+"-"+m[1].slice(4,6)+"-"+m[1].slice(6,8):""; };
+  // จัดกลุ่มตามออเดอร์ + ตัดแถวซ้ำ
+  const orders={};
+  rows.forEach(r=>{ const oid=String(r[kOrder]||"").trim(); if(!oid) return; (orders[oid]=orders[oid]||[]).push(r); });
+  const out=[["ร้านค้า","เวลาชำระเงิน","ชื่อสินค้า","รหัสสินค้า","ราคาสินค้าทั้งหมด","จํานวนสินค้าที่ขาย","ส่วนลดร้านค้า","ยอดที่ชำระแล้ว","ต้นทุนสินค้า","กำไรขั้นต้น","วิธีการชำระเงิน"]];
+  const unmatched={};
+  let totPaid=0, totCost=0, nRows=0, cashAmt=0, kshopAmt=0;
+  Object.keys(orders).forEach(oid=>{
+    const rs=orders[oid], seen=new Set(), items=[];
+    rs.forEach(r=>{ const k=[r[kSku],r[kName],r[kUnit],r[kQty]].join("|"); if(seen.has(k)) return; seen.add(k); items.push(r); });
+    const paid=num(items[0][kPaid]);
+    const labelTot=items.reduce((s,r)=>s+num(r[kUnit])*num(r[kQty]),0);
+    const tm=kTime?String(items[0][kTime]||"").trim():"";
+    const dt=tm||dateOf(items[0][kOnl]);              // มีเวลาใช้เวลา ไม่มีใช้วันที่
+    const payRaw=kPay?String(items[0][kPay]||""):"";
+    const payTxt=payRaw?(payRaw.indexOf("เงินสด")>=0?"เงินสด":"KSHOP"):"";
+    items.forEach(r=>{
+      const q=parseInt(num(r[kQty]))||0; if(q<=0) return;
+      const lt=num(r[kUnit])*q;
+      const share=labelTot>0?paid*(lt/labelTot):0;    // ปันส่วนยอดชำระตามราคาป้าย
+      const sku=String(r[kSku]||""); const vid=matchSku(sku);
+      if(!vid) unmatched[sku]=(unmatched[sku]||0)+q;
+      const cost=vid?VAR[vid].cost*q:0;
+      const F=x=>{const n=Math.round(x*100)/100; return Number.isInteger(n)?String(n):n.toFixed(2);};
+      out.push([String(r[kShop]||"").trim(), dt, String(r[kName]||""), sku,
+                F(lt), q, F(Math.max(lt-share,0)), F(share), F(cost), F(share-cost), payTxt]);
+      totPaid+=share; totCost+=cost; nRows++;
+      if(payTxt==="เงินสด") cashAmt+=share; else if(payTxt) kshopAmt+=share;
+    });
+  });
+  return {out, unmatched, totPaid, totCost, nRows, cashAmt, kshopAmt};
+}
+// ไฟล์เต็ม (NewSaleOrderDetail): มีเวลาชำระเงิน + ยอดชำระรายชิ้น + ส่วนลด + ทุน — ใช้ค่าจากไฟล์ตรง ๆ เติมทุนที่ขาดจากแค็ตตาล็อก
+function buildAccountingFull(rows, keys, payMap){
+  const K=name=>keys.find(k=>String(k).indexOf(name)>=0);
+  const clean=k=>String(k).replace(/[\u200b\ufeff]/g,"").trim();
+  // "ร้านค้า" ต้องขึ้นต้นคอลัมน์ (กันชนกับ "ส่วนลดร้านค้า")
+  const kShop=keys.find(k=>clean(k)==="ร้านค้า")||keys.find(k=>clean(k).indexOf("ร้านค้า")===0);
+  const kOrderF=K("หมายเลขออเดอร์");
+  const kTime=K("เวลาชำระเงิน"), kName=K("ชื่อสินค้า"),
+        kSku=keys.find(k=>String(k).trim()==="รหัสสินค้า")||K("รหัสสินค้า"),
+        kLabel=K("ราคาสินค้าทั้งหมด"), kQty=K("จํานวนสินค้าที่ขาย")||K("จำนวนสินค้าที่ขาย"),
+        kDisc=K("ส่วนลดร้านค้า"), kPaid=K("ยอดที่ชำระแล้ว"), kCost=K("ต้นทุนสินค้า");
+  const hasPay=!!payMap;
+  const out=[hasPay
+    ?["ร้านค้า","เวลาชำระเงิน","ชื่อสินค้า","รหัสสินค้า","ราคาสินค้าทั้งหมด","จํานวนสินค้าที่ขาย","ส่วนลดร้านค้า","ยอดที่ชำระแล้ว","ต้นทุนสินค้า","กำไรขั้นต้น","วิธีการชำระเงิน"]
+    :["ร้านค้า","เวลาชำระเงิน","ชื่อสินค้า","รหัสสินค้า","ราคาสินค้าทั้งหมด","จํานวนสินค้าที่ขาย","ส่วนลดร้านค้า","ยอดที่ชำระแล้ว","ต้นทุนสินค้า","กำไรขั้นต้น"]];
+  const unmatched={}; let totPaid=0, totCost=0, nRows=0, filled=0, cashAmt=0, kshopAmt=0, noPay=0;
+  const F=x=>{const n=Math.round(x*100)/100; return Number.isInteger(n)?String(n):n.toFixed(2);};
+  // เวลาอาจมาเป็นเลข Excel serial -> แปลงเป็น YYYY-MM-DD HH:MM:SS
+  const xlTime=v=>{
+    if(v instanceof Date){ const p=x=>String(x).padStart(2,"0");
+      return v.getFullYear()+"-"+p(v.getMonth()+1)+"-"+p(v.getDate())+" "+p(v.getHours())+":"+p(v.getMinutes())+":"+p(v.getSeconds()); }
+    const sv=String(v).trim();
+    if(/^\d+(\.\d+)?$/.test(sv)){ const n=parseFloat(sv);
+      const d=new Date(Math.round((n-25569)*86400*1000)); const p=x=>String(x).padStart(2,"0");
+      return d.getUTCFullYear()+"-"+p(d.getUTCMonth()+1)+"-"+p(d.getUTCDate())+" "+p(d.getUTCHours())+":"+p(d.getUTCMinutes())+":"+p(d.getUTCSeconds()); }
+    return sv;
+  };
+  rows.forEach(r=>{
+    const q=parseInt(num(r[kQty]))||0; if(q<=0) return;
+    const sku=String(r[kSku]||"").trim();
+    const paid=num(r[kPaid]);
+    let cost=num(r[kCost]);
+    if(cost<=0){                                   // POS ไม่มีทุน -> เติมจากแค็ตตาล็อก
+      const vid=matchSku(sku);
+      if(vid){ cost=VAR[vid].cost*q; filled++; }
+      else unmatched[sku]=(unmatched[sku]||0)+q;
+    }
+    const row=[String(r[kShop]||"").trim(), xlTime(r[kTime]||""), String(r[kName]||""), sku,
+              F(num(r[kLabel])), q, F(num(r[kDisc])), F(paid), F(cost), F(paid-cost)];
+    if(hasPay){
+      const oid=String(r[kOrderF]||"").trim();
+      const payTxt=payMap[oid]||"";
+      if(!payTxt) noPay++;
+      row.push(payTxt);
+      if(payTxt==="เงินสด") cashAmt+=paid; else if(payTxt) kshopAmt+=paid;
+    }
+    out.push(row);
+    totPaid+=paid; totCost+=cost; nRows++;
+  });
+  return {out, unmatched, totPaid, totCost, nRows, filled, cashAmt, kshopAmt, noPay};
+}
+// เลือกรูปแบบไฟล์ที่จะดาวน์โหลด (Excel / CSV)
+function accShowFormat(R){
+  const base="ไฟล์ส่งบัญชี_"+(R.out[1]?String(R.out[1][0]).replace(/\s/g,""):"POS")+"_"+todayISO;
+  const box=document.getElementById("accFmtBox");
+  document.getElementById("accFmtInfo").textContent=R.nRows+" รายการ · ยอดชำระ ฿"+fmt2(R.totPaid);
+  document.getElementById("accFmtXlsx").onclick=()=>{ accDownload(R,base,"xlsx"); box.style.display="none"; };
+  document.getElementById("accFmtCsv").onclick =()=>{ accDownload(R,base,"csv");  box.style.display="none"; };
+  document.getElementById("accFmtCancel").onclick=()=>{ box.style.display="none"; };
+  box.style.display="flex";
+}
+function accDownload(R, base, fmt){
+  if(fmt==="xlsx"){
+    // เขียนเป็น Excel จริง (ตัวเลขเป็นตัวเลข ไม่ใช่ข้อความ)
+    const body=R.out.map((row,ri)=>ri===0?row:row.map((c,ci)=>{
+      if(ci>=4&&ci<=9){ const n=parseFloat(c); return isNaN(n)?c:n; }   // คอลัมน์ตัวเลข
+      return c;
+    }));
+    const ws=XLSX.utils.aoa_to_sheet(body);
+    ws["!cols"]=[{wch:18},{wch:20},{wch:42},{wch:22},{wch:14},{wch:10},{wch:12},{wch:14},{wch:12},{wch:12},{wch:14}];
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "ยอดขาย");
+    XLSX.writeFile(wb, base+".xlsx");
+    toast("ดาวน์โหลดไฟล์ Excel แล้ว");
+  } else {
+    const csv="\ufeff"+R.out.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(",")).join("\n");
+    const blob=new Blob([csv],{type:"text/csv"});
+    const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+    a.download=base+".csv"; a.click();
+    toast("ดาวน์โหลดไฟล์ CSV แล้ว");
+  }
+}
+function accReadOne(file){
+  return new Promise((res,rej)=>{
+    const rd=new FileReader();
+    rd.onload=e=>{ try{
+      const wb=XLSX.read(new Uint8Array(e.target.result),{type:"array"});
+      const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:""});
+      res({name:file.name, rows, keys:rows.length?Object.keys(rows[0]):[]});
+    }catch(err){ rej(err); } };
+    rd.onerror=()=>rej(new Error("อ่านไฟล์ไม่ได้"));
+    rd.readAsArrayBuffer(file);
+  });
+}
+// รับ 1-2 ไฟล์พร้อมกัน แล้วแยกเองว่าไฟล์ไหนเป็นแบบไหน (ไม่ต้องสนลำดับ)
+function accFilesRun(fileList){
+  Promise.all([].slice.call(fileList).map(accReadOne)).then(parts=>{
+    let full=null, lite=null;
+    parts.forEach(pt=>{
+      const K=pt.keys.join("|");
+      const hasTime=/เวลาชำระเงิน/.test(K);
+      const hasPay=/วิธีการชำระเงิน|วิธีชำระ/.test(K);
+      if(hasTime && !full) full=pt;
+      else if(hasPay && !lite) lite=pt;
+      else if(!full && /รหัสสินค้า/.test(K)) full=pt;
+      else if(!lite) lite=pt;
+    });
+    if(!full && !lite){ alert("ไม่พบไฟล์ POS ที่ใช้ได้\n\nต้องเป็นไฟล์ NewSaleOrderDetail และ/หรือ AllLiteDetailOrder"); return; }
+    // payMap จากไฟล์ Lite (เลขออเดอร์ -> เงินสด/KSHOP)
+    let payMap=null;
+    if(lite){
+      const K=name=>lite.keys.find(k=>String(k).indexOf(name)>=0);
+      const kOrder=K("หมายเลขออเดอร์"), kPay=K("วิธีการชำระเงิน")||K("วิธีชำระ");
+      if(kOrder&&kPay){
+        payMap={};
+        lite.rows.forEach(r=>{ const oid=String(r[kOrder]||"").trim(); if(!oid) return;
+          const pv=String(r[kPay]||"");
+          if(pv && !payMap[oid]) payMap[oid]=(pv.indexOf("เงินสด")>=0?"เงินสด":"KSHOP"); });
+      }
+    }
+    let R;
+    if(full){                       // มีไฟล์เต็ม -> ได้เวลาจริง (+วิธีชำระถ้ามี Lite)
+      R=buildAccountingFull(full.rows, full.keys, payMap);
+      if(!payMap) R.warnNoPay=true;
+    } else {                        // มีแต่ Lite -> ไม่มีเวลา
+      R=buildAccountingFile(lite.rows, lite.keys);
+      R.warnNoTime=true;
+    }
+    finishAccFile(R);
+  }).catch(err=>alert("อ่านไฟล์ไม่สำเร็จ: "+err.message));
+}
+function finishAccFile(R){
+  const uk=Object.keys(R.unmatched||{});
+  let msg="📄 ไฟล์ส่งบัญชีพร้อมแล้ว\n"+R.nRows+" รายการ\nยอดชำระรวม ฿"+fmt2(R.totPaid)+"\nต้นทุนรวม ฿"+fmt2(R.totCost)+"\nกำไรขั้นต้น ฿"+fmt2(R.totPaid-R.totCost);
+  if(R.cashAmt||R.kshopAmt) msg+="\n💵 เงินสด ฿"+fmt2(R.cashAmt||0)+" · KSHOP ฿"+fmt2(R.kshopAmt||0);
+  if(R.noPay) msg+="\n⚠️ "+R.noPay+" แถวไม่พบวิธีชำระ (เลขออเดอร์ไม่ตรงกัน 2 ไฟล์)";
+  if(R.warnNoTime) msg+="\n⚠️ ไม่มีเวลา (ชม:นาที) — แนบไฟล์ NewSaleOrderDetail ด้วยจะได้เวลาจริง";
+  if(R.warnNoPay) msg+="\n⚠️ ไม่มีคอลัมน์เงินสด/KSHOP — แนบไฟล์ AllLiteDetailOrder ด้วย";
+  if(R.filled) msg+="\n(เติมทุนจากแค็ตตาล็อกให้ "+R.filled+" แถวที่ POS ไม่มีทุน)";
+  if(uk.length) msg+="\n\n⚠️ จับคู่ต้นทุนไม่ได้ "+uk.length+" SKU (ทุน=0): "+uk.slice(0,5).join(", ");
+  msg+="\n\nกด OK เพื่อเลือกรูปแบบไฟล์";
+  if(!confirm(msg)) return;
+  accShowFormat(R);
+}
+document.getElementById("accFileBtn").onclick=()=>document.getElementById("accFileInput").click();
+document.getElementById("accFileInput").onchange=e=>{ const fs=e.target.files; if(fs&&fs.length){ accFilesRun(fs); } e.target.value=""; };
 
 /* ---------- init ---------- */
 document.getElementById("logoHome").src=LOGO_SRC;
