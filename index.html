@@ -107,6 +107,10 @@
   .brprice-chk{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-soft);margin:6px 2px 2px;cursor:pointer;user-select:none;}
   .brprice-chk input{width:16px;height:16px;accent-color:var(--accent);}
   .brprice-chk small{color:#9aa8b8;}
+  .disc-row{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-soft);margin:4px 2px 2px;flex-wrap:wrap;}
+  .disc-row input{width:62px;border:1px solid #d5dee8;border-radius:8px;padding:6px 8px;font-family:inherit;font-size:13px;text-align:center;}
+  .disc-eq b{color:var(--accent-deep);font-size:13.5px;}
+  .disc-clr{background:none;border:1px solid #d5dee8;border-radius:8px;color:var(--ink-soft);font-family:inherit;font-size:11.5px;padding:5px 10px;cursor:pointer;}
 
   /* ===== Dashboard ธีมดำ ===== */
   #screen-dash{display:none;position:fixed;inset:0;z-index:50;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:100vh;background:#0a1628;background:linear-gradient(160deg,#0a1628,#0d1f3a 45%,#0a1a30);color:#dce9f7;padding:0 0 50px;}
@@ -480,6 +484,12 @@
     </select></div>
     <div class="priceline">ราคาขาย/ชิ้น: ฿<input id="selPrice" type="number" inputmode="numeric" autocomplete="off"> (รวม VAT, แก้ได้)</div>
     <label class="brprice-chk" id="brPriceWrap"><input type="checkbox" id="brPriceChk" autocomplete="off"> ตั้งเป็นราคาเฉพาะสาขานี้ <small>(ไม่กระทบสาขาอื่น)</small></label>
+    <label class="brprice-chk" id="dayPriceWrap"><input type="checkbox" id="dayPriceChk" autocomplete="off"> ส่วนลด/ราคาเฉพาะวันนี้ <small>(ครั้งเดียว ไม่เปลี่ยนราคามาตรฐาน)</small></label>
+    <div class="disc-row" id="discRow" style="display:none">
+      ลด <input type="number" id="discPct" inputmode="decimal" placeholder="0" autocomplete="off"> %
+      <span class="disc-eq">→ สุทธิ ฿<b id="discNet">0</b>/ชิ้น</span>
+      <button type="button" class="disc-clr" id="discClr">ล้าง</button>
+    </div>
     <button class="add-btn" id="addLine">เพิ่มรายการขาย</button>
   </div>
 
@@ -844,6 +854,7 @@ function openBranch(name,chain,color){
   const pf=document.getElementById("payField"); if(pf) pf.style.display=isMainBr?"":"none";
   const pb=document.getElementById("payBreak"); if(pb) pb.style.display=isMainBr?"":"none";
   const bw=document.getElementById("brPriceWrap"); if(bw) bw.style.display=isOnline(name)?"none":"flex";
+  const dw=document.getElementById("dayPriceWrap"); if(dw) dw.style.display=isOnline(name)?"none":"flex";
   document.getElementById("hChain").textContent=chain.toUpperCase();
   document.getElementById("hChain").style.color=color==="central"?"var(--central)":color==="mall"?"var(--mall)":"var(--accent)";
   document.getElementById("hBranch").textContent=name;
@@ -919,6 +930,7 @@ function syncFormPrice(){   // ราคาเปลี่ยนตามไซ�
   const mid=document.getElementById("selModel").value;
   const chk=document.getElementById("brPriceChk");
   if(chk) chk.checked=!!(data.pbr[currentBranch] && data.pbr[currentBranch][mid]!==undefined);
+  if(typeof refreshDiscUI==="function") refreshDiscUI();
 }
 document.getElementById("selSize").addEventListener("change",syncFormPrice);
 function addLine(){
@@ -1009,6 +1021,15 @@ document.getElementById("lines").addEventListener("click",e=>{
 document.getElementById("selModel").addEventListener("change",fillSizes);
 document.getElementById("selPrice").addEventListener("input",e=>{
   const mid=document.getElementById("selModel").value; const v=parseFloat(e.target.value);
+  if(document.getElementById("dayPriceChk").checked){
+    // ราคาเฉพาะวันนี้ (ไม่เปลี่ยนราคามาตรฐาน)
+    const vid=document.getElementById("selSize").value;
+    setDayPrice(vid,isNaN(v)?0:v);
+    const base=basePriceNoPxn(vid,currentBranch);
+    document.getElementById("discPct").value=(base>0&&!isNaN(v))?(Math.round((1-v/base)*10000)/100||""):"";
+    document.getElementById("discNet").textContent=fmt2(isNaN(v)?0:v);
+    return;
+  }
   if(document.getElementById("brPriceChk").checked){
     // ราคาเฉพาะสาขานี้ (เช่น เซ็นลาด) — ไม่กระทบสาขาอื่น
     data.pbr[currentBranch]=data.pbr[currentBranch]||{};
@@ -1020,6 +1041,84 @@ document.getElementById("selPrice").addEventListener("input",e=>{
   store.write(data); renderLines(); refreshSummary();
 });
 // ติ๊ก/เอาออก: ย้ายราคาเข้า-ออกชั้นสาขา
+// ===== ราคา/ส่วนลดเฉพาะวันนี้ (เก็บที่ data.pxn[สาขา][วันที่][ไซส์]) =====
+// ราคาฐานก่อนลด = ข้ามชั้น pxn (ใช้ราคาเฉพาะสาขา -> ราคาช่องทาง -> แค็ตตาล็อก)
+function basePriceNoPxn(vid,br){
+  const v=VAR[vid]; if(!v) return 0;
+  const bp=(data.pbr[br]||{})[v.modelId];
+  if(bp!==undefined && bp!==null) return bp;
+  const ch=chanOfBranch(br);
+  const ov=(data.prices2[ch]||{})[v.modelId];
+  if(ov!==undefined && ov!==null) return ov;
+  const M=MODEL[v.modelId];
+  if(ch==="main"){ const sz=M.sizes.find(x=>x.id===vid); return (sz && sz.pm!==undefined) ? sz.pm : (M.pmain ?? M.price); }
+  return M.price;
+}
+function setDayPrice(vid,val){
+  if(!vid) return;
+  data.pxn[currentBranch]=data.pxn[currentBranch]||{};
+  data.pxn[currentBranch][currentDate]=data.pxn[currentBranch][currentDate]||{};
+  data.pxn[currentBranch][currentDate][vid]=val;
+  store.write(data); renderLines(); refreshSummary();
+}
+function clearDayPrice(vid){
+  const b=data.pxn[currentBranch], d=b&&b[currentDate];
+  if(d){ delete d[vid];
+    if(!Object.keys(d).length) delete b[currentDate];
+    if(b && !Object.keys(b).length) delete data.pxn[currentBranch]; }
+  store.write(data); renderLines(); refreshSummary();
+}
+function hasDayPrice(vid){
+  const b=data.pxn[currentBranch], d=b&&b[currentDate];
+  return !!(d && d[vid]!==undefined);
+}
+function refreshDiscUI(){
+  const vid=document.getElementById("selSize").value;
+  const chk=document.getElementById("dayPriceChk"), row=document.getElementById("discRow");
+  if(!chk) return;
+  const on=hasDayPrice(vid);
+  chk.checked=on; row.style.display=on?"flex":"none";
+  if(on && vid){
+    const base=basePriceNoPxn(vid,currentBranch), now=priceOfVar(vid,currentBranch,currentDate);
+    const pct=base>0?Math.round((1-now/base)*10000)/100:0;
+    document.getElementById("discPct").value=(pct>0?pct:"");
+    document.getElementById("discNet").textContent=fmt2(now);
+  }
+}
+document.getElementById("dayPriceChk").addEventListener("change",e=>{
+  const vid=document.getElementById("selSize").value;
+  if(!vid){ e.target.checked=false; return; }
+  if(e.target.checked){
+    const cur=parseFloat(document.getElementById("selPrice").value)||basePriceNoPxn(vid,currentBranch);
+    setDayPrice(vid,cur);
+    document.getElementById("discRow").style.display="flex";
+    document.getElementById("discPct").value="";
+    document.getElementById("discNet").textContent=fmt2(cur);
+    toast("ใช้ราคาเฉพาะวันที่ "+currentDate);
+  } else {
+    clearDayPrice(vid);
+    document.getElementById("discRow").style.display="none";
+    document.getElementById("selPrice").value=priceOfVar(vid,currentBranch,currentDate);
+    toast("กลับไปใช้ราคาปกติ");
+  }
+});
+// ใส่ % ลด -> คำนวณราคาสุทธิให้
+document.getElementById("discPct").addEventListener("input",e=>{
+  const vid=document.getElementById("selSize").value; if(!vid) return;
+  const base=basePriceNoPxn(vid,currentBranch);
+  const pct=parseFloat(e.target.value);
+  const net=isNaN(pct)?base:Math.round(base*(1-pct/100)*100)/100;
+  document.getElementById("discNet").textContent=fmt2(net);
+  document.getElementById("selPrice").value=net;
+  setDayPrice(vid,net);
+});
+document.getElementById("discClr").onclick=()=>{
+  const vid=document.getElementById("selSize").value;
+  document.getElementById("dayPriceChk").checked=false;
+  clearDayPrice(vid);
+  document.getElementById("discRow").style.display="none";
+  if(vid) document.getElementById("selPrice").value=priceOfVar(vid,currentBranch,currentDate);
+};
 document.getElementById("brPriceChk").addEventListener("change",e=>{
   const mid=document.getElementById("selModel").value;
   const v=parseFloat(document.getElementById("selPrice").value);
