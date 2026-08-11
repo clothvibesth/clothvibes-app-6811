@@ -2655,11 +2655,12 @@ function dashData(ym){
   let sales=0,base=0,cost=0,pieces=0;
   Object.values(perChan).forEach(x=>{ sales+=x.sales; base+=x.base; cost+=x.cost; pieces+=x.pieces; });
   const vat=sales-base;
-  const feeOnline=F.comm+F.txn+F.service+F.ship+F.order+(F.ads||0);
+  const ads=F.ads||0;                                    // ค่าโฆษณา แยกก้อนของตัวเอง
+  const feeOnline=F.comm+F.txn+F.service+F.ship+F.order;  // ค่าธรรมเนียมแพลตฟอร์ม (ไม่รวมโฆษณา)
   const gp=E.gpAmt;
   const opex=E.rent+E.elec+E.wage+E.comm;
-  const profit=base-gp-feeOnline-opex-cost;
-  return {ym,sales,base,vat,cost,pieces,gp,feeOnline,opex,profit,perChan,byModel,byDay,est:F.est};
+  const profit=base-gp-feeOnline-ads-opex-cost;
+  return {ym,sales,base,vat,cost,pieces,gp,feeOnline,ads,opex,profit,perChan,byModel,byDay,est:F.est};
 }
 function prevYm(ym){ const [y,m]=ym.split("-").map(Number); const d=new Date(y,m-2,1); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); }
 
@@ -2696,6 +2697,7 @@ function renderDashboard(){
     {n:"กำไรสุทธิ",v:Math.max(D.profit,0),c:"#42d392"},
     {n:"ต้นทุนสินค้า",v:D.cost,c:"#3fb2e8"},
     {n:"ค่าธรรมเนียม/GP",v:D.gp+D.feeOnline,c:"#ffaa33"},
+    {n:"ค่าโฆษณา (AD)",v:D.ads,c:"#ff5c8a"},
     {n:"ค่าใช้จ่าย (เช่า/ไฟ/จ้าง)",v:D.opex,c:"#c9459b"},
     {n:"VAT ขาย",v:D.vat,c:"#8fd6ff"},
   ].filter(x=>x.v>0.5);
@@ -2776,6 +2778,7 @@ function dashCopySummary(){
   L.push("💰 โครงสร้างเงิน");
   if(D.cost>0)      L.push("• ต้นทุนสินค้า: ฿"+fmt2(D.cost)+pct(D.cost));
   if(D.gp+D.feeOnline>0) L.push("• ค่าธรรมเนียม/GP: ฿"+fmt2(D.gp+D.feeOnline)+pct(D.gp+D.feeOnline));
+  if(D.ads>0)       L.push("• ค่าโฆษณา (AD): ฿"+fmt2(D.ads)+pct(D.ads));
   if(D.opex>0)      L.push("• ค่าใช้จ่าย(เช่า/ไฟ/จ้าง): ฿"+fmt2(D.opex)+pct(D.opex));
   L.push("• VAT ขาย: ฿"+fmt2(D.vat)+pct(D.vat));
   L.push("✅ กำไรสุทธิ: ฿"+fmt2(D.profit)+pct(D.profit)+cmp(D.profit,P.profit));
