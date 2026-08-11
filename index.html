@@ -413,16 +413,14 @@
     <input type="file" id="posInput" accept=".xlsx,.xls" hidden autocomplete="off">
     <button class="imp-btn" id="importShBtn">
       <span class="ic">🛒</span>
-      <span class="tx"><b>นำเข้า Shopee</b><small>2 ไฟล์: Order.all + Income รายได้ที่โอนสำเร็จ</small></span>
+      <span class="tx"><b>นำเข้า Shopee</b><small>เลือก 2 ไฟล์พร้อมกัน: Order.all + Income รายได้ที่โอนสำเร็จ</small></span>
     </button>
-    <input type="file" id="shOrderInput" accept=".xlsx,.xls" hidden autocomplete="off">
-    <input type="file" id="shIncomeInput" accept=".xlsx,.xls" hidden autocomplete="off">
+    <input type="file" id="shOrderInput" accept=".xlsx,.xls" multiple hidden autocomplete="off">
     <button class="imp-btn" id="importTkBtn">
       <span class="ic">🎵</span>
-      <span class="tx"><b>นำเข้า TikTok</b><small>2 ไฟล์: ทั้งหมดคำสั่งซื้อ + income</small></span>
+      <span class="tx"><b>นำเข้า TikTok</b><small>เลือก 2 ไฟล์พร้อมกัน: ทั้งหมดคำสั่งซื้อ + income</small></span>
     </button>
-    <input type="file" id="tkOrderInput" accept=".xlsx,.xls" hidden autocomplete="off">
-    <input type="file" id="tkIncomeInput" accept=".xlsx,.xls" hidden autocomplete="off">
+    <input type="file" id="tkOrderInput" accept=".xlsx,.xls" multiple hidden autocomplete="off">
     <button class="imp-btn" id="accFileBtn">
       <span class="ic">📄</span>
       <span class="tx"><b>สร้างไฟล์ส่งบัญชี (สาขาหลัก)</b><small>เลือก 2 ไฟล์พร้อมกัน: NewSaleOrderDetail (เวลา) + AllLiteDetailOrder (เงินสด/KSHOP)</small></span>
@@ -1925,20 +1923,49 @@ function confirmImportOnline(){
 
 // ===== นำเข้า Shopee (ต้องใช้ 2 ไฟล์: Order + Income) =====
 let shOrderRows=null, shIncomeSheet=null;
-function shStartOrder(file){
+// แยกชนิดไฟล์ Shopee เอง (สลับลำดับได้)
+function shKind(wb){
+  if(wb.SheetNames.indexOf("Income")>=0 || wb.SheetNames.indexOf("Summary")>=0) return "income";
+  const sh=wb.Sheets["orders"]||wb.Sheets[wb.SheetNames[0]];
+  const head=(XLSX.utils.sheet_to_json(sh,{header:1,defval:""})[0]||[]).join("|");
+  if(/ราคาขายสุทธิ/.test(head) && /ค่าคอมมิชชั่น/.test(head)) return "order";
+  return "unknown";
+}
+function shTake(file, cb, onErr){
   readSheet(file, wb=>{
-    const sh=wb.Sheets["orders"]||wb.Sheets[wb.SheetNames[0]];
-    shOrderRows=XLSX.utils.sheet_to_json(sh,{defval:""});
-    toast("โหลดไฟล์ Order แล้ว — เลือกไฟล์ Income ต่อ");
-    document.getElementById("shIncomeInput").click();
+    const kind=shKind(wb);
+    if(kind==="order"){
+      const sh=wb.Sheets["orders"]||wb.Sheets[wb.SheetNames[0]];
+      shOrderRows=XLSX.utils.sheet_to_json(sh,{defval:""});
+    } else if(kind==="income"){
+      const sh=wb.Sheets["Income"]||wb.Sheets[wb.SheetNames[0]];
+      shIncomeSheet=XLSX.utils.sheet_to_json(sh,{header:1,defval:""});
+    } else {
+      cb("unknown"); return;
+    }
+    cb(kind);
   });
 }
-function shStartIncome(file){
-  readSheet(file, wb=>{
-    const sh=wb.Sheets["Income"]||wb.Sheets[wb.SheetNames[0]];
-    shIncomeSheet=XLSX.utils.sheet_to_json(sh,{header:1,defval:""});
-    buildImportShopeeJoin();
+// รับหลายไฟล์พร้อมกัน (ไม่ต้องสนลำดับ)
+function shStartFiles(fileList){
+  shOrderRows=shIncomeSheet=null;
+  const files=[].slice.call(fileList);
+  let done=0, bad=[];
+  files.forEach(f=>{
+    shTake(f, kind=>{ if(kind==="unknown") bad.push(f.name);
+      if(++done===files.length) shFinish(bad); },
+      ()=>{ bad.push(f.name); if(++done===files.length) shFinish(bad); });
   });
+}
+function shFinish(bad){
+  if(shOrderRows && shIncomeSheet){ buildImportShopeeJoin(); return; }
+  let msg="⚠️ ยังนำเข้าไม่ได้\n\n";
+  msg+= shOrderRows ? "✔ ได้ไฟล์ Order แล้ว\n✘ ขาดไฟล์ Income (รายได้ที่โอนสำเร็จ)"
+      : shIncomeSheet ? "✔ ได้ไฟล์ Income แล้ว\n✘ ขาดไฟล์ Order (Order.all)"
+      : "✘ ไม่พบไฟล์ Shopee ที่ใช้ได้";
+  if(bad.length) msg+="\n\nไฟล์ที่อ่านไม่ได้: "+bad.join(", ");
+  msg+="\n\nกดปุ่ม 🛒 นำเข้า Shopee แล้วเลือก 2 ไฟล์พร้อมกัน";
+  alert(msg);
 }
 function buildImportShopeeJoin(){
   if(!shOrderRows||!shIncomeSheet){ alert("ต้องมีทั้งไฟล์ Order และ Income"); return; }
@@ -1993,9 +2020,8 @@ function buildImportShopeeJoin(){
   shOrderRows=shIncomeSheet=null;
   showImportOnline();
 }
-document.getElementById("importShBtn").onclick=()=>document.getElementById("shOrderInput").click();
-document.getElementById("shOrderInput").onchange=e=>{ const f=e.target.files&&e.target.files[0]; if(f){ shStartOrder(f); e.target.value=""; } };
-document.getElementById("shIncomeInput").onchange=e=>{ const f=e.target.files&&e.target.files[0]; if(f){ shStartIncome(f); e.target.value=""; } };
+document.getElementById("importShBtn").onclick=()=>{ shOrderRows=shIncomeSheet=null; document.getElementById("shOrderInput").click(); };
+document.getElementById("shOrderInput").onchange=e=>{ const fs=e.target.files; if(fs&&fs.length){ shStartFiles(fs); } e.target.value=""; };
 
 // ===== นำเข้า TikTok (ต้องใช้ 2 ไฟล์: Order + Income) =====
 let tkOrderRows=null, tkIncomeRows=null;
@@ -2005,20 +2031,40 @@ function readSheet(file, cb){
     cb(wb); }catch(err){ alert("อ่านไฟล์ไม่สำเร็จ: "+err.message); } };
   rd.readAsArrayBuffer(file);
 }
-function tkStartOrder(file){
-  readSheet(file, wb=>{
-    const sh=wb.Sheets["OrderSKUList"]||wb.Sheets[wb.SheetNames[0]];
-    tkOrderRows=XLSX.utils.sheet_to_json(sh,{header:1,defval:""});
-    toast("โหลดไฟล์ Order แล้ว — เลือกไฟล์ Income ต่อ");
-    document.getElementById("tkIncomeInput").click();
+// แยกชนิดไฟล์ TikTok เอง (สลับลำดับได้)
+function tkKind(wb){
+  if(wb.SheetNames.indexOf("OrderSKUList")>=0) return "order";
+  if(wb.SheetNames.indexOf("รายละเอียดคำสั่งซื้อ")>=0) return "income";
+  const sh=wb.Sheets[wb.SheetNames[0]];
+  const g=XLSX.utils.sheet_to_json(sh,{header:1,defval:""});
+  const head=(g[0]||[]).concat(g[1]||[]).join("|");
+  if(/Seller SKU|SKU Subtotal/i.test(head)) return "order";
+  if(/ยอดรวมค่าสินค้าก่อนหักส่วนลด|ประเภท/.test(head)) return "income";
+  return "unknown";
+}
+function tkStartFiles(fileList){
+  tkOrderRows=tkIncomeRows=null;
+  const files=[].slice.call(fileList);
+  let done=0, bad=[];
+  files.forEach(f=>{
+    readSheet(f, wb=>{
+      const kind=tkKind(wb);
+      if(kind==="order") tkOrderRows=XLSX.utils.sheet_to_json(wb.Sheets["OrderSKUList"]||wb.Sheets[wb.SheetNames[0]],{header:1,defval:""});
+      else if(kind==="income") tkIncomeRows=XLSX.utils.sheet_to_json(wb.Sheets["รายละเอียดคำสั่งซื้อ"]||wb.Sheets[wb.SheetNames[0]],{header:1,defval:""});
+      else bad.push(f.name);
+      if(++done===files.length) tkFinish(bad);
+    });
   });
 }
-function tkStartIncome(file){
-  readSheet(file, wb=>{
-    const sh=wb.Sheets["รายละเอียดคำสั่งซื้อ"]||wb.Sheets[wb.SheetNames[0]];
-    tkIncomeRows=XLSX.utils.sheet_to_json(sh,{header:1,defval:""});
-    buildImportTikTok();
-  });
+function tkFinish(bad){
+  if(tkOrderRows && tkIncomeRows){ buildImportTikTok(); return; }
+  let msg="⚠️ ยังนำเข้าไม่ได้\n\n";
+  msg+= tkOrderRows ? "✔ ได้ไฟล์ Order แล้ว\n✘ ขาดไฟล์ income"
+      : tkIncomeRows ? "✔ ได้ไฟล์ income แล้ว\n✘ ขาดไฟล์ ทั้งหมดคำสั่งซื้อ"
+      : "✘ ไม่พบไฟล์ TikTok ที่ใช้ได้";
+  if(bad.length) msg+="\n\nไฟล์ที่อ่านไม่ได้: "+bad.join(", ");
+  msg+="\n\nกดปุ่มนำเข้า TikTok แล้วเลือก 2 ไฟล์พร้อมกัน";
+  alert(msg);
 }
 function tkDate(v){
   const s=String(v).split(" ")[0];
@@ -2074,9 +2120,8 @@ function buildImportTikTok(){
   tkOrderRows=tkIncomeRows=null;
   showImportOnline();
 }
-document.getElementById("importTkBtn").onclick=()=>document.getElementById("tkOrderInput").click();
-document.getElementById("tkOrderInput").onchange=e=>{ const f=e.target.files&&e.target.files[0]; if(f){ tkStartOrder(f); e.target.value=""; } };
-document.getElementById("tkIncomeInput").onchange=e=>{ const f=e.target.files&&e.target.files[0]; if(f){ tkStartIncome(f); e.target.value=""; } };
+document.getElementById("importTkBtn").onclick=()=>{ tkOrderRows=tkIncomeRows=null; document.getElementById("tkOrderInput").click(); };
+document.getElementById("tkOrderInput").onchange=e=>{ const fs=e.target.files; if(fs&&fs.length){ tkStartFiles(fs); } e.target.value=""; };
 
 function labelTotal(list, br){   // ราคาป้ายรวมของออเดอร์ (ตามสาขาที่เลือก)
   return list.reduce((s,x)=>s+priceLabel(x.vid,br)*x.qty,0);
