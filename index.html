@@ -1951,6 +1951,7 @@ function renderImportOnline(){
     '<div class="big">฿'+fmt2(netTot)+'</div>'+
     '<div class="sub">'+fmt(pieces)+' ชิ้น · '+impData.items.length+' รายการ</div>'+
     '<div class="rep-vat">ก่อน VAT ฿'+fmt2(base)+' · VAT 7% ฿'+fmt2(netTot-base)+'</div>'+
+    ((impData.ret&&impData.ret.qty>0)?'<div class="rep-vat" style="color:#c0392b">↩️ ตัดของตีกลับออกแล้ว '+fmt(impData.ret.qty)+' ชิ้น (฿'+fmt2(impData.ret.amt)+') — ไม่นับเป็นยอดขาย</div>':'')+
     '<div class="rep-vat">ค่าธรรมเนียม: คอมฯ ฿'+fmt2(F.comm)+' · txn ฿'+fmt2(F.txn)+' · บริการ ฿'+fmt2(F.service)+
       ((F.order||0)>0?' · ค่าคำสั่งซื้อ ฿'+fmt2(F.order):'')+((F.ship||0)>0?' · ค่าส่ง ฿'+fmt2(F.ship):'')+
       ((F.ads||0)>0?' · <b>โฆษณา ฿'+fmt2(F.ads)+'</b>':'')+'</div>'+
@@ -2087,11 +2088,17 @@ function buildImportShopeeJoin(){
   const kStatus=keys.find(k=>k.indexOf("สถานะการสั่งซื้อ")>=0), kOrder=keys[0],
         kDate=keys.find(k=>k.indexOf("วันที่ทำการสั่งซื้อ")>=0),
         kSku=keys.find(k=>k.indexOf("เลขอ้างอิง SKU")>=0),
-        kQty=keys.find(k=>k==="จำนวน")||keys[24], kNet=keys.find(k=>k.indexOf("ราคาขายสุทธิ")>=0);
+        kQty=keys.find(k=>k==="จำนวน")||keys[24], kNet=keys.find(k=>k.indexOf("ราคาขายสุทธิ")>=0),
+        kRetQ=keys.find(k=>k.indexOf("จำนวนที่ส่งคืน")>=0);   // ของตีกลับ
   const items=[], unmatched={}, months={};
   const settledIds=new Set(); let netAll=0, netSettled=0;
+  let retQty=0, retAmt=0;                                   // สรุปของตีกลับ (ไม่นับเป็นยอดขาย)
   shOrderRows.forEach(r=>{
-    if(String(r[kStatus]||"")!=="สำเร็จแล้ว") return;
+    const st=String(r[kStatus]||"");
+    // นับเป็นยอดขาย: สำเร็จแล้ว + ผู้ซื้อได้รับสินค้าแล้ว
+    if(st!=="สำเร็จแล้ว" && st!=="ผู้ซื้อได้รับสินค้าแล้ว") return;
+    // ของตีกลับ: ตัดออกทั้งบรรทัด
+    if(kRetQ && num(r[kRetQ])>0){ retQty+=parseInt(num(r[kRetQ]))||0; retAmt+=num(r[kNet]); return; }
     const oid=String(r[kOrder]||"").trim();
     const sku=String(r[kSku]||""); const vid=matchSku(sku);
     const q=parseInt(num(r[kQty]))||0; if(q<=0) return;
@@ -2110,7 +2117,7 @@ function buildImportShopeeJoin(){
   const netUnsettled=netAll-netSettled, estFee=netUnsettled*pct;
   const eComm=feeReal>0?estFee*(comm/feeReal):estFee, eSvc=feeReal>0?estFee*(service/feeReal):0, eTxn=feeReal>0?estFee*(txn/feeReal):0;
   const ym=Object.keys(months).sort((a,b)=>months[b]-months[a])[0]||"";
-  impData={platform:"Shopee", items, unmatched, ym,
+  impData={platform:"Shopee", items, unmatched, ym, ret:{qty:retQty, amt:Math.round(retAmt*100)/100},
     fees:{comm:Math.round((comm+eComm)*100)/100, service:Math.round((service+eSvc)*100)/100,
           txn:Math.round((txn+eTxn)*100)/100, order:0, ship:0, est:netUnsettled>0.5},
     stat:{settled:settledIds.size, netSettled, netUnsettled}};
@@ -2206,6 +2213,7 @@ function buildImportTikTok(){
   // Order: SKU + วันขาย (ข้ามหัว 1 แถว)
   const items=[], unmatched={}, months={};
   const settledIds=new Set(); let netSettled=0, netAll=0;
+  let tkRetQty=0, tkRetAmt=0;                     // สรุปของตีกลับ
   const feeCommTot={v:0}, feeOrderTot={v:0}, feeShipTot={v:0};
   // รวมค่าธรรมเนียมจาก income ของออเดอร์ที่ปรากฏใน order
   for(let i=1;i<tkOrderRows.length;i++){
@@ -2216,7 +2224,14 @@ function buildImportTikTok(){
     const q=parseInt(num(r[9]))||0; if(q<=0) continue;
     const dt=tkDate(r[24]); if(!/^\d{4}-\d{2}-\d{2}$/.test(dt)) continue;
     months[dt.slice(0,7)]=(months[dt.slice(0,7)]||0)+1;
-    const nsale=num(r[15]);   // SKU Subtotal After Discount
+    // ของตีกลับ: หักยอดคืนจริง (คอลัมน์ 23) — คืนเต็มจะตัดออกทั้งบรรทัด
+    // (แถวยอด 0 ที่ไม่มีการคืน = สินค้าแถม ยังนับเป็นชิ้น เพราะมีต้นทุนจริง)
+    const refund=Math.abs(num(r[23]));
+    let nsale=num(r[15]);
+    if(refund>0.01){
+      nsale-=refund;
+      if(nsale<=0.01){ tkRetQty+=q; tkRetAmt+=num(r[15]); continue; }
+    }
     netAll+=nsale;
     if(!vid){ unmatched[sku]=(unmatched[sku]||0)+q; continue; }
     items.push({dt,vid,qty:q,net:nsale,oid});
@@ -2237,13 +2252,14 @@ function buildImportTikTok(){
   const estShip = feeRealTotal>0 ? estFee*(feeShip/feeRealTotal) : 0;
   const estOther= feeRealTotal>0 ? estFee*(feeOther/feeRealTotal) : 0;
   const ym=Object.keys(months).sort((a,b)=>months[b]-months[a])[0]||"";
-  impData={platform:"TikTok", items, unmatched, ym,
+  impData={platform:"TikTok", items, unmatched, ym, ret:{qty:tkRetQty, amt:Math.round(tkRetAmt*100)/100},
     fees:{comm:Math.round((feeComm+estComm)*100)/100, order:Math.round((feeOrder+estOrder)*100)/100,
           ship:Math.round((feeShip+estShip)*100)/100, txn:0,
           service:Math.round((feeOther+estOther)*100)/100,   // ค่าบริการ/แคมเปญ/แอฟฟิลิเอต
           ads:Math.round(adsTotal*100)/100,                  // ค่าโฆษณา GMV Max (ค่าการตลาด)
           est:netUnsettled>0.5},
-    stat:{settled:settledIds.size, total:new Set(items.map(x=>x.oid)).size, netSettled, netUnsettled, pct}};
+    stat:{settled:settledIds.size, total:new Set(items.map(x=>x.oid)).size, netSettled, netUnsettled, pct,
+          retQty:tkRetQty, retAmt:Math.round(tkRetAmt*100)/100}};
   tkOrderRows=tkIncomeRows=null;
   showImportOnline();
 }
