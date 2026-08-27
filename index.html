@@ -107,6 +107,76 @@
   .brprice-chk{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-soft);margin:6px 2px 2px;cursor:pointer;user-select:none;}
   .brprice-chk input{width:16px;height:16px;accent-color:var(--accent);}
   .brprice-chk small{color:#9aa8b8;}
+  /* หน้าขายเท่าไหร่ดี */
+  .promo-entry{display:block;width:100%;background:linear-gradient(135deg,#141414,#3a3a3a);color:#fff;border:none;border-radius:16px;padding:14px 16px;font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.22);margin-bottom:14px;text-align:left;}
+  .promo-entry small{display:block;font-family:"Prompt",sans-serif;font-weight:400;font-size:11.5px;opacity:.8;margin-top:3px;}
+  .promo-entry:active{transform:scale(.98);}
+  #screen-promo .rep-head{display:flex;align-items:center;gap:11px;padding:6px 0 12px;}
+  #screen-promo .rep-logo{height:30px;width:auto;max-width:150px;flex:none;}
+  #screen-promo .rep-ttl{font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:19px;color:var(--ink);}
+  .cpn-wrap{display:flex;gap:11px;flex-wrap:wrap;margin-bottom:12px;}
+  .cpn{flex:1 1 calc(50% - 6px);min-width:230px;background:#fff5f5;border:1px dashed #f0a8a8;border-radius:12px;padding:12px 14px;}
+  .cpn-t{color:#e0403a;font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:14.5px;}
+  .cpn-l{color:#e0403a;font-size:12px;margin-top:5px;line-height:2;}
+  .cpn-l input{width:62px;border:1px solid #f0a8a8;border-radius:7px;padding:3px 6px;font-family:inherit;font-size:12.5px;text-align:center;background:#fff;color:#c0392b;font-weight:600;}
+  .cpn-l input:focus{outline:none;border-color:#e0403a;}
+  .cpn-hr{border-top:1px dashed #f0a8a8;margin:9px 0 8px;}
+  .cpn-s{font-size:11.5px;color:#6b5555;line-height:1.8;}
+  .cpn-s b{color:#c0392b;}
+  .cp-r{display:flex;align-items:center;gap:5px;padding:9px 10px;border-bottom:1px solid var(--line);font-size:12.5px;}
+  .cp-r:last-child{border-bottom:none;}
+  .cp-r.head{background:#f4f8fc;font-size:10.5px;color:var(--ink-soft);}
+  .cp-r .nm{flex:1.9;min-width:0;}
+  .cp-r .nm b{display:block;font-weight:500;font-size:12.5px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .cp-r .nm small{display:block;font-size:10px;color:#9aa8b8;margin-top:1px;white-space:nowrap;}
+  .cp-r .v{flex:0.92;text-align:right;font-family:"Bai Jamjuree",sans-serif;font-weight:600;font-size:12px;white-space:nowrap;}
+  .cp-r .tag{flex:0 0 20px;text-align:center;font-size:13px;}
+  .cp-r.ok{background:#f4fdf8;} .cp-r.no{background:#fff5f3;}
+  .cp-sum{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--line);}
+  .cp-sum:last-child{border-bottom:none;}
+  .cp-sum b{font-family:"Bai Jamjuree",sans-serif;}
+  .cp-be{background:var(--accent-soft);border-radius:11px;padding:11px 13px;margin-top:10px;font-size:12.5px;line-height:1.7;}
+  #screen-price .rep-head{display:flex;align-items:center;gap:11px;padding:6px 0 12px;}
+  #screen-price .rep-logo{height:30px;width:auto;max-width:150px;flex:none;}
+  #screen-price .rep-ttl{font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:19px;color:var(--ink);}
+  .price-entry{background:linear-gradient(135deg,#ffb020,#ff8a00)!important;color:#fff!important;}
+  .pr-chk{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-soft);margin-top:4px;cursor:pointer;user-select:none;}
+  .pr-chk input{width:17px;height:17px;accent-color:var(--accent);}
+  .pr-note{font-size:11.5px;color:var(--ink-soft);margin-top:8px;line-height:1.55;}
+  .pr-tb{background:var(--card);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:12px;}
+  .try-box{background:linear-gradient(140deg,#fff8ec,#fff);border:2px solid #ffc978;border-radius:18px;padding:15px 15px 13px;margin:0 0 16px;box-shadow:0 8px 22px rgba(255,160,20,.16);}
+  .try-h{font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:15.5px;color:#c25e00;margin-bottom:11px;}
+  .try-in{display:flex;align-items:center;gap:8px;}
+  .try-lbl{font-size:13px;color:var(--ink-soft);flex:none;}
+  .try-baht{font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:20px;color:#c25e00;flex:none;}
+  .try-in input{flex:1;min-width:0;border:2px solid #ffd9a0;border-radius:12px;padding:11px 13px;font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:22px;color:var(--ink);background:#fff;text-align:left;}
+  .try-in input:focus{outline:none;border-color:#ff9f1a;box-shadow:0 0 0 3px rgba(255,159,26,.15);}
+  .try-clr{flex:none;background:#fff;border:1px solid #ffd9a0;border-radius:10px;color:#c25e00;font-family:inherit;font-size:12px;padding:9px 12px;cursor:pointer;}
+  .try-hint{font-size:11.5px;color:var(--ink-soft);margin-top:8px;}
+  .try-box .pr-tb{box-shadow:none;border:1px solid #ffe3bb;margin:11px 0 0;}
+  .try-box .pr-r.head{background:#fff3e0;color:#a8681a;}
+  .pr-r{display:flex;align-items:center;gap:9px;padding:11px 13px;border-bottom:1px solid var(--line);font-size:13px;}
+  .pr-r:last-child{border-bottom:none;}
+  .pr-r.head{background:#f4f8fc;font-size:11.5px;color:var(--ink-soft);font-weight:500;}
+  .pr-r{gap:6px;padding:11px 11px;}
+  .pr-r .ch{flex:1.05;min-width:0;}
+  .pr-r .ch b{white-space:nowrap;}
+  .pr-r .ch b{font-weight:500;}
+  .pr-r .ch small{display:block;font-size:10.5px;color:var(--ink-soft);}
+  .pr-r .c{flex:1;text-align:right;font-family:"Bai Jamjuree",sans-serif;font-weight:600;font-size:12.5px;white-space:nowrap;}
+  .pr-r.head .c{white-space:normal;line-height:1.3;}
+  .pr-r .c.now{color:var(--ink);}
+  .pr-r .c.should{color:var(--accent-deep);}
+  .pr-r .c.gm{font-size:13.5px;}
+  .gm-ok{color:#1ba672;} .gm-warn{color:#e08a00;} .gm-bad{color:var(--minus);}
+  .pr-badge{display:block;font-size:9.5px;padding:1px 6px;border-radius:20px;margin-top:3px;width:fit-content;margin-left:auto;}
+  .pr-badge.up{background:#ffe9d6;color:#c25e00;}
+  .pr-badge.good{background:#e2f7ee;color:#0e7a52;}
+  .pr-all-r{display:flex;align-items:center;gap:8px;padding:9px 13px;border-bottom:1px solid var(--line);font-size:12.5px;}
+  .pr-all-r:last-child{border-bottom:none;}
+  .pr-all-r.head{background:#f4f8fc;font-size:11px;color:var(--ink-soft);}
+  .pr-all-r .nm{flex:1.6;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .pr-all-r .v{flex:1;text-align:right;font-family:"Bai Jamjuree",sans-serif;font-weight:600;}
   /* หน้าค่าใช้จ่าย: accordion */
   .exp-sec{background:var(--card);border-radius:16px;box-shadow:var(--shadow);margin:0 0 12px;overflow:hidden;}
   .exp-sec-online{opacity:.9;}
@@ -422,6 +492,7 @@
       <span class="tx"><b>TikTok</b><small>ออนไลน์ · หักค่าธรรมเนียม</small></span>
     </button>
   </div>
+  <button class="report-entry price-entry" id="priceBtnH">💡 ขายเท่าไหร่ดี?</button>
   <button class="report-entry" id="reportBtnSimpleH">📊 รายงาน / ดึงข้อมูลตามช่วงเวลา</button>
   <button class="report-entry alt" id="reportBtnDetailH">📒 รายงานการขายแบบละเอียด</button>
   <div class="import-section">
@@ -607,6 +678,125 @@
   <div class="foot">สาขาหลัก = ไม่มี GP (มีค่าเช่า/ค่าไฟ) · บูท = มี GP (ไม่มีค่าเช่า/ค่าไฟ)</div>
 </div>
 
+<!-- ===== ขายเท่าไหร่ดี? (Master file ราคา) ===== -->
+<div id="screen-price" class="wrap" style="display:none">
+  <div class="rep-head"><img id="logoPrice" class="rep-logo" alt=""><div class="rep-ttl">ขายเท่าไหร่ดี?</div></div>
+
+  <div class="rep-card">
+    <div class="rep-row">
+      <div class="rep-field"><label>เลือกรุ่นสินค้า</label><select id="prModel" autocomplete="off"></select></div>
+      <div class="rep-field"><label>ไซส์ (ทุนต่างกัน)</label><select id="prSize" autocomplete="off"></select></div>
+    </div>
+    <div class="rep-row">
+      <div class="rep-field"><label>ต้นทุน/ชิ้น (ก่อน VAT)</label><input type="number" id="prCost" inputmode="decimal" autocomplete="off"></div>
+      <div class="rep-field"><label>กำไรเป้าหมาย %</label><input type="number" id="prTarget" inputmode="decimal" value="35" autocomplete="off"></div>
+    </div>
+    <label class="pr-chk"><input type="checkbox" id="prAds" autocomplete="off"> รวมค่าโฆษณาในการคำนวณ (ออนไลน์)</label>
+    <div class="pr-note" id="prNote"></div>
+  </div>
+
+  <button class="promo-entry" id="promoBtn">🎯 ตั้งราคาโปร TikTok<small>จำลองแคมเปญคูปองหาร ก่อนตัดสินใจลง</small></button>
+
+  <div class="try-box">
+    <div class="try-h">🧮 ลองปรับราคา</div>
+    <div class="try-in">
+      <span class="try-lbl">ถ้าตั้งราคา</span>
+      <span class="try-baht">฿</span>
+      <input type="number" id="prTry" inputmode="decimal" placeholder="0" autocomplete="off">
+      <button type="button" class="try-clr" id="prTryClr">ล้าง</button>
+    </div>
+    <div class="try-hint">พิมพ์ราคาที่คิดจะตั้ง (รวม VAT) แล้วดูกำไรทุกช่องทางทันที</div>
+    <div id="prTryOut"></div>
+  </div>
+
+  <div class="rep-sec">ราคาปัจจุบัน vs ราคาที่ควรขาย</div>
+  <div id="prTable"></div>
+
+  <div class="rep-sec">ตั้งค่าค่าธรรมเนียมแต่ละช่องทาง (%)</div>
+  <div class="rep-card">
+    <div class="rep-row">
+      <div class="rep-field"><label>Shopee</label><input type="number" id="fee_shopee" inputmode="decimal" autocomplete="off"></div>
+      <div class="rep-field"><label>TikTok</label><input type="number" id="fee_tiktok" inputmode="decimal" autocomplete="off"></div>
+      <div class="rep-field"><label>GP บูท</label><input type="number" id="fee_booth" inputmode="decimal" autocomplete="off"></div>
+    </div>
+    <div class="rep-row">
+      <div class="rep-field"><label>ค่าโฆษณา Shopee</label><input type="number" id="ads_shopee" inputmode="decimal" autocomplete="off"></div>
+      <div class="rep-field"><label>ค่าโฆษณา TikTok</label><input type="number" id="ads_tiktok" inputmode="decimal" autocomplete="off"></div>
+      <div class="rep-field"><label>ค่าใช้จ่ายหน้าร้าน</label><input type="number" id="fee_main" inputmode="decimal" autocomplete="off"></div>
+    </div>
+    <div class="pr-note">ค่าเริ่มต้นมาจากข้อมูลจริงเดือน ก.ค. 2569 · GP บูทหักจากฐานก่อน VAT (ตรงกับใบกำกับที่ส่งห้าง)</div>
+    <div class="rep-acts"><button id="prReset">คืนค่าเริ่มต้น</button></div>
+  </div>
+
+  <div class="rep-sec">เทียบทุกรุ่น (กำไร % ตามราคาปัจจุบัน)</div>
+  <div id="prAll"></div>
+
+  <div class="rep-acts"><button id="prBack">‹ กลับหน้าแรก</button></div>
+  <div class="foot">ตัวช่วยตัดสินใจตั้งราคา · ยังไม่ได้รวมค่าเช่า/ค่าไฟ/เงินเดือน (ดูกำไรสุทธิจริงที่รายงาน)</div>
+</div>
+
+<!-- ===== ตั้งราคาโปร TikTok ===== -->
+<div id="screen-promo" class="wrap" style="display:none">
+  <div class="rep-head"><img id="logoPromo" class="rep-logo" alt=""><div class="rep-ttl">ตั้งราคาโปร TikTok</div></div>
+
+  <div class="rep-card">
+    <div class="rep-row">
+      <div class="rep-field"><label>ส่วนลด %</label><input type="number" id="cpDisc" inputmode="decimal" value="25" autocomplete="off"></div>
+      <div class="rep-field"><label>เราออก % (ที่เหลือแพลตฟอร์มออก)</label><input type="number" id="cpShare" inputmode="decimal" value="35" autocomplete="off"></div>
+    </div>
+    <div class="pr-note" id="cpNote"></div>
+  </div>
+
+  <div class="rep-sec">เงื่อนไขแคมเปญ</div>
+  <div class="cpn-wrap">
+    <div class="cpn">
+      <div class="cpn-t">ส่วนลด <span id="cpD1">25%</span></div>
+      <div class="cpn-l">สูงสุด ฿<input type="number" id="cpCap1" value="750" autocomplete="off">, สำหรับคำสั่งซื้อที่มีมูลค่า ≥ ฿<input type="number" id="cpMin1" value="999" autocomplete="off"></div>
+      <div class="cpn-hr"></div>
+      <div class="cpn-s">ลูกค้าทุกราย</div>
+      <div class="cpn-s">อัตราส่วนเงินทุนร่วม: แพลตฟอร์ม <b id="cpP1">65%</b> / ผู้ขาย <b id="cpS1">35%</b></div>
+      <div class="cpn-s">เงินสนับสนุนสูงสุดจากผู้ขาย: <b id="cpO1">฿262.50</b></div>
+    </div>
+    <div class="cpn">
+      <div class="cpn-t">ส่วนลด <span id="cpD2">25%</span></div>
+      <div class="cpn-l">สูงสุด ฿<input type="number" id="cpCap2" value="375" autocomplete="off">, สำหรับคำสั่งซื้อที่มีมูลค่า ≥ ฿<input type="number" id="cpMin2" value="499" autocomplete="off"></div>
+      <div class="cpn-hr"></div>
+      <div class="cpn-s">ลูกค้าทุกราย</div>
+      <div class="cpn-s">อัตราส่วนเงินทุนร่วม: แพลตฟอร์ม <b id="cpP2">65%</b> / ผู้ขาย <b id="cpS2">35%</b></div>
+      <div class="cpn-s">เงินสนับสนุนสูงสุดจากผู้ขาย: <b id="cpO2">฿131.25</b></div>
+    </div>
+    <div class="cpn">
+      <div class="cpn-t">ส่วนลด <span id="cpD3">25%</span></div>
+      <div class="cpn-l">สูงสุด ฿<input type="number" id="cpCap3" value="150" autocomplete="off">, สำหรับคำสั่งซื้อที่มีมูลค่า ≥ ฿<input type="number" id="cpMin3" value="199" autocomplete="off"></div>
+      <div class="cpn-hr"></div>
+      <div class="cpn-s">ลูกค้าทุกราย</div>
+      <div class="cpn-s">อัตราส่วนเงินทุนร่วม: แพลตฟอร์ม <b id="cpP3">65%</b> / ผู้ขาย <b id="cpS3">35%</b></div>
+      <div class="cpn-s">เงินสนับสนุนสูงสุดจากผู้ขาย: <b id="cpO3">฿52.50</b></div>
+    </div>
+    <div class="cpn">
+      <div class="cpn-t">ส่วนลด <span id="cpD4">25%</span></div>
+      <div class="cpn-l">สูงสุด ฿<input type="number" id="cpCap4" value="75" autocomplete="off">, สำหรับคำสั่งซื้อที่มีมูลค่า ≥ ฿<input type="number" id="cpMin4" value="99" autocomplete="off"></div>
+      <div class="cpn-hr"></div>
+      <div class="cpn-s">ลูกค้าทุกราย</div>
+      <div class="cpn-s">อัตราส่วนเงินทุนร่วม: แพลตฟอร์ม <b id="cpP4">65%</b> / ผู้ขาย <b id="cpS4">35%</b></div>
+      <div class="cpn-s">เงินสนับสนุนสูงสุดจากผู้ขาย: <b id="cpO4">฿26.25</b></div>
+    </div>
+  </div>
+
+  <div class="rep-card">
+    <div class="rep-row">
+      <div class="rep-field"><label>ค่าธรรมเนียม TikTok %</label><input type="number" id="cpFee" inputmode="decimal" value="26.3" autocomplete="off"></div>
+      <div class="rep-field"><label>ผ่านถ้าต้องขายเพิ่ม ≤ %</label><input type="number" id="cpPass" inputmode="decimal" value="18" autocomplete="off"></div>
+    </div>
+  </div>
+
+  <div class="rep-sec">ผลต่อกำไรรายรุ่น</div>
+  <div id="cpTable"></div>
+
+  <div class="rep-acts"><button id="cpBack">‹ กลับ</button></div>
+  <div class="foot">ตัวเลขจำลอง · ยังไม่รวมค่าบริการแคมเปญที่แพลตฟอร์มอาจเก็บเพิ่ม</div>
+</div>
+
 <!-- ===== Dashboard ภาพรวมยอดขาย (ธีมดำ) ===== -->
 <div id="screen-dash">
   <div class="dash-head">
@@ -756,7 +946,7 @@
 </div>
 
 <script>
-const CATALOG = [{"id":"m01","name":"กางเกง Premium Snow","code":"PMS","price":490,"sizes":[{"id":"m01s01","size":"28","cost":165},{"id":"m01s02","size":"30","cost":165},{"id":"m01s03","size":"32","cost":165},{"id":"m01s04","size":"34","cost":165},{"id":"m01s05","size":"36","cost":175},{"id":"m01s06","size":"38","cost":175},{"id":"m01s07","size":"40","cost":190},{"id":"m01s08","size":"42","cost":190},{"id":"m01s09","size":"44","cost":210,"pm":490},{"id":"m01s10","size":"46","cost":210,"pm":490}],"pmain":450},{"id":"m02","name":"กางเกง STRETCH เอวยืด","code":"STRETCH","price":790,"sizes":[{"id":"m02s01","size":"28","cost":250},{"id":"m02s02","size":"30","cost":250},{"id":"m02s03","size":"32","cost":250},{"id":"m02s04","size":"34","cost":250},{"id":"m02s05","size":"36","cost":250},{"id":"m02s06","size":"38","cost":250},{"id":"m02s07","size":"40","cost":250},{"id":"m02s08","size":"42","cost":250},{"id":"m02s09","size":"44","cost":250},{"id":"m02s10","size":"46","cost":250}],"pmain":690},{"id":"m03","name":"กางเกง Signature","code":"SIG","price":690,"sizes":[{"id":"m03s01","size":"28","cost":180},{"id":"m03s02","size":"30","cost":180},{"id":"m03s03","size":"32","cost":180},{"id":"m03s04","size":"34","cost":180},{"id":"m03s05","size":"36","cost":190},{"id":"m03s06","size":"38","cost":190},{"id":"m03s07","size":"40","cost":210},{"id":"m03s08","size":"42","cost":210},{"id":"m03s09","size":"44","cost":235,"pm":650},{"id":"m03s10","size":"46","cost":235,"pm":650},{"id":"m03s11","size":"48","cost":235,"pm":690}],"pmain":590},{"id":"m04","name":"กางเกง Premium IVY","code":"TP","price":490,"sizes":[{"id":"m04s01","size":"28","cost":170},{"id":"m04s02","size":"30","cost":170},{"id":"m04s03","size":"32","cost":170},{"id":"m04s04","size":"34","cost":170},{"id":"m04s05","size":"36","cost":170},{"id":"m04s06","size":"38","cost":170},{"id":"m04s07","size":"40","cost":175},{"id":"m04s08","size":"42","cost":175},{"id":"m04s09","size":"44","cost":185,"pm":450},{"id":"m04s10","size":"46","cost":185,"pm":450}],"pmain":390},{"id":"m05","name":"กางเกง Premium Smart","code":"PM","price":590,"sizes":[{"id":"m05s01","size":"28","cost":175},{"id":"m05s02","size":"30","cost":175},{"id":"m05s03","size":"32","cost":175},{"id":"m05s04","size":"34","cost":175},{"id":"m05s05","size":"36","cost":185},{"id":"m05s06","size":"38","cost":185},{"id":"m05s07","size":"40","cost":200},{"id":"m05s08","size":"42","cost":200}],"pmain":550},{"id":"m06","name":"กางเกง Deluxe","code":"DLS","price":790,"sizes":[{"id":"m06s01","size":"28","cost":250},{"id":"m06s02","size":"30","cost":250},{"id":"m06s03","size":"32","cost":250},{"id":"m06s04","size":"34","cost":250},{"id":"m06s05","size":"36","cost":250},{"id":"m06s06","size":"38","cost":250},{"id":"m06s07","size":"40","cost":250},{"id":"m06s08","size":"42","cost":250}],"pmain":690},{"id":"m07","name":"กางเกง Refined","code":"Refined","price":890,"sizes":[{"id":"m07s01","size":"28","cost":250},{"id":"m07s02","size":"30","cost":250},{"id":"m07s03","size":"32","cost":250},{"id":"m07s04","size":"34","cost":250},{"id":"m07s05","size":"36","cost":250},{"id":"m07s06","size":"38","cost":250},{"id":"m07s07","size":"40","cost":250},{"id":"m07s08","size":"42","cost":250}],"pmain":790},{"id":"m08","name":"กางเกงขาสั้น","code":"CSP","price":590,"sizes":[{"id":"m08s01","size":"30","cost":160},{"id":"m08s02","size":"32","cost":160},{"id":"m08s03","size":"34","cost":160},{"id":"m08s04","size":"36","cost":160},{"id":"m08s05","size":"38","cost":160},{"id":"m08s06","size":"40","cost":160},{"id":"m08s07","size":"42","cost":160}],"pmain":450},{"id":"m09","name":"กางเกงสูท Pario","code":"PARIO-Pants","price":1290,"sizes":[{"id":"m09s01","size":"30","cost":490},{"id":"m09s02","size":"32","cost":490},{"id":"m09s03","size":"34","cost":490},{"id":"m09s04","size":"36","cost":490},{"id":"m09s05","size":"38","cost":490},{"id":"m09s06","size":"40","cost":490},{"id":"m09s07","size":"42","cost":490}],"pmain":1090},{"id":"m10","name":"เสื้อสูท Pario","code":"PARIO-Suits","price":1990,"sizes":[{"id":"m10s01","size":"M(50)","cost":690},{"id":"m10s02","size":"L(52)","cost":690},{"id":"m10s03","size":"XL(54)","cost":690},{"id":"m10s04","size":"2XL(56)","cost":690},{"id":"m10s05","size":"3XL(58)","cost":690},{"id":"m10s06","size":"4XL(60)","cost":690},{"id":"m10s07","size":"5XL(62)","cost":690}],"pmain":1990},{"id":"m11","name":"เสื้อสูท Chato (M-4XL)","code":"Suits","price":1790,"sizes":[{"id":"m11s01","size":"M(50)","cost":590},{"id":"m11s02","size":"L(52)","cost":590},{"id":"m11s03","size":"XL(54)","cost":590},{"id":"m11s04","size":"2XL(56)","cost":590},{"id":"m11s05","size":"3XL(58)","cost":590},{"id":"m11s06","size":"4XL(60)","cost":690}],"pmain":1590},{"id":"m12","name":"เสื้อสูท Chato (5-6XL)","code":"Suits","price":1990,"sizes":[{"id":"m12s01","size":"5XL(62)","cost":720},{"id":"m12s02","size":"6XL(64)","cost":720}],"pmain":1890},{"id":"m13","name":"เสื้อสูท Chato (7XL)","code":"Suits","price":2090,"sizes":[{"id":"m13s01","size":"7XL(66)","cost":740}],"pmain":2090},{"id":"m14","name":"เสื้อโปโล","code":"Polo","price":490,"sizes":[{"id":"m14s01","size":"M","cost":135},{"id":"m14s02","size":"L","cost":145},{"id":"m14s03","size":"XL","cost":155},{"id":"m14s04","size":"2XL","cost":165},{"id":"m14s05","size":"3XL","cost":175}],"pmain":350},{"id":"m15","name":"Cooltech Polo","code":"COOLPOLO","price":790,"sizes":[{"id":"m15s01","size":"M","cost":350},{"id":"m15s02","size":"L","cost":350},{"id":"m15s03","size":"XL","cost":350},{"id":"m15s04","size":"2XL","cost":350},{"id":"m15s05","size":"3XL","cost":350}],"pmain":690},{"id":"m16","name":"Non Iron Shirt","code":"NONIRONSHIRT","price":890,"sizes":[{"id":"m16s01","size":"M","cost":250},{"id":"m16s02","size":"L","cost":250},{"id":"m16s03","size":"XL","cost":250},{"id":"m16s04","size":"2XL","cost":250},{"id":"m16s05","size":"3XL","cost":250}],"pmain":790},{"id":"m17","name":"เสื้อเชิ้ตลินิน","code":"LININSHIRT","price":990,"sizes":[{"id":"m17s01","size":"M(42)","cost":300},{"id":"m17s02","size":"L(44)","cost":300},{"id":"m17s03","size":"XL(46)","cost":300},{"id":"m17s04","size":"2XL(48)","cost":300}],"pmain":690},{"id":"m18","name":"เสื้อเชิ้ต (รุ่นเก่า)","code":"SOS","price":490,"sizes":[{"id":"m18s01","size":"M","cost":130},{"id":"m18s02","size":"L","cost":140},{"id":"m18s03","size":"XL","cost":150},{"id":"m18s04","size":"2XL","cost":160},{"id":"m18s05","size":"3XL","cost":170}],"pmain":350},{"id":"m19","name":"กางเกง ESSENTIAL","code":"ESSENTIAL","price":1090,"sizes":[{"id":"m19s01","size":"28","cost":350},{"id":"m19s02","size":"30","cost":350},{"id":"m19s03","size":"32","cost":350},{"id":"m19s04","size":"34","cost":350},{"id":"m19s05","size":"36","cost":350},{"id":"m19s06","size":"38","cost":350},{"id":"m19s07","size":"40","cost":350},{"id":"m19s08","size":"42","cost":350}],"pmain":990},{"id":"m20","name":"เสื้อสูท Ceremony","code":"CEREMONY-Suits","price":2090,"sizes":[{"id":"m20s01","size":"M(50)","cost":690},{"id":"m20s02","size":"L(52)","cost":690},{"id":"m20s03","size":"XL(54)","cost":690},{"id":"m20s04","size":"2XL(56)","cost":690},{"id":"m20s05","size":"3XL(58)","cost":690},{"id":"m20s06","size":"4XL(60)","cost":690},{"id":"m20s07","size":"5XL(62)","cost":690}],"pmain":2090},{"id":"m21","name":"กางเกงสูท Ceremony","code":"CEREMONY-Pants","price":1290,"sizes":[{"id":"m21s01","size":"30","cost":390},{"id":"m21s02","size":"32","cost":390},{"id":"m21s03","size":"34","cost":390},{"id":"m21s04","size":"36","cost":390},{"id":"m21s05","size":"38","cost":390},{"id":"m21s06","size":"40","cost":390},{"id":"m21s07","size":"42","cost":390}],"pmain":1290}];
+const CATALOG = [{"id":"m01","name":"กางเกง Premium Snow","code":"PMS","price":490,"sizes":[{"id":"m01s01","size":"28","cost":165},{"id":"m01s02","size":"30","cost":165},{"id":"m01s03","size":"32","cost":165},{"id":"m01s04","size":"34","cost":165},{"id":"m01s05","size":"36","cost":175},{"id":"m01s06","size":"38","cost":175},{"id":"m01s07","size":"40","cost":190},{"id":"m01s08","size":"42","cost":190},{"id":"m01s09","size":"44","cost":210,"pm":490,"ptiktok":550,"pshopee":790},{"id":"m01s10","size":"46","cost":210,"pm":490,"ptiktok":550,"pshopee":790}],"pmain":450,"ptiktok":490,"pshopee":590},{"id":"m02","name":"กางเกง STRETCH เอวยืด","code":"STRETCH","price":790,"sizes":[{"id":"m02s01","size":"28","cost":250},{"id":"m02s02","size":"30","cost":250},{"id":"m02s03","size":"32","cost":250},{"id":"m02s04","size":"34","cost":250},{"id":"m02s05","size":"36","cost":250},{"id":"m02s06","size":"38","cost":250},{"id":"m02s07","size":"40","cost":250},{"id":"m02s08","size":"42","cost":250},{"id":"m02s09","size":"44","cost":250},{"id":"m02s10","size":"46","cost":250}],"pmain":690,"ptiktok":890,"pshopee":950},{"id":"m03","name":"กางเกง Signature","code":"SIG","price":690,"sizes":[{"id":"m03s01","size":"28","cost":180},{"id":"m03s02","size":"30","cost":180},{"id":"m03s03","size":"32","cost":180},{"id":"m03s04","size":"34","cost":180},{"id":"m03s05","size":"36","cost":190},{"id":"m03s06","size":"38","cost":190},{"id":"m03s07","size":"40","cost":210},{"id":"m03s08","size":"42","cost":210},{"id":"m03s09","size":"44","cost":235,"pm":650,"ptiktok":690,"pshopee":850},{"id":"m03s10","size":"46","cost":235,"pm":650,"ptiktok":690,"pshopee":850},{"id":"m03s11","size":"48","cost":235,"pm":690,"ptiktok":690,"pshopee":850}],"pmain":590,"ptiktok":690,"pshopee":790},{"id":"m04","name":"กางเกง Premium IVY","code":"TP","price":490,"sizes":[{"id":"m04s01","size":"28","cost":170},{"id":"m04s02","size":"30","cost":170},{"id":"m04s03","size":"32","cost":170},{"id":"m04s04","size":"34","cost":170},{"id":"m04s05","size":"36","cost":170},{"id":"m04s06","size":"38","cost":170},{"id":"m04s07","size":"40","cost":175},{"id":"m04s08","size":"42","cost":175},{"id":"m04s09","size":"44","cost":185,"pm":450,"ptiktok":490,"pshopee":650},{"id":"m04s10","size":"46","cost":185,"pm":450,"ptiktok":490,"pshopee":650}],"pmain":390,"ptiktok":450,"pshopee":590},{"id":"m05","name":"กางเกง Premium Smart","code":"PM","price":590,"sizes":[{"id":"m05s01","size":"28","cost":175},{"id":"m05s02","size":"30","cost":175},{"id":"m05s03","size":"32","cost":175},{"id":"m05s04","size":"34","cost":175},{"id":"m05s05","size":"36","cost":185},{"id":"m05s06","size":"38","cost":185},{"id":"m05s07","size":"40","cost":200},{"id":"m05s08","size":"42","cost":200}],"pmain":550,"ptiktok":590,"pshopee":690},{"id":"m06","name":"กางเกง Deluxe","code":"DLS","price":790,"sizes":[{"id":"m06s01","size":"28","cost":250},{"id":"m06s02","size":"30","cost":250},{"id":"m06s03","size":"32","cost":250},{"id":"m06s04","size":"34","cost":250},{"id":"m06s05","size":"36","cost":250},{"id":"m06s06","size":"38","cost":250},{"id":"m06s07","size":"40","cost":250},{"id":"m06s08","size":"42","cost":250}],"pmain":690,"ptiktok":790,"pshopee":890},{"id":"m07","name":"กางเกง Refined","code":"Refined","price":890,"sizes":[{"id":"m07s01","size":"28","cost":250},{"id":"m07s02","size":"30","cost":250},{"id":"m07s03","size":"32","cost":250},{"id":"m07s04","size":"34","cost":250},{"id":"m07s05","size":"36","cost":250},{"id":"m07s06","size":"38","cost":250},{"id":"m07s07","size":"40","cost":250},{"id":"m07s08","size":"42","cost":250}],"pmain":790},{"id":"m08","name":"กางเกงขาสั้น","code":"CSP","price":590,"sizes":[{"id":"m08s01","size":"30","cost":160},{"id":"m08s02","size":"32","cost":160},{"id":"m08s03","size":"34","cost":160},{"id":"m08s04","size":"36","cost":160},{"id":"m08s05","size":"38","cost":160},{"id":"m08s06","size":"40","cost":160},{"id":"m08s07","size":"42","cost":160}],"pmain":450,"ptiktok":590,"pshopee":590},{"id":"m09","name":"กางเกงสูท Pario","code":"PARIO-Pants","price":1290,"sizes":[{"id":"m09s01","size":"30","cost":490},{"id":"m09s02","size":"32","cost":490},{"id":"m09s03","size":"34","cost":490},{"id":"m09s04","size":"36","cost":490},{"id":"m09s05","size":"38","cost":490},{"id":"m09s06","size":"40","cost":490},{"id":"m09s07","size":"42","cost":490}],"pmain":1090,"ptiktok":1090,"pshopee":1350},{"id":"m10","name":"เสื้อสูท Pario","code":"PARIO-Suits","price":1990,"sizes":[{"id":"m10s01","size":"M(50)","cost":690},{"id":"m10s02","size":"L(52)","cost":690},{"id":"m10s03","size":"XL(54)","cost":690},{"id":"m10s04","size":"2XL(56)","cost":690},{"id":"m10s05","size":"3XL(58)","cost":690},{"id":"m10s06","size":"4XL(60)","cost":690},{"id":"m10s07","size":"5XL(62)","cost":690}],"pmain":1990,"ptiktok":2090,"pshopee":2190},{"id":"m11","name":"เสื้อสูท Chato (M-4XL)","code":"Suits","price":1790,"sizes":[{"id":"m11s01","size":"M(50)","cost":590},{"id":"m11s02","size":"L(52)","cost":590},{"id":"m11s03","size":"XL(54)","cost":590},{"id":"m11s04","size":"2XL(56)","cost":590},{"id":"m11s05","size":"3XL(58)","cost":590},{"id":"m11s06","size":"4XL(60)","cost":690,"pshopee":2090}],"pmain":1590,"ptiktok":1690,"pshopee":1890},{"id":"m12","name":"เสื้อสูท Chato (5-6XL)","code":"Suits","price":1990,"sizes":[{"id":"m12s01","size":"5XL(62)","cost":720,"pshopee":2090},{"id":"m12s02","size":"6XL(64)","cost":720,"pshopee":2190}],"pmain":1890,"ptiktok":1890},{"id":"m13","name":"เสื้อสูท Chato (7XL)","code":"Suits","price":2090,"sizes":[{"id":"m13s01","size":"7XL(66)","cost":740}],"pmain":2090,"ptiktok":2090,"pshopee":2190},{"id":"m14","name":"เสื้อโปโล","code":"Polo","price":490,"sizes":[{"id":"m14s01","size":"M","cost":135},{"id":"m14s02","size":"L","cost":145},{"id":"m14s03","size":"XL","cost":155},{"id":"m14s04","size":"2XL","cost":165},{"id":"m14s05","size":"3XL","cost":175}],"pmain":350},{"id":"m15","name":"Cooltech Polo","code":"COOLPOLO","price":790,"sizes":[{"id":"m15s01","size":"M","cost":350},{"id":"m15s02","size":"L","cost":350},{"id":"m15s03","size":"XL","cost":350},{"id":"m15s04","size":"2XL","cost":350},{"id":"m15s05","size":"3XL","cost":350}],"pmain":690,"ptiktok":790,"pshopee":990},{"id":"m16","name":"Non Iron Shirt","code":"NONIRONSHIRT","price":890,"sizes":[{"id":"m16s01","size":"M","cost":250},{"id":"m16s02","size":"L","cost":250},{"id":"m16s03","size":"XL","cost":250},{"id":"m16s04","size":"2XL","cost":250},{"id":"m16s05","size":"3XL","cost":250}],"pmain":790,"ptiktok":790,"pshopee":990},{"id":"m17","name":"เสื้อเชิ้ตลินิน","code":"LININSHIRT","price":990,"sizes":[{"id":"m17s01","size":"M(42)","cost":300},{"id":"m17s02","size":"L(44)","cost":300},{"id":"m17s03","size":"XL(46)","cost":300},{"id":"m17s04","size":"2XL(48)","cost":300}],"pmain":690},{"id":"m18","name":"เสื้อเชิ้ต (รุ่นเก่า)","code":"SOS","price":490,"sizes":[{"id":"m18s01","size":"M","cost":130},{"id":"m18s02","size":"L","cost":140},{"id":"m18s03","size":"XL","cost":150},{"id":"m18s04","size":"2XL","cost":160},{"id":"m18s05","size":"3XL","cost":170}],"pmain":350},{"id":"m19","name":"กางเกง ESSENTIAL","code":"ESSENTIAL","price":1090,"sizes":[{"id":"m19s01","size":"28","cost":350},{"id":"m19s02","size":"30","cost":350},{"id":"m19s03","size":"32","cost":350},{"id":"m19s04","size":"34","cost":350},{"id":"m19s05","size":"36","cost":350},{"id":"m19s06","size":"38","cost":350},{"id":"m19s07","size":"40","cost":350},{"id":"m19s08","size":"42","cost":350}],"pmain":990},{"id":"m20","name":"เสื้อสูท Ceremony","code":"CEREMONY-Suits","price":2090,"sizes":[{"id":"m20s01","size":"M(50)","cost":690},{"id":"m20s02","size":"L(52)","cost":690},{"id":"m20s03","size":"XL(54)","cost":690},{"id":"m20s04","size":"2XL(56)","cost":690},{"id":"m20s05","size":"3XL(58)","cost":690},{"id":"m20s06","size":"4XL(60)","cost":690},{"id":"m20s07","size":"5XL(62)","cost":690}],"pmain":2090},{"id":"m21","name":"กางเกงสูท Ceremony","code":"CEREMONY-Pants","price":1290,"sizes":[{"id":"m21s01","size":"30","cost":390},{"id":"m21s02","size":"32","cost":390},{"id":"m21s03","size":"34","cost":390},{"id":"m21s04","size":"36","cost":390},{"id":"m21s05","size":"38","cost":390},{"id":"m21s06","size":"40","cost":390},{"id":"m21s07","size":"42","cost":390}],"pmain":1290},{"id":"m22","name":"กางเกง Classic","code":"Classic","price":1390,"pmain":1290,"pshopee":1390,"ptiktok":1290,"sizes":[{"id":"m22s01","size":"28","cost":350},{"id":"m22s02","size":"30","cost":350},{"id":"m22s03","size":"32","cost":350},{"id":"m22s04","size":"34","cost":350},{"id":"m22s05","size":"36","cost":350},{"id":"m22s06","size":"38","cost":350},{"id":"m22s07","size":"40","cost":350},{"id":"m22s08","size":"42","cost":350}]}];
 const LOGO_SRC = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAjAAAABcCAYAAABwWI9nAAArxklEQVR4nO2dd9xsVXX3v0+5BS5NVK4QpCgYsEuwIhYQgYAlFH0tYCxg7GgMFmIjGktEsERJxALiK2I0KNiCBUHEAooRGyhNkV7upV3uU+b943d+79lz7swpM2dmzsyzf5/P+TzPzJyyzy5r/fZaa68NERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERGTjKlRF6APdCt7a6iliKgTsU0jIiIimoVOcrkRMrnpBGYq+DsdfG4B812uWRb8v5gcviaiGXA7TieHMdfl/JngvBZq01bwOSIiIiKiP3SSy4vAQodzp5FchnaZPFR53FQCY4XVTaGBiMosaYVNAevpXNk+v1tjDAJTqHxlkEfIJgVTqF1b5LfBxqSk01iXc/6g2jUkTZOKeTYUOFXee4EN22pYCAVoEbL9Y5bysq/pY7NKPXjsuc2rXFu2ravIvTyEZZ1ieIpx3MZ9Hf1zBtVxt/tsRPuEcQa4q8u5lvNDGTNNIjBWbuEgWQ7cC9gK+Dtgx+ScWWBnYEVw/jSq1D+QVvY5wLeAO4A7C54VUT+6deYtUdvtCexDSkK2B+4dnG/B9UfUflPATcDngWuBW2gnubbSDYukRkREDAe2CoRW9Yj+MEO7rNwckZVDgL9BsncTYCfa63wWuBrJ4mngVuBE4Dbg+sz9Q2t57Rg1gbFrKCQTy4B9gd2B/YHdSBliL5hHCvCLwI+A75IqyEEQGSvd1cDLaHdpZeHZxRrg+BrLMGp0IhJbAYcB2yZ/N6f3mZpnZz8BvgNcAnyVlMz4+b0MHrfffsDjknuM04ysCk5AQid0zT4X2JW0b3aC6+SLwG9JFcsw4Gc9BDiU/PbxO/wGOD249khgG/Lf0bgLOI7mTXgsN3cCXkC5fnoX8B9I3oCU1DMo19ZnAhfRva1DuXck5S073Z55BfADNFGxdd3w+K6zTXy//YHH0vxx7za7Bvgk1cag+45l415oInkYar9e5LItQV8Czgc+S2qlyRKlsYdn5iH2Aj4AXEdaueExjxSUj3lUKQvBb+uBe5LD7qTsfa4E3gBsFzy7H4KUhd9rny7v0em4o6ZnjxrZdt0ICddvImtJ+M6LqM3upt1/mnfcg9xJndr1OuD9qN5DVBWkFlpfLFmmcT4eELyz+/9lFa5/XnJNHS6DsvCzDqtQzt8l13gy8YcK17aAN2ee3QS4n36Fau/ykOAeb6tw3euSa7rVgcvzlIrlyTvWohn99cDHgZcAj8w8ty7Z7Xt8ucbyD+P4fVAPZRCedxDwYzaUvwtIf64j1aWhXg0/Wx9ny3UD8G7g/smzQhlTG0YxIM3+FlBlHoIIxWMy583R7o8MA4Yg9cnm+VwXSGflLeSS2h7NqN4EfAr4T0RqXLa6GP0iIlbzdO9cZvnXd/l9nGCWvYBmhQcjC9ROwTkmnTOozXysQbM7k5rQhbQy+X9TNDMKsZ60/VcDRyfHD1Ebfy15XhiQVha3k5LgfmaTnVBlILeKT+kZnfzUt6M2yJuBzqM6v3tA5SqDu0mFZzcrp9/h9uSz6/JGNIEpatsWaqs3A19Hlr5hWpu6YRa1wd8i1/o6yr3HHbT3J9dhXj24fu/s8nsWi0ix2aJR1Ne7/T6DxvymyedXJH/vBC4FPoxCBK5Kvned9Av3/zLjfpBjswgu3w0VrrGMfhDwMdone6GeWiTfcxBijlSnh1b3+wLHAEcA70AuJqh5/AybwISd7JloBrB78HtYidkKtO/TZQ7Lvh7N8G9JPq8A7gesor0TtpJnTCGXxlsQqz8e+CgyedVp7nKwYBGBadLMriqmSDvu5sBrgKNQLAuovqeDc1ck/18K/BdwHjIXeyaRhyehdn0N8HBgs+AZbrcZ4InJcSFq4+8k51URcisR4Z1kdCIo06QxSd0IjEnjKE3sLicUE5hsOWeTa8oEsbpfnwDsTerXHxXsGl0JfCj5bjn5bWHlkpUzrsOievA5Zcu3ovCs9rJ5TGbLERIEy/9VwKOQi+L65O8JyAI71eG6qihbJ03BRiXPs+x7JfBeJDsXSOX3LO2Ty0XkHp5C8vkXqF63Q2Ed0yiWcevgGZ7YQGqk2Ar4BJLHRyDSXBuJGZbidCXNAw8DPgg8PfnNCq6bJcUzaB93oZnEp1FsSwv4FQoqui65Zhny4++ChM/DkG9/q+S3kMisBt6X/H4UcC5DCD6aEJg0tIBnI5OhTdQeHOHAAMUhnYB8pdl75c3WFlDbgOIZHgz8AyKgq1B7+R4moLsDZyOz8DGIJGX9v1n4+7+gILW6LTBTaOCXtcLcxuAi+ifKLz0gOAh9L2Td+wCj9em7PK8E/prBWAj7wXpk4SqywCwnnWBmCWhooff1M6Qxiy003lcjS/rhyOJ6XHLusKxka8hfKTtIuH5uLnGuyctRpLGWYb9xnc4gI8DHUKzoueRjNYqh2hO5ozZJvg8n5vZEvACRn2cnzxjmyrK+EA6uI1AHdwftFMsQ+uHmg8+XAO9E5q9uM2MTpU5YgdxVoc/YLo3wOW8L7tXLDNPvu3fwjLx3bJGaQccJfs8tgFNpr9PFzGf7s48IrrdlquyyxW7nP4j2Ng37lF14LRQpf2RwXdEzp1E/q+tYkfy9D2k8UF7sj9/jUcl1K/t8fqcjHCv+/+IO9Zg97PM+KLlmFDEwz0nKYHmSV4cXZa79GcVjs5Msug7FDY1qqa0ncfdHrg670YvK73PWIuJvHE1xPbh+PXaK2rpo3HgcbA08ASm296DJzxls2O+y8iT7XmHZv4IWCUB1Uuf+fwrFdeLfnpi8y0YF7zzIo8jV4/Z6HenY7Ta2/x2REsOGBVujZoLvsnp2B+AjpG2VrT/3ox+QhgWMehFRIdyJtkSdM9sBijpIC/geYm2rOtzbMRTZACFXevh7iKcBFwTPcJ4IN+zJpB2jqqBaCgTGg+IxpKbFToTUnfabpAGj4fX9IGvifTnt5LiTwm2h4Nx7JdeMYua6CdUIzIM736Z2RAJTTiZ9NbnHKPqOy38aG/brphCYfrENiu05BVlysm1ZRGT+hCzvUE1290JgHp25tmlwHz2EtC1DmeN6uxFZUoxZyvXvTq7kJwK/pHP/dF86gzSPW1Pr7v+/1DbATyknMOznbKGVAwdm7mnfZK8vHc6clqPg4TtpHyAu4zko3sLXVXkGTC6BsQB7OQrW6yZI3Vm/QFrngxB+YYzDM9Cywk4CLxRyP0Z5hIrKNFXj4X67OdUIzENJrU91lic7hiKBKT78LFsSh0li/Kwno6DdPMvEqAlMlTFhF1InS8J2yL1vOVPUXi7rTWh8d4p/yiszVCMwjyVV4nWPzV7GcPZ9ptBk7VI6TzDdL/ZNrumHULgeQMYGr+bqRmLeGDyzcfBg2xWt8CkSNFmB+VHS6PNQeNeFkAQ9hXSAuAyu9F8gAuZrymCSCYw72yvZkBR0GuBfIBVUgza5WwDuiGZh3VyU7ofXks6ghjGI3N82ozqBgcHXXyQwxYddNjciF8gw+jWkMnBlj2UfFwuMlW42LuYxlH9v983zkmvL6o5eCYyf0TS4TO+hM5HwOxyfnJd1Kff73FlkrczW5SLpoptdGd4YKg0XJiQvRaZOv+D1SDAZg+wYU6SxNHui6OhuJOY+lI+JmVQCY4Fi8uL4oW5t+d/J+QNZ/19QxgNoVzjdyngLSlYHgxdCkcDUg1ESmPDdh+lKcrlfS/E7jzOBySJcobkp8H2K+2bYRm9Pri3rDoHJIDB+l1Uo9i/0bIT94Ra0dUuRNacqXB+rkCcl22auv9Mz548cLsjOwOWUExL+/UoUVQ/D9Y1Z6e1JmifBDeyBcDppEFNRuSaRwFiIvJr0nTopX7/Pb1CwXlnSVyfcnkeQX//+/i9olRoMnjBDJDD9YtQEJrzuRcn9htFvtkQrTrLKaJIJjOH63ZhUr5RZAHITspSVkUOTRGAsA48kza3Vqfz/mZw3CNniOnkSqcsz7I/zaEXxI0itbpVRZ8GnUcfZEkWD70h+EjdIl77+CSXV+T3pkq9WjWXLgxM1nQc8C0X3+/mzye+HopwLTVuyOAx42eYrkGvPiYuyRM4d825kpbmH0ST9mkPt9kk0S3b5s/BS2K1RYO99aE96FxHRDVOov/8bSs3QYnD9xvf9EJKtTt65lLCAxvRdKG4xVIad4FQJ90ZLrGFp1ZllrmN0snC9ncngJplus3PR9hWhHPb42Yh0dVRP+r6ugtsEtQytOHko7UltOsGzghtRHMplDHEXywzmkDvpu2gZ9TLSPA/Lkt9fiyq76L0mCSalD0O5AZxIsNOg8G+fRgHQzv8yCjgPwSuRtcP5I7Jwf9sV+BxpQrClJOwiqsPE/L4om/egSIXH327I2pOXXHDS4bxdZwD/S/cxbZjEvJA+FOQYYorUkHBw8l23SfcKBlsvNlC8C4WHhBNa//8sNHnsaQzVNRg8m301CrjyLLgbXGkzwKuQWXCUCg9SS8yJwFmkSXggLdu/AA+k2LI0CTAp3RRlu5wKvs/Cne964FhGn63U5fkL2h9pKqc8trLth8oeZg6OiOiGadRX9kfp/AeR8NDHJ0gnfEuZXHsV6ceTz3n6wnW3Fdo+ZpBWsiZiljSxXLc+M2h9a5l7C2ozkxb3ZWfzLSJaXVFHg3oW+2iUYdemozx4JvERlJG1rn0s+oF9p/eg7K63B9+7A2yKcjBsxuQLE5PS96MZYJ57xZ3xRLQ3Rx5hGBbcxz6GXJR57iyTmNegoN6l6CqMqIZwGfCnSFOz16UkbX15EZoUtoh9EjSGr07+z7PC2BKxFYpvXCoExjppZe5ZQl0rj/JgPflZNMENx82VwD+ikBO3VyX026B++RVoc63pzPedYMXyB5QGetSz9RB2g9yIrElWeuEg2R1lHZxkc65J6VNQIFgeKbVgWIuCwppAXiAdOHeheJi8cnlQbYxImNt9kglqRP8wybgXcBL1xRO4322NNsJbIPZFSOvhZ0h/2E3UDR7vZZT5pMD9ZDe6EzyfE6bDGBTsRroareidQXnhXo0Cyj9Ee8LCSuh3sHmW/nzg8UFh82DF8mYUnQzNUHiGXQinoGy9FlIzaHOrPUg3uZrEvWRCUvpeitsz9E1fS7vrbdRwXzsVreDIE3gzyArzCGSJiTPeiDLwBOxQlHizjhg5y5w3ocmSv1vq8GTpNqT0/F3Ehui23Q6kE7QnoEBfT9wHBU8Gj0VjZE+0bcHd9LniuJ9B4RntJmijvDLK3Az6fBQB3SRlF8L+02NIMwy+E5G0H5EuS5tEWHgeTDl3iuODTmbwbL4qTKivQKzf79YNfs+3IHdhnPlGlMUisvRtSX+uJBOiv0FEOq6M64wqk4tJldWd4He9jO5hDv5uFoVEbEU540OvsBfjAuDraGm+CVNfK477GRhmcX+PAlvL3M8m1vfQnr+habCS+z5KebwfiqRew9IQJiuQb7KIjHiA3I1IKSWuGTZcxs8nn/PazwRnNXKdRStMRBnYsrcaWS39XS+wTPwQ5VzySw0ez2UsBq6/dblnTRasT/9Eviy2rNsBpcfwfoCDlHeOfZmippjXXgeZrS/L0Z44ZQJaHTNyIVquPIocIVXgdzoO+DZpxTe5zP3CFrG90C7IRazcRO+ziJAWLW0cBawQfph8LkOyW2jZ/OZEK0xEOVghHIk2I+xlpaKtLwehBGAxmLwdrp/HoNQHeYG5ll23AD9JvptEl383TCOZDPlu83mUFPIU5E0pswinV5gk1aYj+jFztoCnokCcMgGtNiP9X5qr7LLwAHGsT9PL2y/cRq+hXHrprLmyidYpl+ta4BvJd3mCzLPp7VAQs7+LiMiDx8siWtCwimorFU2cV6INDCd9lWMvcB3fHyVBc/xdHm6iXMDvpMBW4xtJU/XnWTscAnAYyuHmNCHZXaYbiV4LaCvES0vew1lt70FMD0a/bLoszBonHRa+26CVVpDfti2UN2cNsqhBM9vUfW89Wrbn74quaZFuRxAVSUQZWEk+ECXErBJXYOvC+9BWLDH2ZUN4gvXM5HORfAJZ/JcaTIa/F3zOgy0xT0Qxns8j3S6m0RbAfgjMMmSBgXLuI4Cz0WoQV3BEc2Cz4f4ow+gc+e3q9rsN+HXmu6bBBNR74BQNSo+LxwIPIiqTiPKwa/xNaJVHGVeSk+I9GE0Ko+toQ3j8bYcWGBRZfD0J+UTyeSlNQmyZOpV0e56i0AdbYrZCXpITUV1bdjayP/YilK3onofyH5QR7q68ryd/G1kZSxxePv4kqlkd7qxw7qjg/ncWssQUEWgvkb8P2tMrWmEiysL9pIUS3G1Bcf9xUOq/Upw9danCFqp3oXxNebFpjuP4Pop/cQjAUoKJ9NuTz2Xe32EdCyi29SKU1NXkZoqG6e5eCEyYZKlMEjrPeOdRZLS/i2gOrNCngWdTrqO63f+b8VmtUyUg13Xyd0SLYUQ1WHnsAryV/DwbVg77o31hovWlHVNoscgc2pjxcPLr03JpLVLCk5zyIg/uR6cDn0EekzIufst+T+A+hUIEDiUlN44LHTl6ITDzqEMdkHwuk7huGuXiKBNEGTE6rKZ6x/xl8nccZoxzaKuDMnDA4JNZmgIwoj940vZGZNX0Lu4hHHe2DC2bjpa+FFakLWQ1PQzlmvJvnRBaCY5CwbuDzPQ+g4hU3Udd7movrjkauIpqW/a47hdR/z0dhYAcSPuS65G61qs+PIyUf2zwXdV7RDQLJi3PQ6snqlgqxkG5WzHcQUq4ygq1GbTiYRzecxSYGtExDrB8PQ4tyZ+mvey21BwN7MTkxFr12qbTSMkuI53tb4oCok8hzejaqf0da7QObRD8GQa/QfCa5Ln3JH/rOuoiXJZZNyHicRPV6sRt4g0Yn4YS0H6JNMmprWEjGZO9rvdeQWqJKYsbi0+JGBHc+VYnf8tEn/uauYGUqH54Rnwxsh4WvaPJ+vZoX5HzWZq+9CK0gmOYzxsHODh3d5Td+c2ks2Arhh2T78fFDVsGvbZPmMl7G2Bf4J/Iz/ni82eBS1AQ9E9Jx/sg4HKcjFxVdcFWjbOQRa6OTY4t5y4B9kYrk+6N5Paykvfw+7quD0mOk4APoDQakJKjoY3PqgTGyZoejgKpoHyuEC/pKkrnHjE63NPDNeMidN1Pb6twvkn6zojAjMvMf1jw2B5mckc/a1xIjPfYei3wNbRM1ab3ObRsehPq2UOpCZhBsRNVxoonC/dFSdW2Q7P9bZLfO8UFuR9YuZ6EiODN1KP4i8oL2u5hEPhz5jn9wkHN/4tWxn0DLfW3xa/sc1zXvu5lyLX3adSPw13Ch6LjeyUwj0s+lwk4s6C5pOKzIoYHCwNbYMqQ0mnkkhm3wOwqfd7vNAmKpU54zL8NeDEiecNq/ykUE3H/5HPT28Zm+I2QK2nP5Ls5pKQPZfCb6Q0DtijtBpyH3qdqTE83ktJJx1iZnoeU5zeCc4eVj2qOesm7SeztNd4zvPcMcCna0+9jiCyGzy2LcLXSCuAVKLj6BGSRWUva7wdKZHodNFsmf6sIrTXJ3ziLbRa8ZBjgAcF3eTCBWUs6WxgXAjMu5Wwy3D8elRyjxDjIEyvVxwH/gtxJWwAfHGGZBoWNkVLrFXZBdAsQtQvxAuAjpNlml5PGZAwLZV0wZeF627Tm+xq2nNwIPBf4MfDPpBuQmnSUQRhkvYhiJ49By67fhlYvLWTOqR29EhhfV0UZjIurYSmjKluepv5BHDE+sMIYNokIt/gYF9is/nrgcyjr6SOYzGXTYVxcmb4R6pEy7ToF3A/V321otdHlmXsMksjYsvQTNDGvK82C+8JFwXPqRjhej0fxNseTriqeo1pQbkhkFlB6lZNQLNIxKBcPDMit1CuB6WXAxZlv89HLirLYrksXM0ye8h0UvHpmBXAGmrGW2UNu3DBPfZMaBzuHdWQZ9UCUY+etKDXCBciFcS5p4Oqg3Be+/0uA3wzoGTA4V1joGr8MrVA6EDiW1KJql1MVImO34SJyU30P+HeUfPBGBtAmvRKYXgoxDqbepY6qZGRgpsGIscBNwN0Ml8j6WRuj1RTjBO+VtPOoCzIAWA5cjNIxrKC8bFiG2nUZ8HRknVpJuysla6my7Gmh9PfPSo4fAu9AytOkcVAyagukQ+tWzF62PGiYIE4hS8zZKJ7lrSigGqoH+toi47Z5FfAMFMT+VWp2KfVLYKqQkiZu9BeRbnY4j/bN2IdiZWShcC9gB+Aaxoeg9lLOaGVqh4P+XokyMQ961UcIP+tQtGdLleWgTUBI9sZlzFTBncBpfVx/Iopn2RbFaRwA7EFKEhynYUUJqbKcQuTnu8A7gffQvmS9biwk97f7ZBwRBkrfg6xYpwCvA15NGu/az4ql7ZDV8XjgDcHvfbdJVfOlB97Nyd8qA3DL4lMiRgS3o3MalCEwLTTL2ipzj6ajiqL1O0UrU2c48dZ62hNxDfIInzWuGKdkfFVhV0Kvh1eZXQ68F3gKygR7Jmlgb3Y8Tge/OS7rncA5SO+MIk5r3GByOAvcgqxYD0aB5reTupOq5nmxNcbxX19GOqMW92mvBOZ8yidecsd5eOYeEc1DlcSE4zaLdHm3qHD+DCJ1P0++i0SmHW77YcZx+Fnj0u+WGlr0R1BtSbEynUdLpZ8JPB+4lvzluWGOnT2Ab6ExXyWeY6nCbee6vx4lEnwkWnZ9K+1EpixMMBeAg5CrantqIDFVL7YAvwS4K/m/zGwdlEAnvEdEc+A2vD75W6VfjEsQomcYTj5VVG4L0muBXzNYX3pEREQKL5W2MrUC/ALSI1dQvMfRMmTJeTTwcVJXUkQxskTmcuA1KDD3VBT3FrrvysLpBB6OiKWt9z23S68X9uJ3vl+Pz4oYPMymT0M+bAdaTQrs8tqU8gTGCAdzRETEcOGAzwWkc64Enpr8hXwF6l2sn4t2lZ/EJeuDhGWfCeTvUeZdu/SczqCKW8lWtV3QCqW8/a0K0SuBWUeaWbdswb1RV0RzcR3Vg9Een/wdB8IzRfkkUZ4FnjOw0kQsRTjgc1grTSYJnjhfhXab9qquPNildDxa2RTjYarDBNJL2i9ELr2no2XrVd1Ks6gtD0F7PlXZPLgNvcTALEPRys6AWFRom94fAOzPZG1aNimwu2QRRYuXiap33zmQ6j7RUWETyvc918kZyeco9CLqgFfPZPObRJSDScyZwP+QbpjZDQ763R7lbYn6p3eYdHs10neAvVBmacfHlA2u98aPR6HNTstsILwBehlAZrzXos5UdA8rt2m0nMrfRTQLs6gTnUu1vB7D3AenV7iPHoCEX9EeLR5M1yCzaUzYF9EvbG25Ac1cd0fLVcPfIsrBivTdtC+nzju/hfLETJp7fBRwfdp99D60fP1HpHqkCKH8/Xhw30rcoBcCY4Z1GlqhURRMBWkH2z/5Ow6z9aUGt8n3UHpuK/pucEfbEnhI8n9TZ5Tufw9L/hb1P7/3xcjXXqaPR0R0Q7hr94vRKoyL0O7JVgQR5WFFdzHaAbkowN6hC3uiJIKeUEf0B7fDLMpI/CTg30hXgRXBbfBoFIpQdfPPnhtxGkV4/0/yuexKpKeiJW2VCxoxcNg0eAXa5MvfdYN31N0MJb+DZppmpxDpXk75zSp9zklE60tE//BKmhbKseHvqubUiBDsBrod+FryXZlJyUakaRSi/qkHYaBvCzgabUmwjGJ3kmVzC3hh8l0lHdIPgQE4mXID0AVdifyQ0Exl1wn2VS+FDu/3/EjyuSwx3ZbmLjN2uf4K+Nvku7y+51nFlcAPgu8iIvqBV8B8ANgJJYF8B+UCUSM2hGVPmZk+pEH5uw+mOEsedistQ/36nZTL0G2dsxPlSM8GF/cCM64fAL8lP7FQ+KxptAwrTAvdZDgAzI0zLqSrV4RupEsoblfXx0tJt7NvYpuG+V+KyIgtUSeTBqZFBRPRLzxW9kTuoz+grRigmWOm6fCYvDr5W0aXTaHkdksRw8j+3CINsn4X8GGKY2I8LvZGk8xKLtV+/IBTaDn1hylXMZ5pPBJ4Gs33/Zq8nIb8epuQzqImVeC4Te4B3k+59mkhN5IFQ9Pa1C6gw5LPeYPJ+0KtBT7B+KyuihgfLKLx8lfEvtUPTGB+kfwtO9G4b/EpE4UwyHlYEzEbON6OCGbRvkc2DlROs9KPsvFM9fNopYa/K7pmETiGZrtlHLS5N0p9/Ea0XfsBTL7f2iTty8CvyLfC2DU4jXyY9vU3BR4490dR8kWk2e95HMpKHM37EXXDfaqnZaMRGyBUemX0SVmX07jDwbVOidECVjEcnRtuw/KvSEcUcYOe4mL7UTZWBncigV9mMJol74l2k50ved0w4Upcht5rGer0D0Vbjp8MbM1kb8gGShf9Vorf0QLkQLQ7dZOy1tr68hy0Wipv9YEVyp+R9ampMT0R44+mEf1xRHaPvbLWrJ8MoCxNhINrVyDZfAbwbYa3gGYuec6nEZExmeoE69LKk8V+B5Fn659DprwyJncrhvcB29C8wewEO8cCj0CdwMFF88DhpCupmlTuOuF2PQv4EvkJitzm90WbrTWlXjwgNkH7eOSVyzPiKeAVyIUWrS8REc1FuIAAyk82vj+AsjQJrpetgTegWMYzUQ6cx6FgWRiejJ4n9dB0kqf+7ha0qqwS+n0JP3wdCuQsw6Rs1t8BBfo0aZMtpzh+Mtr6e4F2E+Usiq7+LSnRmVRY4R8B/In8XCgmpa8nTdU/6jZ1eQ9DWTjzrC9u5y8i0uYg84iIQSBuI9A/FtHCgV2Sz0Xyxr/fOrASjR72ZuyBiMtxiLC00KRsBngdw5tkehLodCud+rzl7HfpwW1fx0t4tv4L0mWBRUuhvLzqZahCbeUYJWxleBTwdWR6c/1Ywf0Yka6lENxpi8QatLbfJKVT53KnewBi/aNejeSyboaShUF3V6Xb9lfA31MccBYR0Q+sPKKFr3c4Lm87yqVGsDy6ALg0uH4S0QJuRpbne0jl+PLk9xcjz8cwDAfWAZcHZcvC392U/M1zNW2Aul7AJOZYxKTKrOf28qoTgIPpbYfruuAZ98bAJ1Gwkzu9g5VvRjlslpLwsXI/De13kbeu30Lhn1BmXtfbKGDry1uQkOtGqKxMWsA/IEtiTFwXMUhMIYvmVaR9Mva3avBK0LdQbt824yw0xkdtHR4UrId/B3wVTcI9GfOkexXyIpTZgqFfmDw5hUW23r3qE1IrTSViWWdDOvL4JcAfKedicaWeirY7N4kZ5uzd5GUV8BVU2e4I4VbuByHX0VKwvoRwXbwP+AJpUHMWbrNVyHTpYLFhW2JMsp6OrC/dVnuE+X2eRbqPx1Jq24jhwf3qDJTOfgfgyOS7SGDKYzmSP89GuqZoNZfl0BwKKF0q8tv7C4V1Y113BNrWZ44eli5XgOXr3snnTnxjCrn1vhVcUxp1Ehg/+GpgX9I9ZPI6iwN4V6JZ/ktJo5eHwZKtsLZFgmVfUoUNUoSzaD37uSxNBRcu+Xw58A26W9jshtsX+CipBWdYJMbP3xzlcemmGFrB+f8HBbmVyRoZEdELPLmbA96GtmGZBk6nWTGATcZMcqxHKRFOpNyeRj7nn1GMxaQnpvT7noOsMP7OMIH7CEovMaiVwE6Tsj2wI53r3NsIfBK1ayX30aDgytgRkRln52vlHLZytBBZMAal/OwGAngMipL2sjOX6R7SynVZyiDMLJi9Z/bwO1/V+6sMDa6vlcgU63czyw4Pv/PzkmuGQWJc75sgshnWb7bOF9CA8Qx4kLMQw++/GYq4d78v6hsPTa4blr/6YrrXnQ+P54OSa4ZRf4af9ZykDOtzyul3uChz7c8oHpt1H/NJeV4QvItdrXn9oI7D918LPDh4/tEl6sH1O8yxAqn11sTFeC1K3VHUR8N++nMkt/Iswv7+FIrrxL89NrmmaalATB52Jq2nsI+53i5F8hLqfwfH3HSrT/f7O4D7BeVuBFwZ26MAnrAz5Q0yV+x5pDscgwZNHS83RXuczeGkg8HlWySt7E8Fzy+rgCeVwEDaBhuhRHd+v6wAdluuR4rG1w6KxLhNNyYlL536m7+bRyZoGK5Ahkhg+sW4EhgrkeuRCf8Q4DImk8BM9XjMoLHcKRby8cA3O7xTUR/9E9JDkD+GJonAQFomxwllx0k4NrZOzq0rfMPttx/d28rleUOmvI2BC7QtIiRu+LKs+XbgvWyY+nmWaoTCGQnDzvsAtItptjHDTvv+5NyqircXAnN18F6jOKp0HtfjFKqj7KDOCph1pCuBoF5lF1rStidVTNnBGpLSNcj/C+ksYRiIBKYejCuBGeUxjhaYWbRa5qW0y+o5ismL3+cO4KnJ/YpkXC8E5glJOVfQTNnt375B57HicfxHNjQY9EJkQj27F5JznSa4Lsd5QTmbkvy0DX6Z5WiFUtgB8jph2HnWAMejXUSzg8exMjYzho3aiXhsgwJMXYEuxyJpY64l3TenF6tBLwTmiorPGDXCGKUXAjeSvmuo+EKr2leRz9WYoTel7JlaeO0LUcxVOCg79aWzSfNGDFPpQiQwdWHcCYzJtF2Zw3qmZdswCMzyCseK5O8OyCr1DuDdSLmF9bNQUE6f4755KbBbUp4yE7ReCMwuG96mUbBu3BatTOo0Xvwut6P4rJUdrjcxcR1l9W5WNr0euI3OMs7PvwRZfqY7XF8agxY8Xko7h2JbLkFLuHYl7XCdSEK4Amgz4CjgVcgddSJwDWKVdv/kYWOUSnk/tFx7s+R7B+v67yxwIcrEeiHDCeoMldoRA35WJ7SSMtyACEbZJcTujNNoBdl5wElok05Ily27bReAZwJPQv3gRNKVTLOZe3aDzcwW/qBMyf9ISjjDxIMWfrOke3LYqpaXWTgiYpAYxvLVUcD5kx6JXD0OyCyaAFrmbIRWMGbhCWaerrKStDI9D21V48RodS+88Dsdjiafo8gdVUZ2W//+GdgH+B5KbOfVR+6LiygW5likh45HST3/0uG5ftdOsvpQRHStB8L2N1lahmJO9wGuZTR11xM8aDcH3kMaJOsZXbfZaGgdCY8rgF8DPwQ+iBTZvsnxUuAziDBdnrnOzwqtBWsR8zf77EfAVLHANOW4tI/3tmCZRkG7fwzuu57U9x/Ww+/QiqZH9vC8VYiMfh6ZiF3HFnRZK9CZpObRUW5bES0w9WDcLTCjOIZhgXH/fEqf5ZwjlRt553msh7rhKjQBdQxGFXlWxQLTpMNp+su4ku4HnB9cG75jVkZfh4jgwUinPhS4T1BXW6MJ6X7Ah0ktPL7vYpf7nhvcp28iP0zBY0vHGrQb9X8hU9PByEoCndm2Y1hcAbba7BCcs0eJZ7doN4G58s5CA/m3yee6GLvLW/bcUVgE3CY39nEPb964iPLEnA28CK0W2C44LxQ8f42sMOsQAb0G7ad1Q3BPaPeNHoBI4Ta0C+GF4JplpO16HjJFO0HSLCmZGjXK9otRoMll6xWT+E69IFsPg6gXu8ZsEagSqwgb6iSXMdx+IUtQLgM+iyat1wb360WOV6kTK+ZRoIrsts68DsUE/TNpYlLrVIde+PPq5Hhico+7kEXrGmQtW026D1X4HEitOuF9b0UWHqfXGNtsyFkT6m7ItH8dG7LLueTIWw5r3+h8cP5c8nk9svRk2fRtyPWxX1COugKJ/G77BOUcNUvPm8m0gJ9myt4Lsu16L2RlCZm5j/Vot+teV1+sS45su96KTJ8HBuXoy8daI9y3Nkf+5rLvOmwLzCUlyuQ+PUoLzHPZcBbZ7fhl5toLae//S+W4g/ZgzTeXqAfX78szdZhFHRaYssd6pEw/j+LfwriNXuW4rzmV8egbLp931y4ju0MZ8ng02cze07rTetX6tFMZFoLz57qcuxaRy52T59aa3HTYgYyQvrjjI36eHG9HPsU9kCtieaZ8rpDwcxZhA2UV6jzar+ksVKFXJ9+HrLMOuFxrkZKepRmz/k4wi6/D+uM6tJvmVuA/UB6d/RCTPxxZUMKlko6FCTt16Dcl87+j/o15ZG05B8Xh2G8bxt80CesRWd8BvVO3wWz/dad+Pkhciyxkfn4nOMHjsMsWInQhdNuCxO9wXeZ7T3jCpJWTDPezuxHxN+6guB5cv2XH0Z3JM8rGwOTBMuUW5Pr4HWrTs9GkK8wIHs76+8HtjEff6EV2L5LK5wvQJHs/FLvyfEQEw5hESNsvnChMBfexjMjW1RWIYH6adJGK26g2udGEpUudFM1qJOBfhojMo4CH9XDvnyDX0JUop8v1tCvMQZqxpoF704zZfxHmkJCoEyaQ4QDbHBGYI4EtgYdTPQ5mHfBtRJDORzEuN9A+4JpuntyCdhKWh5sZrntxEzoHU3bCbcjCOQqsRP2pjJK8EylruzW2ZPSbx44Ci6g/eUK1AvXFPLh+PSErwgySe3XplhbqY2s6/GYZY4tgHVhFmtxtHNCr7PbkyPW2GsW6PBV4EFoiXgV/Bn6AxtlJiGzeETwLBjCRbwKBCWFrRfZFN0GExtaSHZLD8RctRHQuR2TFq1UuQzPeEE6DP8rZ41KDzbpZRbwxysnjdt0FEZz1tFthfolmRiBl9McOz4jtGhExuXAsJDQnlm0SEK74NWaRLDbx2BUF7YaT/0UUDO8NcK9PjhCOOxyYTG4agTHCzIz2w/aKZbS7iIap4Jpav50wjHoJTY9TdN4UsgycgyAku+NEXKr0i2G/V5PLlkWvZR2ncVk3+qmHsu09iPodVl8bx75RR92ELqFe5bKXZodxnwPFuDRWNvAnr9zZuIlRC9mI7ui1XePsKyIiImIwiHI5IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIqIR+H9BSakiG9QFVAAAAABJRU5ErkJggg==";
 
 const MODEL={}, VAR={}, VARORDER={};
@@ -3138,6 +3328,253 @@ function finishAccFile(R){
 }
 document.getElementById("accFileBtn").onclick=()=>document.getElementById("accFileInput").click();
 document.getElementById("accFileInput").onchange=e=>{ const fs=e.target.files; if(fs&&fs.length){ accFilesRun(fs); } e.target.value=""; };
+
+/* ---------- ขายเท่าไหร่ดี? (Master file ราคา) ---------- */
+// ค่าเริ่มต้นจากข้อมูลจริง ก.ค. 2569
+const PR_DEF={fee_shopee:32.0, fee_tiktok:26.3, fee_booth:25.0, fee_main:0,
+              ads_shopee:0, ads_tiktok:8.5};
+data.prcfg=data.prcfg||Object.assign({},PR_DEF);
+const PR_KEYS=["fee_shopee","fee_tiktok","fee_booth","fee_main","ads_shopee","ads_tiktok"];
+
+// ช่องทางที่จะเทียบ
+function prChannels(){
+  const c=data.prcfg, ads=document.getElementById("prAds").checked;
+  return [
+    {k:"main",   n:"หน้าร้าน", d:"สาขาหลัก · ไม่หัก GP", fee:num(c.fee_main), color:"#1ba672"},
+    {k:"booth",  n:"บูท", d:"Central/The Mall · GP "+num(c.fee_booth)+"%", fee:num(c.fee_booth), color:"#ff1a1a"},
+    {k:"shopee", n:"Shopee", d:"ค่าธรรมเนียม "+num(c.fee_shopee)+"%"+(ads&&num(c.ads_shopee)?" + โฆษณา "+num(c.ads_shopee)+"%":""), fee:num(c.fee_shopee)+(ads?num(c.ads_shopee):0), color:"#ee4d2d"},
+    {k:"tiktok", n:"TikTok", d:"ค่าธรรมเนียม "+num(c.fee_tiktok)+"%"+(ads&&num(c.ads_tiktok)?" + โฆษณา "+num(c.ads_tiktok)+"%":""), fee:num(c.fee_tiktok)+(ads?num(c.ads_tiktok):0), color:"#3fb2e8"},
+  ];
+}
+// กำไร % จากราคาขาย (รวม VAT) — คิดบนฐานก่อน VAT ตามหลักบัญชีที่ตกลง
+function prMargin(price, cost, feePct){
+  const base=price/(1+VAT);
+  const fee=base*(feePct/100);
+  const profit=base-fee-cost;
+  return {base, fee, profit, pct: base>0 ? profit/base*100 : 0};
+}
+// ราคาที่ควรขาย เพื่อให้ได้กำไรเป้า %
+function prSuggest(cost, feePct, targetPct){
+  const denom=1-(feePct/100)-(targetPct/100);
+  if(denom<=0.02) return null;                 // ค่าธรรมเนียม+เป้า สูงเกินไป
+  return (cost/denom)*(1+VAT);
+}
+function prRound(p){ return Math.ceil(p/10)*10-0; }   // ปัดขึ้นหลักสิบ
+
+function prCurrentPrice(k, vid){
+  const v=VAR[vid]; if(!v) return 0;
+  const M=MODEL[v.modelId];
+  if(k==="main"){ const sz=M.sizes.find(x=>x.id===vid);
+    return (data.prices2.main||{})[v.modelId] ?? ((sz&&sz.pm!==undefined)?sz.pm:(M.pmain ?? M.price)); }
+  if(k==="booth") return (data.prices2.booth||{})[v.modelId] ?? M.price;
+  // ออนไลน์: ราคารายไซส์ชนะราคาระดับรุ่น (บางแพลตฟอร์มแบ่งช่วงไซส์ไม่เหมือนกัน)
+  const sz=M.sizes.find(x=>x.id===vid)||{};
+  if(k==="shopee") return sz.pshopee ?? M.pshopee ?? ((data.prices2.booth||{})[v.modelId] ?? M.price);
+  if(k==="tiktok") return sz.ptiktok ?? M.ptiktok ?? ((data.prices2.booth||{})[v.modelId] ?? M.price);
+  return M.price;
+}
+function renderPrice(){
+  const vid=document.getElementById("prSize").value;
+  const cost=num(document.getElementById("prCost").value);
+  const target=num(document.getElementById("prTarget").value);
+  const chs=prChannels();
+  let h='<div class="pr-tb"><div class="pr-r head"><span class="ch">ช่องทาง</span>'+
+    '<span class="c">ราคาปัจจุบัน</span><span class="c" style="flex:1.25">กำไรตอนนี้</span>'+
+    '<span class="c">ราคาตามเป้า '+fmt(target)+'%</span></div>';
+  chs.forEach(c=>{
+    const now=prCurrentPrice(c.k, vid);
+    const sug=prSuggest(cost, c.fee, target);
+    const m=prMargin(now, cost, c.fee);
+    const cls=m.pct>=target?"gm-ok":(m.pct>=target-10?"gm-warn":"gm-bad");
+    const need=sug&&now<sug-1;
+    h+='<div class="pr-r"><span class="ch"><b style="color:'+c.color+'">'+c.n+'</b><small>'+c.d+'</small></span>'+
+       '<span class="c now">฿'+fmt(now)+'</span>'+
+       '<span class="c gm '+cls+'" style="flex:1.25">฿'+fmt(m.profit)+
+         ' <small style="font-size:11.5px">('+m.pct.toFixed(1)+'%)</small>'+
+         (need?'<span class="pr-badge up">ต่ำไป</span>':'<span class="pr-badge good">ผ่าน</span>')+'</span>'+
+       '<span class="c should">'+(sug?"฿"+fmt(prRound(sug))+
+          (Math.abs(prRound(sug)-now)>=1?'<small style="display:block;font-size:10px;font-weight:400;color:'+(prRound(sug)>now?"#e08a00":"#1ba672")+'">'+
+            (prRound(sug)>now?"↑ ขึ้น ฿"+fmt(prRound(sug)-now):"↓ ลดได้ ฿"+fmt(now-prRound(sug)))+'</small>':'')
+          :'<small style="font-size:10px;font-weight:400;color:var(--minus);line-height:1.4">เป็นไปไม่ได้<br>เพดาน '+(100-c.fee).toFixed(0)+'%</small>')+'</span></div>';
+  });
+  h+='</div>';
+  // เตือนถ้าเป้าสูงเกินเพดานของบางช่องทาง
+  const over=chs.filter(c=>target>=100-c.fee);
+  if(over.length){
+    h+='<div class="pr-note" style="color:var(--minus)">⚠️ เป้า '+fmt(target)+'% สูงเกินไปสำหรับ '+
+       over.map(c=>c.n+' (เพดาน '+(100-c.fee).toFixed(0)+'%)').join(', ')+
+       '<br><small>เพดาน = 100% − ค่าธรรมเนียม · ยิ่งตั้งเป้าใกล้เพดาน ราคายิ่งพุ่งสูงจนขายไม่ได้จริง</small></div>';
+  }
+  document.getElementById("prTable").innerHTML=h;
+
+  // หมายเหตุ
+  const v=VAR[vid];
+  document.getElementById("prNote").innerHTML= v
+    ? 'สูตร: ราคา = ต้นทุน ÷ (1 − ค่าธรรมเนียม% − กำไรเป้า%) × 1.07 · <b>ราคาทุกช่องรวม VAT แล้ว</b>'
+    : '';
+  renderPrTry();
+  renderPrAll();
+}
+function renderPrTry(){
+  const vid=document.getElementById("prSize").value;
+  const cost=num(document.getElementById("prCost").value);
+  const p=num(document.getElementById("prTry").value);
+  const box=document.getElementById("prTryOut");
+  if(!p){ box.innerHTML=""; return; }
+  let h='<div class="pr-tb" style="margin-top:10px"><div class="pr-r head"><span class="ch">ช่องทาง</span>'+
+    '<span class="c">หักค่าธรรมเนียม</span><span class="c">กำไร/ชิ้น</span><span class="c">กำไร %</span></div>';
+  prChannels().forEach(c=>{
+    const m=prMargin(p, cost, c.fee);
+    const cls=m.pct>=25?"gm-ok":(m.pct>=15?"gm-warn":"gm-bad");
+    h+='<div class="pr-r"><span class="ch"><b style="color:'+c.color+'">'+c.n+'</b></span>'+
+       '<span class="c">−฿'+fmt(m.fee)+'</span>'+
+       '<span class="c now">฿'+fmt(m.profit)+'</span>'+
+       '<span class="c gm '+cls+'">'+m.pct.toFixed(1)+'%</span></div>';
+  });
+  h+='</div>';
+  box.innerHTML=h;
+}
+function renderPrAll(){
+  const target=num(document.getElementById("prTarget").value);
+  const chs=prChannels();
+  let h='<div class="pr-tb"><div class="pr-all-r head"><span class="nm">รุ่น (ราคาบูท)</span>'+
+    chs.map(c=>'<span class="v">'+(c.k==="main"?"หน้าร้าน":c.k==="booth"?"บูท":c.n)+'</span>').join("")+'</div>';
+  CATALOG.forEach(M=>{
+    const sz=M.sizes[0]; if(!sz) return;
+    const cost=sz.cost;
+    h+='<div class="pr-all-r"><span class="nm">'+M.name+' <small style="color:#9aa8b8">฿'+fmt(M.price)+'</small></span>';
+    chs.forEach(c=>{
+      const now=prCurrentPrice(c.k, sz.id);
+      const m=prMargin(now, cost, c.fee);
+      const cls=m.pct>=target?"gm-ok":(m.pct>=target-10?"gm-warn":"gm-bad");
+      h+='<span class="v '+cls+'">'+m.pct.toFixed(0)+'%</span>';
+    });
+    h+='</div>';
+  });
+  h+='</div>';
+  document.getElementById("prAll").innerHTML=h;
+}
+function fillPrModels(){
+  const mSel=document.getElementById("prModel");
+  mSel.innerHTML=CATALOG.map(M=>'<option value="'+M.id+'">'+M.name+'</option>').join("");
+  fillPrSizes();
+}
+function fillPrSizes(){
+  const mid=document.getElementById("prModel").value, M=MODEL[mid];
+  const sSel=document.getElementById("prSize");
+  sSel.innerHTML=M.sizes.map(z=>'<option value="'+z.id+'">'+z.size+' (ทุน '+fmt(z.cost)+')</option>').join("");
+  syncPrCost();
+}
+function syncPrCost(){
+  const vid=document.getElementById("prSize").value, v=VAR[vid];
+  if(v) document.getElementById("prCost").value=v.cost;
+  renderPrice();
+}
+function openPrice(){
+  const lg=document.getElementById("logoPrice"); if(lg) lg.src=LOGO_SRC;
+  PR_KEYS.forEach(k=>{ const el=document.getElementById(k); if(el) el.value=data.prcfg[k]; });
+  fillPrModels();
+  document.getElementById("screen-home").style.display="none";
+  document.getElementById("screen-price").style.display="block";
+  window.scrollTo(0,0);
+}
+document.getElementById("priceBtnH").onclick=openPrice;
+document.getElementById("prBack").onclick=()=>{
+  document.getElementById("screen-price").style.display="none";
+  document.getElementById("screen-home").style.display="flex"; window.scrollTo(0,0);
+};
+document.getElementById("prModel").onchange=fillPrSizes;
+document.getElementById("prSize").onchange=syncPrCost;
+["prCost","prTarget"].forEach(id=>document.getElementById(id).addEventListener("input",renderPrice));
+document.getElementById("prTry").addEventListener("input",renderPrTry);
+document.getElementById("prTryClr").onclick=()=>{ document.getElementById("prTry").value=""; renderPrTry(); };
+document.getElementById("prAds").onchange=renderPrice;
+PR_KEYS.forEach(k=>{
+  const el=document.getElementById(k); if(!el) return;
+  el.addEventListener("input",()=>{ data.prcfg[k]=num(el.value); store.write(data); renderPrice(); });
+});
+document.getElementById("prReset").onclick=()=>{
+  data.prcfg=Object.assign({},PR_DEF); store.write(data);
+  PR_KEYS.forEach(k=>{ const el=document.getElementById(k); if(el) el.value=data.prcfg[k]; });
+  renderPrice(); toast("คืนค่าเริ่มต้นแล้ว");
+};
+
+/* ---------- ตั้งราคาโปร TikTok (จำลองแคมเปญคูปองหาร) ---------- */
+const CP_KEYS=["cpDisc","cpShare","cpMin1","cpCap1","cpMin2","cpCap2","cpMin3","cpCap3","cpMin4","cpCap4","cpFee","cpPass"];
+data.cpcfg=data.cpcfg||{};
+function cpVal(id,def){ const el=document.getElementById(id); const v=num(el?el.value:def); return v||def; }
+// ส่วนลดที่ลูกค้าได้ ตามเพดานขั้นบันได
+function cpDiscount(price){
+  const d=cpVal("cpDisc",25)/100;
+  const t=[[cpVal("cpMin1",999),cpVal("cpCap1",750)],
+           [cpVal("cpMin2",499),cpVal("cpCap2",375)],
+           [cpVal("cpMin3",199),cpVal("cpCap3",150)],
+           [cpVal("cpMin4",99),cpVal("cpCap4",75)]]
+          .filter(x=>x[0]>0&&x[1]>0).sort((a,b)=>b[0]-a[0]);
+  for(const [mn,cap] of t){ if(price>=mn) return Math.min(price*d, cap); }
+  return 0;
+}
+function renderPromo(){
+  const fee=cpVal("cpFee",26.3), sharePct=cpVal("cpShare",35), share=sharePct/100, pass=cpVal("cpPass",18);
+  const dPct=cpVal("cpDisc",25);
+  document.getElementById("cpNote").innerHTML=
+    'ลูกค้าเห็นลด <b>'+fmt(dPct)+'%</b> แต่เราออกจริงเพียง <b>'+
+    (dPct*share).toFixed(2)+'%</b> ของราคา (ที่เหลือแพลตฟอร์มออกให้)';
+  // อัปเดตการ์ดเงื่อนไขแคมเปญ
+  [1,2,3,4].forEach(i=>{
+    const cap=cpVal("cpCap"+i,[750,375,150,75][i-1]);
+    const set=(id,v)=>{ const el=document.getElementById(id); if(el) el.innerHTML=v; };
+    set("cpD"+i, fmt(dPct)+"%");
+    set("cpP"+i, fmt(100-sharePct)+"%");
+    set("cpS"+i, fmt(sharePct)+"%");
+    set("cpO"+i, "฿"+fmt2(cap*share));
+  });
+  // ตารางรายรุ่น
+  const rows=[];
+  CATALOG.forEach(M=>{
+    const z=M.sizes[0]; if(!z) return;
+    const tk=z.ptiktok ?? M.ptiktok; if(!tk) return;      // เฉพาะรุ่นที่ตั้งราคา TikTok ไว้
+    const cost=z.cost;
+    const disc=cpDiscount(tk), ours=disc*share;
+    const b0=tk/(1+VAT), p0=b0-b0*fee/100-cost;
+    const b1=(tk-ours)/(1+VAT), p1=b1-b1*fee/100-cost;
+    const need=p1>0?(p0/p1-1)*100:999;
+    rows.push({n:M.name, tk, cost, disc, ours, pay:tk-disc, p0, p1, need,
+               g0:b0>0?p0/b0*100:0, g1:b1>0?p1/b1*100:0});
+  });
+  rows.sort((a,b)=>a.need-b.need);
+  let h='<div class="pr-tb"><div class="cp-r head"><span class="tag"></span><span class="nm">รุ่น</span>'+
+    '<span class="v">ลูกค้าจ่าย</span><span class="v">เราออก</span><span class="v">กำไรใหม่</span><span class="v">ต้องขายเพิ่ม</span></div>';
+  rows.forEach(r=>{
+    const ok=r.need<=pass, mid=r.need<=pass+7;
+    h+='<div class="cp-r '+(ok?"ok":(mid?"":"no"))+'"><span class="tag">'+(ok?"✅":(mid?"🟡":"❌"))+'</span>'+
+       '<span class="nm"><b>'+r.n+'</b><small>ราคา ฿'+fmt(r.tk)+' · ทุน ฿'+fmt(r.cost)+'</small></span>'+
+       '<span class="v">฿'+fmt(r.pay)+'</span>'+
+       '<span class="v" style="color:var(--minus)">−฿'+fmt(r.ours)+'</span>'+
+       '<span class="v">฿'+fmt(r.p1)+' <small style="font-size:10.5px;color:#7b8794">('+r.g1.toFixed(0)+'%)</small></span>'+
+       '<span class="v '+(ok?"gm-ok":(mid?"gm-warn":"gm-bad"))+'">'+(r.need>500?"—":r.need.toFixed(0)+"%")+'</span></div>';
+  });
+  h+='</div>';
+  const okN=rows.filter(r=>r.need<=pass).length, noN=rows.filter(r=>r.need>pass+7).length;
+  h+='<div class="pr-note">✅ ควรลง '+okN+' รุ่น · 🟡 พิจารณา '+(rows.length-okN-noN)+' รุ่น · ❌ ไม่ควรลง '+noN+' รุ่น</div>';
+  document.getElementById("cpTable").innerHTML=h;
+}
+function openPromo(){
+  const lg=document.getElementById("logoPromo"); if(lg) lg.src=LOGO_SRC;
+  CP_KEYS.forEach(k=>{ if(data.cpcfg[k]!==undefined){ const el=document.getElementById(k); if(el) el.value=data.cpcfg[k]; } });
+  document.getElementById("screen-price").style.display="none";
+  document.getElementById("screen-promo").style.display="block";
+  renderPromo(); window.scrollTo(0,0);
+}
+document.getElementById("promoBtn").onclick=openPromo;
+document.getElementById("cpBack").onclick=()=>{
+  document.getElementById("screen-promo").style.display="none";
+  document.getElementById("screen-price").style.display="block"; window.scrollTo(0,0);
+};
+CP_KEYS.forEach(k=>{
+  const el=document.getElementById(k); if(!el) return;
+  el.addEventListener("input",()=>{ data.cpcfg[k]=num(el.value); store.write(data); renderPromo(); });
+});
 
 /* ---------- init ---------- */
 document.getElementById("logoHome").src=LOGO_SRC;
