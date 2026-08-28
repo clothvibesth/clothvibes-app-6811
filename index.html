@@ -497,6 +497,15 @@
     .totals .baht .val{font-size:22px;}
     .acts button{padding:9px;font-size:12.5px;}
   }
+  /* ซ่อนลูกศรขึ้นลงเฉพาะช่องคูปอง (พิมพ์เลขสะดวกกว่า) */
+  #screen-promo .cpn-l input::-webkit-outer-spin-button,#screen-promo .cpn-l input::-webkit-inner-spin-button,
+  #screen-promo .cpn-pct::-webkit-outer-spin-button,#screen-promo .cpn-pct::-webkit-inner-spin-button,
+  #screen-promosp .spn-l input::-webkit-outer-spin-button,#screen-promosp .spn-l input::-webkit-inner-spin-button,
+  #screen-promosp .sp-pin::-webkit-outer-spin-button,#screen-promosp .sp-pin::-webkit-inner-spin-button{
+    -webkit-appearance:none !important;margin:0;}
+  #screen-promo .cpn-l input,#screen-promo .cpn-pct,
+  #screen-promosp .spn-l input,#screen-promosp .sp-pin{
+    -moz-appearance:textfield !important;appearance:textfield !important;}
 </style>
 </head>
 <body>
