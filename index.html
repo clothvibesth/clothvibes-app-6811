@@ -3036,12 +3036,15 @@ function dashCopySummary(){
     L.push("📍 แยกช่องทาง");
     chans.forEach(c=>{ const m=CHAN_META[c]||{n:c}; L.push("• "+m.n+": ฿"+fmt(D.perChan[c].sales)+" ("+fmt(D.perChan[c].pieces)+" ชิ้น)"); });
   }
-  // Top 5 รุ่น
-  const mk=Object.keys(D.byModel).sort((a,b)=>D.byModel[b].amt-D.byModel[a].amt).slice(0,5);
+  // สินค้าทุกรายการ (เรียงตามยอดขาย)
+  const mk=Object.keys(D.byModel).sort((a,b)=>D.byModel[b].amt-D.byModel[a].amt);
   if(mk.length){
     L.push("──────────────");
-    L.push("🏆 รุ่นขายดี Top 5");
-    mk.forEach((k,i)=>{ const x=D.byModel[k]; L.push((i+1)+". "+x.name+" — "+fmt(x.q)+" ชิ้น ฿"+fmt(x.amt)); });
+    L.push("🏆 สินค้าที่ขายได้ ("+mk.length+" รุ่น)");
+    let tq=0, ta=0;
+    mk.forEach((k,i)=>{ const x=D.byModel[k]; tq+=x.q; ta+=x.amt;
+      L.push((i+1)+". "+x.name+" — "+fmt(x.q)+" ชิ้น ฿"+fmt(x.amt)); });
+    L.push("รวม "+fmt(tq)+" ชิ้น ฿"+fmt2(ta));
   }
   const txt=L.join("\n");
   if(navigator.clipboard&&navigator.clipboard.writeText){
