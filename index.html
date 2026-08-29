@@ -506,6 +506,99 @@
   #screen-promo .cpn-l input,#screen-promo .cpn-pct,
   #screen-promosp .spn-l input,#screen-promosp .sp-pin{
     -moz-appearance:textfield !important;appearance:textfield !important;}
+  /* ===== เอกสารห้าง ===== */
+  .hist-r{background:var(--card);border-radius:13px;box-shadow:var(--shadow);padding:12px 14px;margin-bottom:9px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .hist-i{flex:1;min-width:150px;}
+  .hist-i b{display:block;font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:14px;color:var(--accent-deep);}
+  .hist-i small{display:block;font-size:11px;color:var(--ink-soft);margin-top:2px;line-height:1.5;}
+  .hist-amt{font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:14px;text-align:right;}
+  .hist-badge{display:inline-block;font-size:9.5px;padding:1px 7px;border-radius:20px;margin-right:5px;vertical-align:middle;}
+  .hist-badge.iv{background:#e3f1fc;color:#0466a8;}
+  .hist-badge.cn{background:#ffe7e0;color:#c0392b;}
+  .hist-acts{display:flex;gap:6px;width:100%;margin-top:4px;}
+  .hist-acts button{flex:1;background:#fff;border:1px solid #d5dee8;border-radius:9px;padding:7px;font-family:inherit;font-size:11.5px;cursor:pointer;color:var(--accent-deep);}
+  .hist-acts .del{color:var(--minus);border-color:#f3c8bd;}
+  .cust-btn{background:#fff;border:1px solid #d5dee8;border-radius:10px;padding:0 12px;font-size:15px;cursor:pointer;color:var(--accent-deep);flex:none;}
+  .cust-card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:13px;margin-bottom:10px;}
+  .cust-card .ch{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+  .cust-card .ch b{flex:1;font-size:13.5px;font-weight:500;}
+  .cust-del{background:none;border:none;color:#c9b190;font-size:19px;cursor:pointer;padding:0 3px;line-height:1;}
+  .cust-f{margin-bottom:8px;}
+  .cust-f label{display:block;font-size:11px;color:var(--ink-soft);margin-bottom:3px;}
+  .cust-f input,.cust-f textarea{width:100%;border:1px solid #d5dee8;border-radius:9px;padding:7px 9px;font-family:inherit;font-size:12.5px;}
+  .cust-f textarea{resize:vertical;min-height:52px;line-height:1.5;}
+  .cust-row{display:flex;gap:8px;}
+  .cust-row .cust-f{flex:1;}
+  .doc-entry{background:linear-gradient(135deg,#5a4ea3,#7c6fd0)!important;color:#fff!important;}
+  #screen-doc .rep-head{display:flex;align-items:center;gap:11px;padding:6px 0 12px;}
+  #screen-doc .rep-logo{height:30px;width:auto;max-width:150px;flex:none;}
+  #screen-doc .rep-ttl{font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:19px;color:var(--ink);}
+  .doc-tabs{display:flex;gap:8px;margin-bottom:12px;}
+  .doc-tab{flex:1;background:#fff;border:1.5px solid #d5e3f0;border-radius:12px;padding:11px;font-family:inherit;font-size:13px;cursor:pointer;color:var(--ink-soft);}
+  .doc-tab.on{background:var(--grad);color:#fff;border-color:transparent;font-weight:600;}
+  .doc-row{border-bottom:1px solid var(--line);padding:10px 12px;}
+  .doc-row:last-child{border-bottom:none;}
+  .doc-r1{display:flex;gap:7px;align-items:center;margin-bottom:7px;}
+  .dc-code{width:120px;border:1px solid #d5dee8;border-radius:8px;padding:6px 8px;font-family:inherit;font-size:12.5px;}
+  .dc-name{flex:1;min-width:0;border:1px solid #d5dee8;border-radius:8px;padding:6px 8px;font-family:inherit;font-size:12.5px;}
+  .dc-del{background:none;border:none;color:#c9b190;font-size:19px;cursor:pointer;padding:0 4px;line-height:1;}
+  .doc-r2{display:flex;gap:9px;align-items:center;flex-wrap:wrap;font-size:11.5px;color:var(--ink-soft);}
+  .doc-r2 label{display:flex;align-items:center;gap:5px;}
+  .dc-n{width:74px;border:1px solid #d5dee8;border-radius:8px;padding:5px 7px;font-family:"Bai Jamjuree",sans-serif;font-weight:600;font-size:12.5px;text-align:right;}
+  .dc-n::-webkit-outer-spin-button,.dc-n::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .dc-n{-moz-appearance:textfield;appearance:textfield;}
+  .dc-ret{color:#e0403a;}.dc-ret b{font-family:"Bai Jamjuree",sans-serif;}
+  .dc-amt{margin-left:auto;font-family:"Bai Jamjuree",sans-serif;font-weight:600;color:var(--accent-deep);font-size:13px;}
+  #docPrintArea{display:none;}
+  /* เทมเพลตพิมพ์ */
+  .ivc{width:200mm;padding:6mm;font-family:"Prompt",sans-serif;font-size:9pt;color:#000;background:#fff;}
+  .iv-h{display:flex;gap:10px;align-items:flex-start;}
+  .iv-logo{height:52px;}
+  .iv-co b{display:block;font-size:13pt;line-height:1.25;}
+  .iv-co b.en{font-size:11pt;}
+  .iv-co span{display:block;font-size:7.5pt;line-height:1.4;}
+  .iv-title{text-align:center;margin:6px 0 8px;}
+  .iv-title span{display:inline-block;border:1.5px solid #c00;color:#c00;border-radius:5px;padding:5px 26px;font-size:11pt;font-weight:600;text-align:center;line-height:1.25;}
+  .iv-title small{font-size:7.5pt;font-weight:400;}
+  .iv-info{width:100%;border-collapse:collapse;font-size:8pt;margin-bottom:5px;}
+  .iv-info td{padding:2px 4px;vertical-align:top;}
+  .iv-info .k{width:88px;color:#333;}
+  .iv-info .v{border-bottom:1px dotted #999;}
+  .iv-info .k2{width:52px;text-align:right;}
+  .iv-info .v2{width:110px;border-bottom:1px dotted #999;font-weight:600;}
+  .iv-tb{width:100%;border-collapse:collapse;font-size:8pt;}
+  .iv-tb th,.iv-tb td{border:1px solid #000;padding:2.5px 4px;}
+  .iv-tb th{background:#f0f0f0;text-align:center;font-weight:600;font-size:7.5pt;}
+  .iv-tb td.c{text-align:center;} .iv-tb td.r{text-align:right;}
+  .iv-bot{display:flex;border:1px solid #000;border-top:none;}
+  .iv-left{flex:1;padding:5px 7px;border-right:1px solid #000;font-size:7.5pt;}
+  .iv-plant{margin-bottom:5px;line-height:1.6;}
+  .iv-plant .ean{background:#ff0;padding:0 3px;}
+  .iv-reason{margin-bottom:5px;color:#c00;}
+  .iv-baht{margin:6px 0;font-size:8pt;}
+  .iv-note{color:#444;line-height:1.5;font-size:7pt;margin-top:6px;}
+  .iv-right{width:78mm;}
+  .iv-right .sr{display:flex;justify-content:space-between;align-items:center;padding:3px 7px;border-bottom:1px solid #000;font-size:7.5pt;}
+  .iv-right .sr:last-child{border-bottom:none;}
+  .iv-right .sr small{color:#555;font-size:6.5pt;}
+  .iv-right .sr b{font-size:9pt;}
+  .iv-right .hl{background:#f4f4f4;}
+  .iv-right .tot{background:#e8f2fb;}
+  .iv-right .tot b{font-size:11pt;}
+  .iv-qty{border:1px solid #000;border-top:none;padding:3px 7px;font-size:8pt;text-align:right;}
+  .iv-sign{display:flex;gap:0;border:1px solid #000;border-top:none;}
+  .iv-sign .sg{flex:1;padding:6px 8px 8px;border-right:1px solid #000;font-size:7pt;}
+  .iv-sign .sg:last-child{border-right:none;}
+  .iv-sign .ttl{margin-bottom:10px;min-height:22px;}
+  .iv-sign .ln{border-bottom:1px dotted #666;height:16px;}
+  .iv-sign .lb{text-align:center;color:#555;margin:2px 0 8px;}
+  @media print{
+    body.doc-printing .wrap,body.doc-printing #screen-dash,body.doc-printing .toast{display:none!important;}
+    body.doc-printing #docPrintArea{display:block!important;}
+    body.doc-printing{background:#fff;}
+    .ivc{width:auto;padding:8mm 6mm;}
+    @page{size:A4 portrait;margin:0;}
+  }
 </style>
 </head>
 <body>
@@ -536,6 +629,7 @@
     </button>
   </div>
   <button class="report-entry price-entry" id="priceBtnH">💡 ขายเท่าไหร่ดี?</button>
+  <button class="report-entry doc-entry" id="docBtnH">📄 เอกสารห้าง (ใบกำกับ/ใบลดหนี้)</button>
   <button class="report-entry" id="reportBtnSimpleH">📊 รายงาน / ดึงข้อมูลตามช่วงเวลา</button>
   <button class="report-entry alt" id="reportBtnDetailH">📒 รายงานการขายแบบละเอียด</button>
   <div class="import-section">
@@ -780,6 +874,82 @@
   <div class="rep-acts"><button id="prBack">‹ กลับหน้าแรก</button></div>
   <div class="foot">ตัวช่วยตัดสินใจตั้งราคา · ยังไม่ได้รวมค่าเช่า/ค่าไฟ/เงินเดือน (ดูกำไรสุทธิจริงที่รายงาน)</div>
 </div>
+
+<!-- ===== เอกสารห้าง (ใบกำกับ/ใบลดหนี้) ===== -->
+<div id="screen-doc" class="wrap" style="display:none">
+  <div class="rep-head"><img id="logoDoc" class="rep-logo" alt=""><div class="rep-ttl">เอกสารห้าง</div></div>
+
+  <div class="doc-tabs">
+    <button class="doc-tab on" data-dt="iv">ใบส่งสินค้า/ใบกำกับภาษี</button>
+    <button class="doc-tab" data-dt="cn">ใบลดหนี้ (รับคืน)</button>
+    <button class="doc-tab" data-dt="hist">📚 ประวัติ</button>
+  </div>
+
+  <div id="docHist" style="display:none">
+    <div class="rep-card">
+      <div class="rep-row">
+        <div class="rep-field"><label>ค้นหา (เลขที่ / ลูกค้า)</label><input type="text" id="histQ" placeholder="เช่น IVCVTM" autocomplete="off"></div>
+        <div class="rep-field"><label>ประเภท</label><select id="histType" autocomplete="off">
+          <option value="">ทั้งหมด</option><option value="iv">ใบกำกับภาษี</option><option value="cn">ใบลดหนี้</option>
+        </select></div>
+      </div>
+    </div>
+    <div id="histList"></div>
+  </div>
+
+  <div id="docForm">
+  <div class="rep-card">
+    <div class="rep-row">
+      <div class="rep-field"><label>ลูกค้า</label>
+        <div style="display:flex;gap:6px">
+          <select id="docCust" autocomplete="off" style="flex:1;min-width:0"></select>
+          <button type="button" id="docCustEdit" class="cust-btn">✎</button>
+        </div>
+      </div>
+      <div class="rep-field"><label>เลขที่เอกสาร</label><input type="text" id="docNo" placeholder="IVCVTM-004" autocomplete="off"></div>
+    </div>
+    <div class="rep-row">
+      <div class="rep-field"><label>วันที่</label><input type="date" id="docDate" autocomplete="off"></div>
+      <div class="rep-field"><label>เครดิต (วัน)</label><input type="number" id="docCredit" value="91" autocomplete="off"></div>
+      <div class="rep-field"><label>ส่วนลด/GP %</label><input type="number" id="docDisc" value="25" autocomplete="off"></div>
+    </div>
+    <div class="rep-row" id="docRefRow" style="display:none">
+      <div class="rep-field"><label>อ้างอิงใบกำกับเลขที่</label><input type="text" id="docRef" placeholder="IVCVTM-003" autocomplete="off"></div>
+      <div class="rep-field"><label>เหตุผล</label><input type="text" id="docReason" value="รับคืนสินค้าฝากขายที่จำหน่ายไม่หมด" autocomplete="off"></div>
+    </div>
+    <div class="pr-note" id="docHint"></div>
+  </div>
+
+  <div id="custPanel" style="display:none">
+    <div class="rep-sec">ทะเบียนลูกค้า</div>
+    <div id="custList"></div>
+    <div class="rep-acts" style="margin-bottom:14px">
+      <button id="custAdd">+ เพิ่มลูกค้า</button>
+      <button id="custDone" style="background:var(--grad);color:#fff;border:none">✓ เสร็จแล้ว</button>
+    </div>
+  </div>
+
+  <div class="rep-sec">รายการสินค้า</div>
+  <div id="docItems"></div>
+  <div class="rep-acts" style="margin-bottom:14px">
+    <button id="docAdd">+ เพิ่มรายการ</button>
+    <button id="docClear">ล้างทั้งหมด</button>
+  </div>
+
+  <div class="rep-card" id="docSum"></div>
+
+  <div class="rep-acts">
+    <button id="docPrint" style="background:var(--grad);color:#fff;border:none">🖨️ พิมพ์ / บันทึก PDF</button>
+    <button id="docSave">💾 บันทึกเอกสาร</button>
+    <button id="docNew">📄 เริ่มใบใหม่</button>
+  </div>
+  </div>
+
+  <div class="rep-acts"><button id="docBack">‹ กลับหน้าแรก</button></div>
+  <div class="foot">ตรวจทานก่อนพิมพ์เสมอ · ใบลดหนี้ต้องออกในเดือนภาษีที่เกิดการรับคืนจริง (ม.86/10)</div>
+</div>
+
+<div id="docPrintArea"></div>
 
 <!-- ===== ตั้งราคาโปร Shopee ===== -->
 <div id="screen-promosp" class="wrap" style="display:none">
@@ -1509,6 +1679,19 @@ function mergeData(into,inc){
     for(const dt in ip[br]){ into.pay[br][dt]=Object.assign(into.pay[br][dt]||{}, ip[br][dt]||{}); } }
   into.prices2=into.prices2||{booth:{},main:{}};
   if(inc.prices2){ Object.assign(into.prices2.booth||{}, inc.prices2.booth||{}); Object.assign(into.prices2.main||{}, inc.prices2.main||{}); }
+  // เอกสารห้าง: รวมตาม id (ใบเดียวกันยึดฉบับที่บันทึกล่าสุด)
+  into.docs=into.docs||[];
+  (inc.docs||[]).forEach(d=>{
+    const i=into.docs.findIndex(x=>x.id===d.id || (x.no===d.no && x.type===d.type));
+    if(i<0) into.docs.push(d);
+    else if((d.saved||0)>(into.docs[i].saved||0)) into.docs[i]=d;
+  });
+  // ทะเบียนลูกค้า: รวมตาม id
+  into.doccust=into.doccust||[];
+  (inc.doccust||[]).forEach(c=>{
+    const i=into.doccust.findIndex(x=>x.id===c.id);
+    if(i<0) into.doccust.push(c); else into.doccust[i]=Object.assign(into.doccust[i],c);
+  });
   into.pbr=into.pbr||{};
   const ipb=inc.pbr||{};
   for(const b in ipb){ into.pbr[b]=Object.assign(into.pbr[b]||{}, ipb[b]||{}); }
@@ -3799,6 +3982,351 @@ document.getElementById("spReset").onclick=()=>{
   data.spcoupons=JSON.parse(JSON.stringify(SP_DEF)); store.write(data);
   renderSpCoupons(); renderSpTable(); toast("คืนค่าแล้ว");
 };
+
+/* ---------- เอกสารห้าง (ใบกำกับ/ใบลดหนี้) ---------- */
+const DOC_CUST_DEF=[
+  {id:"tm_ngam", name:"บริษัท เดอะมอลล์ กรุ๊ป จำกัด (สาขางามวงศ์วาน)",
+   addr:"408,410,412,414,416,418,420,422,424,426,428,430 หมู่ 2 ถ.งามวงศ์วาน ต.บางเขน อ.เมือง จ.นนทบุรี 11000",
+   tax:"0105523009350", branch:"00005", plant:"15KD", ean:"205000986964"},
+];
+data.doccust=data.doccust||JSON.parse(JSON.stringify(DOC_CUST_DEF));
+data.docdraft=data.docdraft||{};
+data.docs=data.docs||[];      // ประวัติเอกสารที่บันทึกแล้ว
+let docMode="iv", docRows=[];
+
+const CO_INFO={
+  nameTh:"บริษัท บี.ที.เอ็น.ดี. อินฟินิตี้ ริช จำกัด",
+  nameEn:"B.T.N.D. Infinity Rich CO.,LTD.",
+  addr1:"สำนักงานใหญ่ : 432/154 หมู่ 2 ต.สันผีเสื้อ อ.เมือง จ.เชียงใหม่ 50300",
+  addr2:"Head Office : 432/154 San Phe Sua, Mueng, Chiang Mai 50300",
+  tel:"โทร. 064-289-1624 / 094-735-5454",
+  tax:"เลขประจำตัวผู้เสียภาษี 0505566015579"
+};
+
+function docCust(){ return data.doccust.find(c=>c.id===document.getElementById("docCust").value)||data.doccust[0]||{}; }
+function fillDocCust(){
+  const sel=document.getElementById("docCust");
+  sel.innerHTML=data.doccust.map(c=>'<option value="'+c.id+'">'+c.name+'</option>').join("");
+}
+function docNewRow(){ return {code:"", name:"", qty:0, price:0, sold:0}; }
+
+/* ---- จัดการทะเบียนลูกค้า ---- */
+const CUST_FIELDS=[["name","ชื่อลูกค้า (นิติบุคคล + สาขา)","text"],["addr","ที่อยู่","area"],
+  ["tax","เลขประจำตัวผู้เสียภาษี","text"],["branch","สาขาที่","text"],
+  ["plant","Plant","text"],["ean","EAN Code","text"]];
+function renderCustList(){
+  const box=document.getElementById("custList");
+  if(!data.doccust.length){ box.innerHTML='<div class="empty">ยังไม่มีลูกค้า — กด "เพิ่มลูกค้า"</div>'; return; }
+  box.innerHTML=data.doccust.map((c,i)=>
+    '<div class="cust-card"><div class="ch"><b>'+(c.name||"(ยังไม่ใส่ชื่อ)")+'</b>'+
+      '<button class="cust-del" data-cud="'+i+'">×</button></div>'+
+    CUST_FIELDS.map(f=>{
+      const v=String(c[f[0]]||"").replace(/"/g,"&quot;");
+      if(f[2]==="area") return '<div class="cust-f"><label>'+f[1]+'</label><textarea data-cui="'+i+'" data-cuf="'+f[0]+'" autocomplete="off">'+String(c[f[0]]||"")+'</textarea></div>';
+      return '<div class="cust-f"><label>'+f[1]+'</label><input type="text" data-cui="'+i+'" data-cuf="'+f[0]+'" value="'+v+'" autocomplete="off"></div>';
+    }).join("")+'</div>').join("");
+  box.querySelectorAll("[data-cuf]").forEach(inp=>{
+    inp.oninput=()=>{
+      const c=data.doccust[+inp.dataset.cui]; if(!c) return;
+      c[inp.dataset.cuf]=inp.value; store.write(data);
+      const card=inp.closest(".cust-card"); const t=card&&card.querySelector(".ch b");
+      if(t && inp.dataset.cuf==="name") t.textContent=inp.value||"(ยังไม่ใส่ชื่อ)";
+      const cur=document.getElementById("docCust").value;
+      fillDocCust(); document.getElementById("docCust").value=cur;
+    };
+  });
+  box.querySelectorAll("[data-cud]").forEach(b=>{
+    b.onclick=()=>{
+      if(data.doccust.length<=1){ toast("ต้องมีลูกค้าอย่างน้อย 1 ราย"); return; }
+      if(!confirm("ลบลูกค้ารายนี้?")) return;
+      data.doccust.splice(+b.dataset.cud,1); store.write(data);
+      fillDocCust(); renderCustList();
+    };
+  });
+}
+function toggleCustPanel(on){
+  document.getElementById("custPanel").style.display=on?"block":"none";
+  if(on) renderCustList();
+}
+
+function renderDocItems(){
+  const box=document.getElementById("docItems");
+  if(!docRows.length){ box.innerHTML='<div class="empty">ยังไม่มีรายการ — กด "เพิ่มรายการ"</div>'; renderDocSum(); return; }
+  const isCN=(docMode==="cn");
+  box.innerHTML='<div class="pr-tb">'+docRows.map((r,i)=>
+    '<div class="doc-row"><div class="doc-r1">'+
+      '<input type="text" class="dc-code" data-i="'+i+'" data-f="code" value="'+String(r.code).replace(/"/g,"&quot;")+'" placeholder="รหัสสินค้า" autocomplete="off">'+
+      '<input type="text" class="dc-name" data-i="'+i+'" data-f="name" value="'+String(r.name).replace(/"/g,"&quot;")+'" placeholder="รายละเอียด" autocomplete="off">'+
+      '<button class="dc-del" data-del="'+i+'">×</button></div>'+
+    '<div class="doc-r2">'+
+      (isCN
+        ? '<label>ส่งไป <input type="number" class="dc-n" data-i="'+i+'" data-f="qty" value="'+(r.qty||"")+'" autocomplete="off"></label>'+
+          '<label>ขายได้ <input type="number" class="dc-n" data-i="'+i+'" data-f="sold" value="'+(r.sold||"")+'" autocomplete="off"></label>'+
+          '<span class="dc-ret">คืน <b>'+fmt(Math.max(num(r.qty)-num(r.sold),0))+'</b></span>'
+        : '<label>จำนวน <input type="number" class="dc-n" data-i="'+i+'" data-f="qty" value="'+(r.qty||"")+'" autocomplete="off"></label>')+
+      '<label>ราคา/หน่วย <input type="number" class="dc-n" data-i="'+i+'" data-f="price" value="'+(r.price||"")+'" autocomplete="off"></label>'+
+      '<span class="dc-amt">฿'+fmt2(docQty(r)*num(r.price))+'</span>'+
+    '</div></div>').join("")+'</div>';
+  box.querySelectorAll("[data-f]").forEach(inp=>{
+    inp.oninput=()=>{
+      const r=docRows[+inp.dataset.i]; if(!r) return;
+      r[inp.dataset.f]= inp.type==="number" ? num(inp.value) : inp.value;
+      saveDocDraft();
+      if(inp.type==="number"){ const pos=inp.selectionStart; renderDocItems();
+        const again=document.querySelector('#docItems [data-i="'+inp.dataset.i+'"][data-f="'+inp.dataset.f+'"]');
+        if(again){ again.focus(); try{ again.setSelectionRange(pos,pos); }catch(e){} }
+      } else renderDocSum();
+    };
+  });
+  box.querySelectorAll("[data-del]").forEach(b=>{
+    b.onclick=()=>{ docRows.splice(+b.dataset.del,1); saveDocDraft(); renderDocItems(); };
+  });
+  renderDocSum();
+}
+function docQty(r){ return docMode==="cn" ? Math.max(num(r.qty)-num(r.sold),0) : num(r.qty); }
+function docTotals(){
+  const disc=num(document.getElementById("docDisc").value)||0;
+  let qty=0, gross=0;
+  docRows.forEach(r=>{ const q=docQty(r); qty+=q; gross+=q*num(r.price); });
+  const dAmt=gross*disc/100;
+  const after=gross-dAmt;              // ยอดหลังหักส่วนลด (รวม VAT แล้ว)
+  const base=after/(1+VAT);            // ฐานภาษี
+  const vat=after-base;                // VAT ที่ถอดออกมา
+  return {qty, gross, disc, dAmt, after, base, vat};
+}
+function renderDocSum(){
+  const t=docTotals();
+  document.getElementById("docSum").innerHTML=
+    '<div class="cp-sum"><span>รวมจำนวนสินค้า</span><b>'+fmt(t.qty)+' ตัว</b></div>'+
+    '<div class="cp-sum"><span>ยอดเงิน</span><b>฿'+fmt2(t.gross)+'</b></div>'+
+    '<div class="cp-sum"><span>หักส่วนลด '+fmt(t.disc)+'%</span><b style="color:var(--minus)">−฿'+fmt2(t.dAmt)+'</b></div>'+
+    '<div class="cp-sum"><span><b>มูลค่าหลังหักส่วนลด</b></span><b style="font-size:16px;color:var(--accent-deep)">฿'+fmt2(t.after)+'</b></div>'+
+    '<div class="cp-sum"><span style="padding-left:12px;color:#7b8794">— ฐานภาษี</span><span style="color:#7b8794">฿'+fmt2(t.base)+'</span></div>'+
+    '<div class="cp-sum"><span style="padding-left:12px;color:#7b8794">— ภาษีมูลค่าเพิ่ม 7%</span><span style="color:#7b8794">฿'+fmt2(t.vat)+'</span></div>'+
+    '<div class="pr-note">ยอดที่ห้างต้องชำระ = <b>฿'+fmt2(t.after)+'</b> (VAT ถอดจากยอดนี้ ไม่บวกเพิ่ม)</div>';
+}
+function saveDocDraft(){
+  data.docdraft[docMode]={rows:docRows,
+    no:document.getElementById("docNo").value, date:document.getElementById("docDate").value,
+    credit:document.getElementById("docCredit").value, disc:document.getElementById("docDisc").value,
+    cust:document.getElementById("docCust").value,
+    ref:document.getElementById("docRef").value, reason:document.getElementById("docReason").value};
+  store.write(data);
+}
+function loadDocDraft(){
+  const d=data.docdraft[docMode];
+  if(!d){ docRows=[]; return; }
+  docRows=d.rows||[];
+  const set=(id,v)=>{ const el=document.getElementById(id); if(el&&v!==undefined) el.value=v; };
+  set("docNo",d.no); set("docDate",d.date); set("docCredit",d.credit); set("docDisc",d.disc);
+  set("docRef",d.ref); set("docReason",d.reason);
+  if(d.cust) set("docCust",d.cust);
+}
+function setDocMode(m){
+  if(docMode!=="hist") saveDocDraft();
+  const prev=docMode; docMode=m;
+  document.querySelectorAll(".doc-tab").forEach(b=>b.classList.toggle("on",b.dataset.dt===m));
+  const isHist=(m==="hist");
+  document.getElementById("docHist").style.display=isHist?"block":"none";
+  document.getElementById("docForm").style.display=isHist?"none":"block";
+  if(isHist){ docMode=prev; renderHist(); 
+    document.querySelectorAll(".doc-tab").forEach(b=>b.classList.toggle("on",b.dataset.dt==="hist"));
+    return; }
+  document.getElementById("docRefRow").style.display=(m==="cn")?"flex":"none";
+  document.getElementById("docHint").innerHTML= m==="cn"
+    ? '📌 ใบลดหนี้: กรอก <b>ส่งไป</b> และ <b>ขายได้</b> ระบบจะคำนวณจำนวนคืนให้ (ม.86/10 ต้องออกในเดือนที่รับคืนจริง)'
+    : '📌 ใบกำกับภาษี: ราคา/หน่วยเป็น<b>ราคารวม VAT</b> · ส่วนลดหักจากยอดรวม · VAT ถอดจากยอดหลังหักส่วนลด';
+  loadDocDraft(); renderDocItems();
+}
+/* ---- ประวัติเอกสาร ---- */
+function docSnapshot(){
+  const t=docTotals(), c=docCust();
+  return {id:"D"+Date.now(), type:docMode, rows:JSON.parse(JSON.stringify(docRows)),
+    no:document.getElementById("docNo").value, date:document.getElementById("docDate").value,
+    credit:document.getElementById("docCredit").value, disc:document.getElementById("docDisc").value,
+    cust:document.getElementById("docCust").value, custName:c.name||"",
+    ref:document.getElementById("docRef").value, reason:document.getElementById("docReason").value,
+    qty:t.qty, total:t.after, saved:Date.now()};
+}
+function saveDocFinal(){
+  const no=document.getElementById("docNo").value.trim();
+  if(!no){ alert("กรุณาใส่เลขที่เอกสารก่อนบันทึก"); return; }
+  if(!docRows.length){ alert("ยังไม่มีรายการสินค้า"); return; }
+  const snap=docSnapshot();
+  const idx=data.docs.findIndex(d=>d.no===no && d.type===docMode);
+  if(idx>=0){
+    if(!confirm("มีเอกสารเลขที่ "+no+" อยู่แล้ว\n\nต้องการบันทึกทับไหม?")) return;
+    snap.id=data.docs[idx].id; data.docs[idx]=snap;
+  } else data.docs.push(snap);
+  store.write(data); toast("บันทึกเอกสาร "+no+" แล้ว");
+}
+function renderHist(){
+  const q=(document.getElementById("histQ").value||"").toLowerCase().trim();
+  const ty=document.getElementById("histType").value;
+  const box=document.getElementById("histList");
+  let list=data.docs.slice().sort((a,b)=>(b.date||"").localeCompare(a.date||"")||b.saved-a.saved);
+  if(ty) list=list.filter(d=>d.type===ty);
+  if(q) list=list.filter(d=>(d.no||"").toLowerCase().indexOf(q)>=0 || (d.custName||"").toLowerCase().indexOf(q)>=0);
+  if(!list.length){ box.innerHTML='<div class="empty">'+(data.docs.length?"ไม่พบเอกสารที่ค้นหา":"ยังไม่มีเอกสารที่บันทึก — กรอกแล้วกด \"บันทึกเอกสาร\"")+'</div>'; return; }
+  box.innerHTML=list.map(d=>
+    '<div class="hist-r"><div class="hist-i">'+
+      '<b><span class="hist-badge '+d.type+'">'+(d.type==="cn"?"ใบลดหนี้":"ใบกำกับ")+'</span>'+(d.no||"-")+'</b>'+
+      '<small>'+thDate(d.date)+' · '+(d.custName||"")+'<br>'+fmt(d.qty)+' ตัว'+(d.ref?' · อ้างอิง '+d.ref:'')+'</small></div>'+
+    '<div class="hist-amt">฿'+fmt2(d.total)+'</div>'+
+    '<div class="hist-acts"><button data-hopen="'+d.id+'">เปิด</button>'+
+      '<button data-hprint="'+d.id+'">🖨️ พิมพ์</button>'+
+      '<button class="del" data-hdel="'+d.id+'">ลบ</button></div></div>').join("");
+  box.querySelectorAll("[data-hopen]").forEach(b=>b.onclick=()=>loadDoc(b.dataset.hopen,false));
+  box.querySelectorAll("[data-hprint]").forEach(b=>b.onclick=()=>loadDoc(b.dataset.hprint,true));
+  box.querySelectorAll("[data-hdel]").forEach(b=>b.onclick=()=>{
+    const d=data.docs.find(x=>x.id===b.dataset.hdel);
+    if(!confirm("ลบเอกสาร "+(d?d.no:"")+" ออกจากประวัติ?\n(ไม่กระทบไฟล์ที่พิมพ์ไปแล้ว)")) return;
+    data.docs=data.docs.filter(x=>x.id!==b.dataset.hdel); store.write(data); renderHist();
+  });
+}
+function loadDoc(id, doPrint){
+  const d=data.docs.find(x=>x.id===id); if(!d) return;
+  docMode=d.type; docRows=JSON.parse(JSON.stringify(d.rows||[]));
+  document.querySelectorAll(".doc-tab").forEach(b=>b.classList.toggle("on",b.dataset.dt===d.type));
+  document.getElementById("docHist").style.display="none";
+  document.getElementById("docForm").style.display="block";
+  document.getElementById("docRefRow").style.display=(d.type==="cn")?"flex":"none";
+  const set=(i,v)=>{ const el=document.getElementById(i); if(el&&v!==undefined) el.value=v; };
+  set("docNo",d.no); set("docDate",d.date); set("docCredit",d.credit); set("docDisc",d.disc);
+  set("docRef",d.ref); set("docReason",d.reason);
+  if(d.cust && data.doccust.some(c=>c.id===d.cust)) set("docCust",d.cust);
+  renderDocItems();
+  if(doPrint) setTimeout(docPrint,200); else { window.scrollTo(0,0); toast("เปิดเอกสาร "+d.no); }
+}
+function openDoc(){
+  const lg=document.getElementById("logoDoc"); if(lg) lg.src=LOGO_SRC;
+  fillDocCust();
+  if(!document.getElementById("docDate").value) document.getElementById("docDate").value=todayISO;
+  document.getElementById("screen-home").style.display="none";
+  document.getElementById("screen-doc").style.display="block";
+  setDocMode(docMode); window.scrollTo(0,0);
+}
+document.getElementById("docBtnH").onclick=openDoc;
+document.getElementById("docBack").onclick=()=>{
+  saveDocDraft();
+  document.getElementById("screen-doc").style.display="none";
+  document.getElementById("screen-home").style.display="flex"; window.scrollTo(0,0);
+};
+document.querySelectorAll(".doc-tab").forEach(b=>b.onclick=()=>setDocMode(b.dataset.dt));
+document.getElementById("docAdd").onclick=()=>{ docRows.push(docNewRow()); saveDocDraft(); renderDocItems(); };
+document.getElementById("docClear").onclick=()=>{
+  if(!confirm("ล้างรายการทั้งหมด?")) return;
+  docRows=[]; saveDocDraft(); renderDocItems();
+};
+["docNo","docDate","docCredit","docDisc","docCust","docRef","docReason"].forEach(id=>{
+  const el=document.getElementById(id); if(!el) return;
+  el.addEventListener("input",()=>{ saveDocDraft(); renderDocSum(); });
+  el.addEventListener("change",()=>{ saveDocDraft(); renderDocSum(); });
+});
+document.getElementById("docSave").onclick=saveDocFinal;
+document.getElementById("docNew").onclick=()=>{
+  if(docRows.length && !confirm("เริ่มใบใหม่? (รายการปัจจุบันจะถูกล้าง)")) return;
+  docRows=[]; document.getElementById("docNo").value=""; document.getElementById("docRef").value="";
+  document.getElementById("docDate").value=todayISO;
+  saveDocDraft(); renderDocItems(); toast("เริ่มใบใหม่");
+};
+["histQ","histType"].forEach(id=>{ const el=document.getElementById(id);
+  if(el){ el.addEventListener("input",renderHist); el.addEventListener("change",renderHist); } });
+document.getElementById("docCustEdit").onclick=()=>toggleCustPanel(document.getElementById("custPanel").style.display==="none");
+document.getElementById("custDone").onclick=()=>toggleCustPanel(false);
+document.getElementById("custAdd").onclick=()=>{
+  const id="c"+Date.now().toString().slice(-8);
+  data.doccust.push({id, name:"", addr:"", tax:"", branch:"", plant:"", ean:""});
+  store.write(data); fillDocCust(); renderCustList();
+  document.getElementById("docCust").value=id;
+};
+
+/* ---- พิมพ์เอกสาร (เทมเพลตตามฟอร์มเดิม) ---- */
+function thDate(iso){
+  if(!iso) return "";
+  const [y,m,d]=iso.split("-").map(Number);
+  return d+"/"+m+"/"+String((y+543)%100).padStart(2,"0");
+}
+function docPrint(){
+  if(!docRows.length){ toast("ยังไม่มีรายการ"); return; }
+  const t=docTotals(), c=docCust(), isCN=(docMode==="cn");
+  const title = isCN ? "ใบลดหนี้ / ใบรับคืนสินค้า" : "ใบกำกับภาษี / ใบส่งสินค้า / ใบแจ้งหนี้";
+  const titleEn= isCN ? "CREDIT NOTE / GOODS RETURN" : "TAX INVOICE/ DELIVERY ORDER / INVOICE";
+  let rows="";
+  docRows.forEach((r,i)=>{
+    const q=docQty(r); if(q<=0 && !r.code) return;
+    rows+='<tr><td class="c">'+(i+1)+'</td><td>'+(r.code||"")+'</td><td>'+(r.name||"")+'</td>'+
+      '<td class="r">'+fmt(q)+'</td><td class="c">ตัว</td><td class="r">'+fmt2(num(r.price))+'</td>'+
+      '<td class="r">'+fmt2(q*num(r.price))+'</td></tr>';
+  });
+  for(let i=docRows.length;i<18;i++) rows+='<tr><td class="c">&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
+  const html=
+  '<div class="ivc">'+
+    '<div class="iv-h"><img src="'+LOGO_SRC+'" class="iv-logo">'+
+      '<div class="iv-co"><b>'+CO_INFO.nameTh+'</b><b class="en">'+CO_INFO.nameEn+'</b>'+
+      '<span>'+CO_INFO.addr1+'</span><span>'+CO_INFO.addr2+'</span>'+
+      '<span>'+CO_INFO.tel+'</span><span>'+CO_INFO.tax+'</span></div></div>'+
+    '<div class="iv-title"><span>'+title+'<br><small>'+titleEn+'</small></span></div>'+
+    '<table class="iv-info"><tr>'+
+      '<td class="k">นามลูกค้า</td><td class="v">'+(c.name||"")+'</td>'+
+      '<td class="k2">เลขที่</td><td class="v2">'+(document.getElementById("docNo").value||"")+'</td></tr>'+
+      '<tr><td class="k">ที่อยู่</td><td class="v" rowspan="2">'+(c.addr||"")+'</td>'+
+      '<td class="k2">วันที่</td><td class="v2">'+thDate(document.getElementById("docDate").value)+'</td></tr>'+
+      '<tr><td class="k"></td><td class="k2">เครดิต</td><td class="v2">'+(document.getElementById("docCredit").value||"")+' วัน</td></tr>'+
+      '<tr><td class="k">เลขประจำตัวผู้เสียภาษี</td><td class="v">'+(c.tax||"")+
+        ' &nbsp;&nbsp; <b>สาขาที่</b> '+(c.branch||"")+'</td>'+
+        '<td class="k2">'+(isCN?"อ้างอิง":"")+'</td><td class="v2">'+(isCN?(document.getElementById("docRef").value||""):"")+'</td></tr>'+
+    '</table>'+
+    '<table class="iv-tb"><thead><tr>'+
+      '<th style="width:30px">ลำดับ</th><th style="width:110px">รหัสสินค้า</th><th>รายละเอียด</th>'+
+      '<th style="width:52px">จำนวน</th><th style="width:38px">หน่วย</th>'+
+      '<th style="width:70px">ราคา/หน่วย</th><th style="width:82px">จำนวนเงิน</th></tr></thead>'+
+      '<tbody>'+rows+'</tbody></table>'+
+    '<div class="iv-bot">'+
+      '<div class="iv-left">'+
+        '<div class="iv-plant">1.Plant: '+(c.plant||"")+'<br>2.EAN Code: <span class="ean">'+(c.ean||"")+'</span></div>'+
+        (isCN?'<div class="iv-reason">เหตุผล: '+(document.getElementById("docReason").value||"")+'</div>':'')+
+        '<div class="iv-baht"><b>ตัวอักษร.</b> ('+bahtTextDoc(t.after)+')</div>'+
+        '<div class="iv-note">หมายเหตุ<br>'+
+          (isCN
+           ? 'ใบลดหนี้ฉบับนี้ออกตามมาตรา 86/10 แห่งประมวลรัษฎากร เนื่องจากรับคืนสินค้าฝากขายที่จำหน่ายไม่หมด'
+           : '1. สินค้าที่ส่งมอบนี้ ยังคงเป็นกรรมสิทธิ์ของบริษัทฯ จนกว่าจะได้รับชำระเงินครบถ้วน<br>2. โปรดตรวจรับสินค้าให้เรียบร้อยก่อนลงนามรับสินค้า')+
+        '</div>'+
+      '</div>'+
+      '<div class="iv-right">'+
+        '<div class="sr"><span>ยอดเงิน<br><small>TOTAL AMOUNT</small></span><b>'+fmt2(t.gross)+'</b></div>'+
+        '<div class="sr"><span>หักส่วนลด '+fmt(t.disc)+'%<br><small>DISCOUNT</small></span><b>'+fmt2(t.dAmt)+'</b></div>'+
+        '<div class="sr hl"><span>มูลค่าสินค้าหลังหักส่วนลด<br><small>TOTAL AMOUNT AFTER DISCOUNT</small></span><b>'+fmt2(t.after)+'</b></div>'+
+        '<div class="sr"><span>ภาษีมูลค่าเพิ่ม 7%<br><small>VAT</small></span><b>'+fmt2(t.vat)+'</b></div>'+
+        '<div class="sr"><span>ราคาสินค้าก่อนภาษีมูลค่าเพิ่ม<br><small>TOTAL BEFORE VAT</small></span><b>'+fmt2(t.base)+'</b></div>'+
+        '<div class="sr tot"><span>จำนวนเงินที่ต้องชำระ</span><b>'+fmt2(t.after)+'</b></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="iv-qty">รวมจำนวนสินค้า <b>'+fmt(t.qty)+'</b> ตัว</div>'+
+    '<div class="iv-sign">'+
+      '<div class="sg"><div class="ttl">ได้รับสินค้าตามรายการข้างบนนี้ไว้เรียบร้อยแล้ว</div>'+
+        '<div class="ln"></div><div class="lb">ผู้รับสินค้า</div><div class="ln"></div><div class="lb">วันที่</div></div>'+
+      '<div class="sg"><div class="ttl">&nbsp;</div>'+
+        '<div class="ln"></div><div class="lb">ผู้ส่งสินค้า</div><div class="ln"></div><div class="lb">วันที่</div></div>'+
+      '<div class="sg"><div class="ttl">ในนาม '+CO_INFO.nameTh+'</div>'+
+        '<div class="ln"></div><div class="lb">ผู้มีอำนาจลงนาม</div></div>'+
+    '</div>'+
+  '</div>';
+  document.getElementById("docPrintArea").innerHTML=html;
+  document.body.classList.add("doc-printing");
+  setTimeout(()=>{ window.print(); setTimeout(()=>document.body.classList.remove("doc-printing"),300); },150);
+}
+function bahtTextDoc(n){
+  n=Math.round(n*100)/100;
+  const n1=["","หนึ่ง","สอง","สาม","สี่","ห้า","หก","เจ็ด","แปด","เก้า"], p1=["","สิบ","ร้อย","พัน","หมื่น","แสน","ล้าน"];
+  function conv(s){ s=String(parseInt(s,10)||0); let o=""; const L=s.length;
+    for(let i=0;i<L;i++){ const d=+s[i], p=L-i-1; if(d===0) continue;
+      if(p===0&&d===1&&L>1) o+="เอ็ด"; else if(p===1&&d===1) o+=""; else if(p===1&&d===2) o+="ยี่"; else o+=n1[d];
+      o+=p1[p%6===0&&p>0?6:p%6]; } return o; }
+  const i=Math.floor(n), f=Math.round((n-i)*100);
+  return (i===0?"ศูนย์":conv(i))+"บาท"+(f===0?"ถ้วน":conv(f)+"สตางค์");
+}
+document.getElementById("docPrint").onclick=docPrint;
 
 /* ---------- init ---------- */
 document.getElementById("logoHome").src=LOGO_SRC;
