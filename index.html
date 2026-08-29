@@ -3049,7 +3049,7 @@ function backFromDash(){
 function dashBranchPass(br){ return dashPickedBranches.size===0 || dashPickedBranches.has(br); }
 function dashData(ym){
   const perChan={};   // key -> {sales,base,vat,cost,pieces}
-  const byModel={}, byDay={};
+  const byModel={}, byDay={}, perBranch={};
   Object.keys(data.branches).forEach(br=>{
     const ch=chanOfBranch(br);
     if(!dashBranchPass(br)) return;
@@ -3061,6 +3061,8 @@ function dashData(ym){
         const pr=priceOfVar(vid,br,dt), sale=q*pr;
         (perChan[ch]=perChan[ch]||{sales:0,base:0,cost:0,pieces:0}).sales+=sale;
         perChan[ch].base+=sale/(1+VAT); perChan[ch].cost+=q*v.cost; perChan[ch].pieces+=q;
+        // ยอดรายสาขา (ใช้ในสรุปคัดลอก)
+        (perBranch[br]=perBranch[br]||{ch, sales:0, pieces:0}).sales+=sale; perBranch[br].pieces+=q;
         const k=v.modelId; (byModel[k]=byModel[k]||{name:v.modelName,q:0,amt:0}); byModel[k].q+=q; byModel[k].amt+=sale;
         byDay[dt]=(byDay[dt]||0)+sale;
       });
@@ -3089,7 +3091,7 @@ function dashData(ym){
   const gp=E.gpAmt;
   const opex=E.rent+E.elec+E.wage+E.comm;
   const profit=base-gp-feeOnline-ads-opex-cost;
-  return {ym,sales,base,vat,cost,pieces,gp,feeOnline,ads,opex,profit,perChan,byModel,byDay,est:F.est};
+  return {ym,sales,base,vat,cost,pieces,gp,feeOnline,ads,opex,profit,perChan,perBranch,byModel,byDay,est:F.est};
 }
 function prevYm(ym){ const [y,m]=ym.split("-").map(Number); const d=new Date(y,m-2,1); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); }
 
@@ -3214,10 +3216,20 @@ function dashCopySummary(){
   if(D.est) L.push("⚠️ ค่าธรรมเนียมบางส่วนเป็นตัวประมาณ");
   // แยกช่องทาง
   const chans=Object.keys(D.perChan).sort((a,b)=>D.perChan[b].sales-D.perChan[a].sales);
-  if(chans.length>1){
+  if(chans.length){
     L.push("──────────────");
-    L.push("📍 แยกช่องทาง");
-    chans.forEach(c=>{ const m=CHAN_META[c]||{n:c}; L.push("• "+m.n+": ฿"+fmt(D.perChan[c].sales)+" ("+fmt(D.perChan[c].pieces)+" ชิ้น)"); });
+    L.push("📍 แยกช่องทาง / สาขา");
+    chans.forEach(c=>{
+      const m=CHAN_META[c]||{n:c};
+      L.push("• "+m.n+": ฿"+fmt(D.perChan[c].sales)+" ("+fmt(D.perChan[c].pieces)+" ชิ้น)");
+      // แตกรายสาขาในช่องทางนี้
+      const brs=Object.keys(D.perBranch||{}).filter(b=>D.perBranch[b].ch===c)
+        .sort((a,b)=>D.perBranch[b].sales-D.perBranch[a].sales);
+      if(brs.length>1 || (brs.length===1 && brs[0]!==m.n)){
+        brs.forEach(b=>{ const x=D.perBranch[b];
+          L.push("   – "+b+": ฿"+fmt(x.sales)+" ("+fmt(x.pieces)+" ชิ้น)"); });
+      }
+    });
   }
   // สินค้าทุกรายการ (เรียงตามยอดขาย)
   const mk=Object.keys(D.byModel).sort((a,b)=>D.byModel[b].amt-D.byModel[a].amt);
