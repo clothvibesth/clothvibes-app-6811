@@ -316,6 +316,7 @@
   .af-btn{display:block;width:100%;text-align:left;border:none;border-radius:14px;padding:14px 16px;margin-bottom:10px;cursor:pointer;font-family:inherit;color:#fff;}
   .af-btn b{display:block;font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:15px;}
   .af-btn small{display:block;font-size:11px;opacity:.85;margin-top:3px;}
+  .af-both{background:linear-gradient(135deg,#5a4ea3,#7c6fd0);}
   .af-x{background:linear-gradient(135deg,#1ba672,#128a5c);}
   .af-c{background:linear-gradient(135deg,#3fb2e8,#077fc5);}
   .af-btn:active{transform:scale(.98);}
@@ -636,9 +637,9 @@
     <div class="import-title">นำเข้าข้อมูลจากไฟล์</div>
     <button class="imp-btn" id="importBtn">
       <span class="ic">📥</span>
-      <span class="tx"><b>นำเข้า POS หน้าร้าน</b><small>ไฟล์ AllLiteDetailOrder จากเครื่อง POS (สาขาหลัก/บูท)</small></span>
+      <span class="tx"><b>นำเข้า POS หน้าร้าน</b><small>เลือกไฟล์ POS (แนบ 2 ไฟล์พร้อมกันได้: NewSaleOrderDetail + AllLiteDetailOrder)</small></span>
     </button>
-    <input type="file" id="posInput" accept=".xlsx,.xls" hidden autocomplete="off">
+    <input type="file" id="posInput" accept=".xlsx,.xls" multiple hidden autocomplete="off">
     <button class="imp-btn" id="importShBtn">
       <span class="ic">🛒</span>
       <span class="tx"><b>นำเข้า Shopee</b><small>เลือก 2 ไฟล์พร้อมกัน: Order.all + Income รายได้ที่โอนสำเร็จ</small></span>
@@ -649,11 +650,6 @@
       <span class="tx"><b>นำเข้า TikTok</b><small>เลือก 2 ไฟล์พร้อมกัน: ทั้งหมดคำสั่งซื้อ + income</small></span>
     </button>
     <input type="file" id="tkOrderInput" accept=".xlsx,.xls" multiple hidden autocomplete="off">
-    <button class="imp-btn" id="accFileBtn">
-      <span class="ic">📄</span>
-      <span class="tx"><b>สร้างไฟล์ส่งบัญชี (สาขาหลัก)</b><small>เลือก 2 ไฟล์พร้อมกัน: NewSaleOrderDetail (เวลา) + AllLiteDetailOrder (เงินสด/KSHOP)</small></span>
-    </button>
-    <input type="file" id="accFileInput" accept=".xlsx,.xls" multiple hidden autocomplete="off">
   </div>
   <button class="report-entry ghost" id="expBtn">⚙️ ตั้งค่าค่าใช้จ่ายรายสาขา</button>
   <button class="report-entry ghost" id="cleanBtn">🧹 ตรวจ/ล้างข้อมูลเพี้ยน</button>
@@ -1136,6 +1132,17 @@
 </div>
 
 <div class="toast" id="toast"></div>
+<!-- เลือกปลายทางหลังอ่านไฟล์ POS -->
+<div id="posChoice" class="acc-fmt" style="display:none">
+  <div class="af-box">
+    <div class="af-t">ไฟล์ POS พร้อมแล้ว</div>
+    <div class="af-s" id="posChoiceInfo"></div>
+    <button class="af-btn af-both" id="posDoBoth"><b>✅ ทำทั้ง 2 อย่าง</b><small>บันทึกยอด + ดาวน์โหลดไฟล์ส่งบัญชี</small></button>
+    <button class="af-btn af-x" id="posDoImport"><b>📊 บันทึกยอดเข้าระบบ</b><small>ตัดบิลผิดปกติออก · ใช้ทำรายงาน</small></button>
+    <button class="af-btn af-c" id="posDoAcc"><b>📄 ดาวน์โหลดไฟล์ส่งบัญชี</b><small>ครบทุกบิลตาม POS · ส่งให้บัญชี</small></button>
+    <button class="af-cancel" id="posChoiceCancel">ยกเลิก</button>
+  </div>
+</div>
 <!-- เลือกรูปแบบไฟล์ส่งบัญชี -->
 <div id="accFmtBox" class="acc-fmt" style="display:none">
   <div class="af-box">
@@ -2258,6 +2265,67 @@ function posDate(onl){   // "866120260630-0005" -> "2026-06-30"
   return d.slice(0,4)+"-"+d.slice(4,6)+"-"+d.slice(6,8);
 }
 
+let posParts=null;   // {full, lite} จากไฟล์ที่เลือก
+function posFilesRun(fileList){
+  Promise.all([].slice.call(fileList).map(accReadOne)).then(parts=>{
+    let full=null, lite=null;
+    parts.forEach(pt=>{
+      const K=pt.keys.join("|");
+      const isFull=/จ[ํำ]นวนสินค้าที่ขาย/.test(K) || (/ต้นทุนสินค้า/.test(K) && /กำไรขั้นต้น/.test(K));
+      const isLite=/วิธีการชำระเงิน|วิธีชำระ/.test(K);
+      if(isFull && !full) full=pt;
+      else if(isLite && !lite) lite=pt;
+      else if(!full && /รหัสสินค้า/.test(K) && !isLite) full=pt;
+      else if(!lite) lite=pt;
+    });
+    if(!full && !lite){ alert("ไม่พบไฟล์ POS ที่ใช้ได้\n\nต้องเป็น NewSaleOrderDetail และ/หรือ AllLiteDetailOrder"); return; }
+    posParts={full, lite};
+    // สรุปให้ดูก่อนเลือก
+    const src=lite||full;
+    let n=0, amt=0;
+    if(lite){
+      const K=name=>lite.keys.find(k=>String(k).indexOf(name)>=0);
+      const kO=K("หมายเลขออเดอร์"), kA=K("ควรได้รับ")||K("จำนวนเงิน");
+      const seen={};
+      lite.rows.forEach(r=>{ const o=String(r[kO]||"").trim(); if(!o||seen[o]) return; seen[o]=1; n++; amt+=num(r[kA]); });
+      document.getElementById("posChoiceInfo").textContent=n+" ออเดอร์ · ยอดรวม ฿"+fmt2(amt)+(full?" (มีไฟล์เวลาครบ)":" (ไม่มีไฟล์เวลา)");
+    } else {
+      document.getElementById("posChoiceInfo").textContent=full.rows.length+" รายการ (ไม่มีไฟล์วิธีชำระเงิน)";
+    }
+    // ปุ่มที่ทำได้
+    document.getElementById("posDoImport").style.display=lite?"block":"none";
+    document.getElementById("posDoBoth").style.display=lite?"block":"none";
+    document.getElementById("posChoice").style.display="flex";
+  }).catch(err=>alert("อ่านไฟล์ไม่สำเร็จ: "+err.message));
+}
+function posRunImport(){
+  if(!posParts||!posParts.lite){ alert("ต้องมีไฟล์ AllLiteDetailOrder เพื่อบันทึกยอด (มีวิธีชำระเงิน)"); return; }
+  impData=null; buildImport(posParts.lite.rows);
+}
+function posRunAcc(){
+  if(!posParts) return;
+  const {full, lite}=posParts;
+  let payMap=null;
+  if(lite){
+    const K=name=>lite.keys.find(k=>String(k).indexOf(name)>=0);
+    const kOrder=K("หมายเลขออเดอร์"), kPay=K("วิธีการชำระเงิน")||K("วิธีชำระ");
+    if(kOrder&&kPay){ payMap={};
+      lite.rows.forEach(r=>{ const oid=String(r[kOrder]||"").trim(); if(!oid) return;
+        const pv=String(r[kPay]||""); if(pv&&!payMap[oid]) payMap[oid]=(pv.indexOf("เงินสด")>=0?"เงินสด":"KSHOP"); }); }
+  }
+  let R;
+  if(full){ R=buildAccountingFull(full.rows, full.keys, payMap); if(!payMap) R.warnNoPay=true; }
+  else { R=buildAccountingFile(lite.rows, lite.keys); R.warnNoTime=true; }
+  finishAccFile(R);
+}
+document.getElementById("posChoiceCancel").onclick=()=>{ document.getElementById("posChoice").style.display="none"; posParts=null; };
+document.getElementById("posDoImport").onclick=()=>{ document.getElementById("posChoice").style.display="none"; posRunImport(); };
+document.getElementById("posDoAcc").onclick=()=>{ document.getElementById("posChoice").style.display="none"; posRunAcc(); };
+document.getElementById("posDoBoth").onclick=()=>{
+  document.getElementById("posChoice").style.display="none";
+  posRunAcc();
+  setTimeout(posRunImport, 700);      // ดาวน์โหลดก่อน แล้วเข้าหน้าตรวจสอบนำเข้า
+};
 function readPOS(file){
   impData=null;
   const rd=new FileReader();
@@ -2837,7 +2905,7 @@ function backFromImport(){
   window.scrollTo(0,0);
 }
 document.getElementById("importBtn").onclick=()=>document.getElementById("posInput").click();
-document.getElementById("posInput").onchange=e=>{ const f=e.target.files&&e.target.files[0]; if(f) readPOS(f); };
+document.getElementById("posInput").onchange=e=>{ const fs=e.target.files; if(fs&&fs.length) posFilesRun(fs); e.target.value=""; };
 document.getElementById("impBranch").onchange=renderImport;
 document.getElementById("impMonthSel").onchange=renderImport;
 document.getElementById("impYearSel").onchange=renderImport;
@@ -3482,9 +3550,7 @@ function accDownload(R, base, fmt){
     a.download=base+".csv"; a.click();
     toast("ดาวน์โหลดไฟล์ CSV แล้ว");
   }
-  askImportAfterAcc();
 }
-// ถามต่อ: นำยอดขายเข้าระบบด้วยไหม (ใช้เส้นทางนำเข้า POS เดิม มีหน้าตรวจสอบก่อนยืนยัน)
 function askImportAfterAcc(){
   if(!accLiteRows||!accLiteRows.length) return;
   setTimeout(()=>{
@@ -3507,46 +3573,6 @@ function accReadOne(file){
     rd.readAsArrayBuffer(file);
   });
 }
-// รับ 1-2 ไฟล์พร้อมกัน แล้วแยกเองว่าไฟล์ไหนเป็นแบบไหน (ไม่ต้องสนลำดับ)
-function accFilesRun(fileList){
-  Promise.all([].slice.call(fileList).map(accReadOne)).then(parts=>{
-    let full=null, lite=null;
-    parts.forEach(pt=>{
-      const K=pt.keys.join("|");
-      // ไฟล์เต็ม (NewSaleOrderDetail): มีคอลัมน์จำนวนสินค้าที่ขาย/ต้นทุน/กำไรขั้นต้น
-      const isFull=/จ[ํำ]นวนสินค้าที่ขาย/.test(K) || (/ต้นทุนสินค้า/.test(K) && /กำไรขั้นต้น/.test(K));
-      // ไฟล์ Lite (AllLiteDetailOrder): มีวิธีการชำระเงิน
-      const isLite=/วิธีการชำระเงิน|วิธีชำระ/.test(K);
-      if(isFull && !full) full=pt;
-      else if(isLite && !lite) lite=pt;
-      else if(!full && /รหัสสินค้า/.test(K) && !isLite) full=pt;
-      else if(!lite) lite=pt;
-    });
-    if(!full && !lite){ alert("ไม่พบไฟล์ POS ที่ใช้ได้\n\nต้องเป็นไฟล์ NewSaleOrderDetail และ/หรือ AllLiteDetailOrder"); return; }
-    // payMap จากไฟล์ Lite (เลขออเดอร์ -> เงินสด/KSHOP)
-    let payMap=null;
-    if(lite){
-      const K=name=>lite.keys.find(k=>String(k).indexOf(name)>=0);
-      const kOrder=K("หมายเลขออเดอร์"), kPay=K("วิธีการชำระเงิน")||K("วิธีชำระ");
-      if(kOrder&&kPay){
-        payMap={};
-        lite.rows.forEach(r=>{ const oid=String(r[kOrder]||"").trim(); if(!oid) return;
-          const pv=String(r[kPay]||"");
-          if(pv && !payMap[oid]) payMap[oid]=(pv.indexOf("เงินสด")>=0?"เงินสด":"KSHOP"); });
-      }
-    }
-    accLiteRows=lite?lite.rows:null;   // เก็บไว้เผื่อผู้ใช้อยากนำยอดขายเข้าระบบต่อ
-    let R;
-    if(full){                       // มีไฟล์เต็ม -> ได้เวลาจริง (+วิธีชำระถ้ามี Lite)
-      R=buildAccountingFull(full.rows, full.keys, payMap);
-      if(!payMap) R.warnNoPay=true;
-    } else {                        // มีแต่ Lite -> ไม่มีเวลา
-      R=buildAccountingFile(lite.rows, lite.keys);
-      R.warnNoTime=true;
-    }
-    finishAccFile(R);
-  }).catch(err=>alert("อ่านไฟล์ไม่สำเร็จ: "+err.message));
-}
 function finishAccFile(R){
   if(!R.nRows){
     alert("⚠️ อ่านข้อมูลไม่ได้ (0 รายการ)\n\nตรวจว่าเลือกไฟล์ถูกต้อง:\n• NewSaleOrderDetail (มีคอลัมน์ จํานวนสินค้าที่ขาย)\n• AllLiteDetailOrder (มีคอลัมน์ วิธีการชำระเงิน)");
@@ -3564,8 +3590,6 @@ function finishAccFile(R){
   if(!confirm(msg)) return;
   accShowFormat(R);
 }
-document.getElementById("accFileBtn").onclick=()=>document.getElementById("accFileInput").click();
-document.getElementById("accFileInput").onchange=e=>{ const fs=e.target.files; if(fs&&fs.length){ accFilesRun(fs); } e.target.value=""; };
 
 /* ---------- ขายเท่าไหร่ดี? (Master file ราคา) ---------- */
 // ค่าเริ่มต้นจากข้อมูลจริง ก.ค. 2569
