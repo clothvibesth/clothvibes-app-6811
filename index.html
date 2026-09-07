@@ -243,6 +243,7 @@
   .dash-back{background:rgba(255,255,255,.08);border:none;color:#8fd6ff;width:38px;height:38px;border-radius:12px;font-size:22px;cursor:pointer;flex:none;}
   .dash-title{flex:1;text-align:center;font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:18px;color:#fff;letter-spacing:.5px;}
   .dash-upd{font-size:10px;color:#5a7ba0;position:absolute;right:16px;bottom:-4px;}
+  .dash-range-note{padding:0 16px 8px;font-size:11.5px;color:#7fa8d4;}
   .dash-modes{display:flex;gap:8px;padding:0 16px 10px;}
   .dash-mode{flex:1;background:rgba(255,255,255,.06);border:1.5px solid rgba(120,180,240,.2);border-radius:11px;padding:9px;font-family:inherit;font-size:12.5px;color:#c3d5ea;cursor:pointer;}
   .dash-mode.on{background:rgba(63,178,232,.85);color:#fff;border-color:transparent;font-weight:600;}
@@ -1027,6 +1028,7 @@
     <div class="dash-field"><label>จากวันที่</label><input type="date" id="dashFrom" autocomplete="off"></div>
     <div class="dash-field"><label>ถึงวันที่</label><input type="date" id="dashTo" autocomplete="off"></div>
   </div>
+  <div id="dashRangeNote" class="dash-range-note" style="display:none"></div>
   <div class="dash-chan-row">
     <label class="dash-chan-lbl">เลือกสาขา/ช่องทาง <small>(ติ๊กได้อิสระ · ไม่ติ๊ก = ทุกสาขา)</small></label>
     <div class="dash-branchbox" id="dashBranchBox"></div>
@@ -1604,7 +1606,7 @@ document.getElementById("addLine").onclick=addLine;
 document.getElementById("backBtn").onclick=backToBranch;
 document.getElementById("prevDay").onclick=()=>changeDay(-1);
 document.getElementById("nextDay").onclick=()=>changeDay(1);
-document.getElementById("datePick").onchange=e=>{currentDate=e.target.value||todayISO;refreshDateUI();renderLines();refreshSummary();fitBottomPad();};
+document.getElementById("datePick").onchange=e=>{currentDate=toAD(e.target.value)||todayISO;refreshDateUI();renderLines();refreshSummary();fitBottomPad();};
 
 /* ---------- VAT + hide cost toggles ---------- */
 function applyVatToggle(){ document.querySelectorAll('#vatToggle button').forEach(b=>b.classList.toggle('on',b.dataset.vat===data.vatMode)); }
@@ -1840,7 +1842,7 @@ function openReport(mode){
 }
 function backFromReport(){ document.getElementById("screen-report").style.display="none"; document.getElementById("screen-home").style.display="flex"; window.scrollTo(0,0); }
 function reportData(){
-  const f=document.getElementById("repFrom").value||"0000-00-00", t=document.getElementById("repTo").value||"9999-99-99";
+  const f=toAD(document.getElementById("repFrom").value)||"0000-00-00", t=toAD(document.getElementById("repTo").value)||"9999-99-99";
   const cf=document.getElementById("repChan").value||"__all__";
   const lo=f<=t?f:t, hi=f<=t?t:f;
   const bf = repPickedBranches.size===1 ? [...repPickedBranches][0] : "__all__";  // ใช้กับ label/สูตรกำไรกรณีเลือกสาขาเดียว
@@ -1925,7 +1927,7 @@ function branchLabel(){
   if(repPickedBranches.size===1) return [...repPickedBranches][0];
   return repPickedBranches.size+" สาขา";
 }
-function repFilter(){ const f=document.getElementById("repFrom").value||"0000-00-00",t=document.getElementById("repTo").value||"9999-99-99";
+function repFilter(){ const f=toAD(document.getElementById("repFrom").value)||"0000-00-00",t=toAD(document.getElementById("repTo").value)||"9999-99-99";
   const lo=f<=t?f:t,hi=f<=t?t:f; return (br,dt)=> branchPassed(br) && dt>=lo && dt<=hi; }
 document.getElementById("reportBtnSimpleH").onclick=()=>openReport("simple");
 document.getElementById("reportBtnDetailH").onclick=openDashboard;
@@ -1940,7 +1942,7 @@ document.getElementById("repRent").oninput=e=>{ data.rent=parseFloat(e.target.va
 document.getElementById("repElec").oninput=e=>{ data.elec=parseFloat(e.target.value)||0; store.write(data); renderReport(); };
 document.getElementById("repComm").oninput=e=>{ data.comm=parseFloat(e.target.value)||0; store.write(data); renderReport(); };
 document.getElementById("repChan").onchange=()=>{ renderReport(); };
-document.getElementById("repCsv").onclick=()=>{ const f=document.getElementById("repFrom").value,t=document.getElementById("repTo").value,detailed=(reportMode==="detailed");
+document.getElementById("repCsv").onclick=()=>{ const f=toAD(document.getElementById("repFrom").value),t=toAD(document.getElementById("repTo").value),detailed=(reportMode==="detailed");
   downloadCSV(csvRows(repFilter(),detailed),(detailed?"รายงานละเอียด":"ยอดขาย")+"_CLOTHVIBES_"+f+"_ถึง_"+t+".csv"); };
 document.getElementById("repCopy").onclick=()=>{
   const r=reportData(); if(!r.pieces){ toast("ไม่มีข้อมูล"); return; }
@@ -2032,6 +2034,12 @@ function startSyncLoop(){
 /* ---------- ค่าใช้จ่ายรายสาขา (รายเดือน) + เฉลี่ยตามวัน ---------- */
 const EXP_FIELDS=[["gp","GP %"],["rent","ค่าเช่า"],["elec","ค่าไฟ"],["wage","ค่าจ้าง"],["comm","คอมมิชชั่น"]];
 function monthOf(iso){ return iso.slice(0,7); }
+// ถ้าเบราว์เซอร์ให้ค่าปีเป็น พ.ศ. (ปฏิทินไทย) ให้แปลงเป็น ค.ศ.
+function toAD(iso){
+  if(!iso||!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso;
+  const y=+iso.slice(0,4);
+  return (y>=2400) ? String(y-543)+iso.slice(4) : iso;
+}
 function isDateKey(d){ return /^\d{4}-\d{2}-\d{2}$/.test(d); }               // "2026-07-15" -> "2026-07"
 function daysInMonth(ym){ const [y,m]=ym.split("-").map(Number); return new Date(y,m,0).getDate(); }
 function prevMonth(ym){ const [y,m]=ym.split("-").map(Number); const d=new Date(y,m-2,1); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); }
@@ -3185,7 +3193,7 @@ function prevYm(ym){ const [y,m]=ym.split("-").map(Number); const d=new Date(y,m
 let dashMode="month";
 function dashArg(){
   if(dashMode==="range"){
-    let lo=document.getElementById("dashFrom").value, hi=document.getElementById("dashTo").value;
+    let lo=toAD(document.getElementById("dashFrom").value), hi=toAD(document.getElementById("dashTo").value);
     if(!lo||!hi) return todayISO.slice(0,7);
     if(lo>hi){ const t=lo; lo=hi; hi=t; }
     return {lo,hi};
@@ -3205,6 +3213,14 @@ function renderDashboard(){
  try{
   const arg=dashArg();
   const D=dashData(arg);
+  const note=document.getElementById("dashRangeNote");
+  if(note){
+    if(dashMode==="range"){ note.style.display="block";
+      note.innerHTML='📅 ช่วงที่ใช้คำนวณ: <b>'+D.lo+'</b> ถึง <b>'+D.hi+'</b> (ค.ศ.)'+
+        ((document.getElementById("dashFrom").value||"").slice(0,4)>="2400"
+          ? ' <span style="color:#ffb020">— ปฏิทินเครื่องแสดงเป็น พ.ศ. ระบบแปลงให้แล้ว</span>' : '');
+    } else note.style.display="none";
+  }
   const has=D.pieces>0;
   document.getElementById("dashEmpty").style.display=has?"none":"block";
   ["kpi-grid","dashChanBars"].forEach(()=>{});
@@ -4211,7 +4227,7 @@ function renderDocSum(){
 }
 function saveDocDraft(){
   data.docdraft[docMode]={rows:docRows,
-    no:document.getElementById("docNo").value, date:document.getElementById("docDate").value,
+    no:document.getElementById("docNo").value, date:toAD(document.getElementById("docDate").value),
     credit:document.getElementById("docCredit").value, disc:document.getElementById("docDisc").value,
     cust:document.getElementById("docCust").value,
     ref:document.getElementById("docRef").value, reason:document.getElementById("docReason").value};
@@ -4246,7 +4262,7 @@ function setDocMode(m){
 function docSnapshot(){
   const t=docTotals(), c=docCust();
   return {id:"D"+Date.now(), type:docMode, rows:JSON.parse(JSON.stringify(docRows)),
-    no:document.getElementById("docNo").value, date:document.getElementById("docDate").value,
+    no:document.getElementById("docNo").value, date:toAD(document.getElementById("docDate").value),
     credit:document.getElementById("docCredit").value, disc:document.getElementById("docDisc").value,
     cust:document.getElementById("docCust").value, custName:c.name||"",
     ref:document.getElementById("docRef").value, reason:document.getElementById("docReason").value,
@@ -4375,7 +4391,7 @@ function docPrint(){
       '<td class="k">นามลูกค้า</td><td class="v">'+(c.name||"")+'</td>'+
       '<td class="k2">เลขที่</td><td class="v2">'+(document.getElementById("docNo").value||"")+'</td></tr>'+
       '<tr><td class="k">ที่อยู่</td><td class="v" rowspan="2">'+(c.addr||"")+'</td>'+
-      '<td class="k2">วันที่</td><td class="v2">'+thDate(document.getElementById("docDate").value)+'</td></tr>'+
+      '<td class="k2">วันที่</td><td class="v2">'+thDate(toAD(document.getElementById("docDate").value))+'</td></tr>'+
       '<tr><td class="k"></td><td class="k2">เครดิต</td><td class="v2">'+(document.getElementById("docCredit").value||"")+' วัน</td></tr>'+
       '<tr><td class="k">เลขประจำตัวผู้เสียภาษี</td><td class="v">'+(c.tax||"")+
         ' &nbsp;&nbsp; <b>สาขาที่</b> '+(c.branch||"")+'</td>'+
