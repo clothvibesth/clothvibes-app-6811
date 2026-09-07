@@ -243,6 +243,11 @@
   .dash-back{background:rgba(255,255,255,.08);border:none;color:#8fd6ff;width:38px;height:38px;border-radius:12px;font-size:22px;cursor:pointer;flex:none;}
   .dash-title{flex:1;text-align:center;font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:18px;color:#fff;letter-spacing:.5px;}
   .dash-upd{font-size:10px;color:#5a7ba0;position:absolute;right:16px;bottom:-4px;}
+  .dash-modes{display:flex;gap:8px;padding:0 16px 10px;}
+  .dash-mode{flex:1;background:rgba(255,255,255,.06);border:1.5px solid rgba(120,180,240,.2);border-radius:11px;padding:9px;font-family:inherit;font-size:12.5px;color:#c3d5ea;cursor:pointer;}
+  .dash-mode.on{background:rgba(63,178,232,.85);color:#fff;border-color:transparent;font-weight:600;}
+  .dash-field input[type="date"]{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(120,180,240,.18);color:#dce9f7;border-radius:10px;padding:8px 10px;font-family:inherit;font-size:13px;}
+  .dash-field input[type="date"]:focus{outline:none;border-color:#3fb2e8;}
   .dash-ctrl{display:flex;gap:9px;padding:4px 16px 16px;flex-wrap:wrap;}
   .dash-field{flex:1;min-width:90px;}
   .dash-field label{display:block;font-size:10.5px;color:#5a7ba0;margin-bottom:4px;}
@@ -1010,9 +1015,17 @@
     <div class="dash-title">ภาพรวมข้อมูลยอดขาย</div>
     <div class="dash-upd" id="dashUpd"></div>
   </div>
-  <div class="dash-ctrl">
+  <div class="dash-modes">
+    <button class="dash-mode on" id="dmMonth">รายเดือน</button>
+    <button class="dash-mode" id="dmRange">เลือกช่วงวันที่</button>
+  </div>
+  <div class="dash-ctrl" id="dashMonthBox">
     <div class="dash-field"><label>เดือน</label><select id="dashMonth" name="dm_nofill" autocomplete="new-password"></select></div>
     <div class="dash-field"><label>ปี</label><select id="dashYear" name="dy_nofill" autocomplete="new-password"></select></div>
+  </div>
+  <div class="dash-ctrl" id="dashRangeBox" style="display:none">
+    <div class="dash-field"><label>จากวันที่</label><input type="date" id="dashFrom" autocomplete="off"></div>
+    <div class="dash-field"><label>ถึงวันที่</label><input type="date" id="dashTo" autocomplete="off"></div>
   </div>
   <div class="dash-chan-row">
     <label class="dash-chan-lbl">เลือกสาขา/ช่องทาง <small>(ติ๊กได้อิสระ · ไม่ติ๊ก = ทุกสาขา)</small></label>
@@ -3115,7 +3128,14 @@ function backFromDash(){
 
 // รวมข้อมูลของเดือน+ช่องทางที่เลือก
 function dashBranchPass(br){ return dashPickedBranches.size===0 || dashPickedBranches.has(br); }
-function dashData(ym){
+// รับได้ทั้ง "2026-08" (ทั้งเดือน) หรือ {lo,hi} (ช่วงวันที่)
+function dashRange(arg){
+  if(arg && typeof arg==="object") return {lo:arg.lo, hi:arg.hi};
+  return {lo:arg+"-01", hi:arg+"-"+String(daysInMonth(arg)).padStart(2,"0")};
+}
+function dashData(arg){
+  const R=dashRange(arg), lo=R.lo, hi=R.hi;
+  const inRange=dt=>isDateKey(dt) && dt>=lo && dt<=hi;
   const perChan={};   // key -> {sales,base,vat,cost,pieces}
   const byModel={}, byDay={}, perBranch={};
   Object.keys(data.branches).forEach(br=>{
@@ -3123,7 +3143,7 @@ function dashData(ym){
     if(!dashBranchPass(br)) return;
     const days=data.branches[br]||{};
     Object.keys(days).forEach(dt=>{
-      if(dt.slice(0,7)!==ym) return;
+      if(!inRange(dt)) return;
       Object.keys(days[dt]).forEach(vid=>{
         const v=VAR[vid]; if(!v) return; const q=days[dt][vid]; if(q<=0) return;
         const pr=priceOfVar(vid,br,dt), sale=q*pr;
@@ -3136,18 +3156,17 @@ function dashData(ym){
       });
     });
   });
-  // ค่าใช้จ่าย/ค่าธรรมเนียม/GP ต่อช่องทาง
-  const lo=ym+"-01", hi=ym+"-"+String(daysInMonth(ym)).padStart(2,"0");
-  // สร้าง byBranch สำหรับ expenseForRange/onlineFeesForRange
+  // ค่าใช้จ่าย/ค่าธรรมเนียม/GP ต่อช่องทาง (รองรับช่วงคร่อมหลายเดือน)
   const brInRange={};
   Object.keys(data.branches).forEach(br=>{
-    const ch=chanOfBranch(br); if(!dashBranchPass(br)) return;
-    let baseByMonth={}; baseByMonth[ym]=0;
+    if(!dashBranchPass(br)) return;
+    const baseByMonth={}; let any=false;
     const days=data.branches[br]||{};
-    Object.keys(days).forEach(dt=>{ if(dt.slice(0,7)!==ym) return;
+    Object.keys(days).forEach(dt=>{ if(!inRange(dt)) return;
+      const m=dt.slice(0,7); baseByMonth[m]=baseByMonth[m]||0;
       Object.keys(days[dt]).forEach(vid=>{ const v=VAR[vid]; if(!v) return; const q=days[dt][vid]; if(q<=0) return;
-        baseByMonth[ym]+=q*priceOfVar(vid,br,dt)/(1+VAT); }); });
-    if(baseByMonth[ym]>0) brInRange[br]={baseByMonth};
+        baseByMonth[m]+=q*priceOfVar(vid,br,dt)/(1+VAT); any=true; }); });
+    if(any) brInRange[br]={baseByMonth};
   });
   const E=expenseForRange(lo,hi,brInRange);       // {rent,elec,wage,comm,gpAmt}
   const F=onlineFeesForRange(lo,hi,brInRange);    // {comm,txn,service,ship,order,est}
@@ -3159,22 +3178,41 @@ function dashData(ym){
   const gp=E.gpAmt;
   const opex=E.rent+E.elec+E.wage+E.comm;
   const profit=base-gp-feeOnline-ads-opex-cost;
-  return {ym,sales,base,vat,cost,pieces,gp,feeOnline,ads,opex,profit,perChan,perBranch,byModel,byDay,est:F.est};
+  return {ym:(typeof arg==="string"?arg:""), lo, hi, sales,base,vat,cost,pieces,gp,feeOnline,ads,opex,profit,perChan,perBranch,byModel,byDay,est:F.est};
 }
 function prevYm(ym){ const [y,m]=ym.split("-").map(Number); const d=new Date(y,m-2,1); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); }
 
+let dashMode="month";
+function dashArg(){
+  if(dashMode==="range"){
+    let lo=document.getElementById("dashFrom").value, hi=document.getElementById("dashTo").value;
+    if(!lo||!hi) return todayISO.slice(0,7);
+    if(lo>hi){ const t=lo; lo=hi; hi=t; }
+    return {lo,hi};
+  }
+  return document.getElementById("dashYear").value+"-"+document.getElementById("dashMonth").value;
+}
+// ช่วงก่อนหน้า (ยาวเท่ากัน) สำหรับเทียบ
+function dashPrevArg(a){
+  if(typeof a==="string") return prevYm(a);
+  const d1=new Date(a.lo+"T00:00:00"), d2=new Date(a.hi+"T00:00:00");
+  const days=Math.round((d2-d1)/86400000)+1;
+  const p2=new Date(d1.getTime()-86400000), p1=new Date(p2.getTime()-(days-1)*86400000);
+  const f=d=>d.toISOString().slice(0,10);
+  return {lo:f(p1), hi:f(p2)};
+}
 function renderDashboard(){
  try{
-  const ym=document.getElementById("dashYear").value+"-"+document.getElementById("dashMonth").value;
-  const D=dashData(ym);
+  const arg=dashArg();
+  const D=dashData(arg);
   const has=D.pieces>0;
   document.getElementById("dashEmpty").style.display=has?"none":"block";
   ["kpi-grid","dashChanBars"].forEach(()=>{});
   document.querySelectorAll("#screen-dash .dash-card, .kpi-grid").forEach(el=>el.style.display=has?"":"none");
   if(!has) return;
-  const P=dashData(prevYm(ym));   // เดือนก่อน (เทียบ)
+  const P=dashData(dashPrevArg(arg));   // ช่วงก่อนหน้า (เทียบ)
   const cmp=(cur,prev)=>{ if(prev<=0) return ""; const d=(cur-prev)/prev*100;
-    return '<span class="'+(d>=0?"up":"down")+'">'+(d>=0?"▲":"▼")+' '+Math.abs(d).toFixed(1)+'% เทียบเดือนก่อน</span>'; };
+    return '<span class="'+(d>=0?"up":"down")+'">'+(d>=0?"▲":"▼")+' '+Math.abs(d).toFixed(1)+'% เทียบ'+(dashMode==="range"?"ช่วงก่อน":"เดือนก่อน")+'</span>'; };
   document.getElementById("kpiSales").textContent="฿"+fmt2(D.sales);
   document.getElementById("kpiSalesCmp").innerHTML=cmp(D.sales,P.sales);
   document.getElementById("kpiProfit").textContent="฿"+fmt2(D.profit);
@@ -3209,7 +3247,7 @@ function renderDashboard(){
       '<span class="q">'+fmt(x.q)+' ชิ้น</span><span class="vl">฿'+fmt(x.amt)+'</span></div>';}).join("");
 
   // แนวโน้มรายวัน
-  drawTrend("dashTrend",D.byDay,ym);
+  drawTrend("dashTrend",D.byDay,D.lo,D.hi);
  }catch(err){
   console.error("dashboard error:",err);
   const em=document.getElementById("dashEmpty");
@@ -3232,11 +3270,19 @@ function drawDonut(cvId,lgId,parts,total){
     '<span class="vl">฿'+fmt(p.v)+'<span class="pc">'+(p.v/total*100).toFixed(1)+'%</span></span></div>').join("");
 }
 
-function drawTrend(cvId,byDay,ym){
+function drawTrend(cvId,byDay,lo,hi){
   const cv=document.getElementById(cvId),ctx=cv.getContext("2d");
-  const W=cv.width,H=cv.height,pad=36,dim=daysInMonth(ym);
+  const W=cv.width,H=cv.height,pad=36;
   ctx.clearRect(0,0,W,H);
-  const vals=[]; for(let d=1;d<=dim;d++){ vals.push(byDay[ym+"-"+String(d).padStart(2,"0")]||0); }
+  // ไล่วันจาก lo ถึง hi
+  const vals=[], labels=[];
+  let cur=new Date(lo+"T00:00:00"), end=new Date(hi+"T00:00:00"), guard=0;
+  while(cur<=end && ++guard<400){
+    const k=cur.toISOString().slice(0,10);
+    vals.push(byDay[k]||0); labels.push(k.slice(8,10));
+    cur=new Date(cur.getTime()+86400000);
+  }
+  const dim=vals.length||1;
   const max=Math.max(...vals,1);
   // grid
   ctx.strokeStyle="rgba(120,180,240,.1)";ctx.lineWidth=1;ctx.fillStyle="#5a7ba0";ctx.font="10px 'Prompt'";ctx.textAlign="right";
@@ -3252,15 +3298,18 @@ function drawTrend(cvId,byDay,ym){
   // dots + x labels (ทุก 5 วัน)
   ctx.fillStyle="#3fb2e8"; vals.forEach((v,i)=>{ if(v>0){ctx.beginPath();ctx.arc(x(i),y(v),2.5,0,Math.PI*2);ctx.fill();} });
   ctx.fillStyle="#5a7ba0";ctx.textAlign="center";ctx.font="9px 'Prompt'";
-  for(let d=1;d<=dim;d+=5){ ctx.fillText(d,x(d-1),H-pad*0.6); }
+  const step=Math.max(1,Math.ceil(dim/7));
+  for(let d=0;d<dim;d+=step){ ctx.fillText(labels[d],x(d),H-pad*0.6); }
 }
 
 function dashCopySummary(){
-  const ym=document.getElementById("dashYear").value+"-"+document.getElementById("dashMonth").value;
-  const D=dashData(ym);
-  if(D.pieces<=0){ toast("ไม่มีข้อมูลเดือนนี้"); return; }
-  const P=dashData(prevYm(ym));
-  const moTxt=TH_MONTHS[+ym.slice(5,7)-1]+" "+ym.slice(0,4);
+  const arg=dashArg();
+  const D=dashData(arg);
+  if(D.pieces<=0){ toast("ไม่มีข้อมูลในช่วงที่เลือก"); return; }
+  const P=dashData(dashPrevArg(arg));
+  const moTxt=(typeof arg==="string")
+    ? TH_MONTHS[+arg.slice(5,7)-1]+" "+arg.slice(0,4)
+    : D.lo+" ถึง "+D.hi;
   const pct=x=>D.sales>0?" ("+(x/D.sales*100).toFixed(1)+"%)":"";
   const cmp=(cur,prev)=>{ if(prev<=0) return ""; const d=(cur-prev)/prev*100; return " "+(d>=0?"▲":"▼")+Math.abs(d).toFixed(1)+"%"; };
   // ขอบเขตสาขาที่เลือก
@@ -3268,7 +3317,7 @@ function dashCopySummary(){
   if(dashPickedBranches.size>0) scope=[...dashPickedBranches].join(", ");
   const L=[];
   L.push("📊 สรุปยอดขาย CLOTHVIBES");
-  L.push("เดือน "+moTxt+" · "+scope);
+  L.push((typeof arg==="string"?"เดือน ":"ช่วง ")+moTxt+" · "+scope);
   L.push("──────────────");
   L.push("ยอดขาย (รวม VAT): ฿"+fmt2(D.sales)+cmp(D.sales,P.sales));
   L.push("ฐานภาษี: ฿"+fmt2(D.base)+" · VAT: ฿"+fmt2(D.vat));
@@ -3327,6 +3376,25 @@ function fallbackCopy(txt){
   document.body.removeChild(ta);
 }
 document.getElementById("dashCopyBtn").onclick=dashCopySummary;
+function setDashMode(m){
+  dashMode=m;
+  document.getElementById("dmMonth").classList.toggle("on",m==="month");
+  document.getElementById("dmRange").classList.toggle("on",m==="range");
+  document.getElementById("dashMonthBox").style.display=(m==="month")?"flex":"none";
+  document.getElementById("dashRangeBox").style.display=(m==="range")?"flex":"none";
+  if(m==="range"){
+    const f=document.getElementById("dashFrom"), t=document.getElementById("dashTo");
+    if(!f.value||!t.value){
+      const ym=document.getElementById("dashYear").value+"-"+document.getElementById("dashMonth").value;
+      f.value=ym+"-01"; t.value=ym+"-"+String(daysInMonth(ym)).padStart(2,"0");
+    }
+  }
+  renderDashboard();
+}
+document.getElementById("dmMonth").onclick=()=>setDashMode("month");
+document.getElementById("dmRange").onclick=()=>setDashMode("range");
+document.getElementById("dashFrom").onchange=renderDashboard;
+document.getElementById("dashTo").onchange=renderDashboard;
 document.getElementById("dashBack").onclick=backFromDash;
 document.getElementById("dashMonth").onchange=renderDashboard;
 document.getElementById("dashYear").onchange=renderDashboard;
