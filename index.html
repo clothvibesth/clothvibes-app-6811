@@ -253,6 +253,23 @@
   .dash-title{flex:1;text-align:center;font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:18px;color:#fff;letter-spacing:.5px;}
   .dash-upd{font-size:10px;color:#5a7ba0;position:absolute;right:16px;bottom:-4px;}
   .dash-range-note{padding:0 16px 8px;font-size:11.5px;color:#7fa8d4;}
+  .dash-act-row{display:flex;gap:9px;padding:0 16px;}
+  .dash-act-row .dash-copy-btn{flex:1;margin:0;}
+  .dash-xls-btn{background:linear-gradient(135deg,#1ba672,#28c98d)!important;}
+  .xls-box{position:fixed;inset:0;background:rgba(6,18,34,.72);display:flex;align-items:center;justify-content:center;z-index:120;padding:20px;}
+  .xls-card{background:#fff;border-radius:20px;padding:20px;max-width:400px;width:100%;box-shadow:0 18px 50px rgba(0,0,0,.3);}
+  .xls-t{font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:17px;color:var(--ink);margin-bottom:6px;text-align:center;}
+  .xls-info{font-size:12px;color:var(--ink-soft);text-align:center;margin-bottom:14px;line-height:1.6;}
+  .xls-sec{font-size:11.5px;color:var(--ink-soft);margin-bottom:8px;}
+  .xls-opt{display:block;width:100%;border:none;border-radius:14px;padding:13px 15px;margin-bottom:9px;text-align:left;cursor:pointer;font-family:inherit;color:#fff;}
+  .xls-opt b{display:block;font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:14px;}
+  .xls-opt small{display:block;font-size:11px;opacity:.85;margin-top:3px;}
+  #xlsAll{background:linear-gradient(135deg,#0a86cf,#3fb2e8);}
+  #xlsEach{background:linear-gradient(135deg,#5a4ea3,#7c6fd0);}
+  .xls-chk{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink);margin:12px 0 4px;cursor:pointer;}
+  .xls-chk input{width:18px;height:18px;accent-color:var(--minus);}
+  .xls-chk small{color:var(--ink-soft);font-size:11px;}
+  .xls-cancel{display:block;width:100%;background:none;border:none;color:var(--ink-soft);font-family:inherit;font-size:13px;padding:10px;cursor:pointer;margin-top:4px;}
   .dash-modes{display:flex;gap:8px;padding:0 16px 10px;}
   .dash-mode{flex:1;background:rgba(255,255,255,.06);border:1.5px solid rgba(120,180,240,.2);border-radius:11px;padding:9px;font-family:inherit;font-size:12.5px;color:#c3d5ea;cursor:pointer;}
   .dash-mode.on{background:rgba(63,178,232,.85);color:#fff;border-color:transparent;font-weight:600;}
@@ -1042,7 +1059,22 @@
     <label class="dash-chan-lbl">เลือกสาขา/ช่องทาง <small>(ติ๊กได้อิสระ · ไม่ติ๊ก = ทุกสาขา)</small></label>
     <div class="dash-branchbox" id="dashBranchBox"></div>
   </div>
-  <button class="dash-copy-btn" id="dashCopyBtn">📋 คัดลอกสรุปยอด (สำหรับแชร์)</button>
+  <div class="dash-act-row">
+    <button class="dash-copy-btn" id="dashCopyBtn">📋 คัดลอกสรุปยอด</button>
+    <button class="dash-copy-btn dash-xls-btn" id="dashXlsBtn">📊 ส่งออก Excel</button>
+  </div>
+
+  <div class="xls-box" id="xlsBox" style="display:none">
+    <div class="xls-card">
+      <div class="xls-t">📊 ส่งออกเป็น Excel</div>
+      <div class="xls-info" id="xlsInfo"></div>
+      <div class="xls-sec">รูปแบบไฟล์</div>
+      <button class="xls-opt" id="xlsAll"><b>📋 รวมทุกสาขาในชีตเดียว</b><small>กรองดูทีละสาขาเองได้ · เหมาะกับดูภาพรวม</small></button>
+      <button class="xls-opt" id="xlsEach"><b>🏬 แยกชีตต่อสาขา</b><small>มีกล่องสรุปแต่ละสาขา + ชีตรวม</small></button>
+      <label class="xls-chk"><input type="checkbox" id="xlsHide"> ซ่อนต้นทุน / กำไร <small>(สำหรับส่งห้างหรือคนนอก)</small></label>
+      <button class="xls-cancel" id="xlsCancel">ยกเลิก</button>
+    </div>
+  </div>
 
   <!-- KPI -->
   <div class="kpi-grid">
@@ -4502,6 +4534,129 @@ function bahtTextDoc(n){
   return (i===0?"ศูนย์":conv(i))+"บาท"+(f===0?"ถ้วน":conv(f)+"สตางค์");
 }
 document.getElementById("docPrint").onclick=docPrint;
+
+/* ---------- ส่งออก Excel จาก Dashboard ---------- */
+// รวบรวมข้อมูล flat: สาขา × รุ่น ในช่วงที่เลือก
+function xlsCollect(){
+  const arg=dashArg(), R=dashRange(arg);
+  const lo=R.lo, hi=R.hi;
+  const CHN={main:"สาขาหลัก",booth:"บูท",shopee:"Shopee",tiktok:"TikTok"};
+  const FEE={main:0, booth:num(data.prcfg.fee_booth)||25,
+             shopee:num(data.prcfg.fee_shopee)||32, tiktok:num(data.prcfg.fee_tiktok)||26.3};
+  const rows=[];
+  Object.keys(data.branches).forEach(br=>{
+    if(!dashBranchPass(br)) return;
+    const ch=chanOfBranch(br);
+    // GP รายสาขาถ้าตั้งไว้ (บูท)
+    let gp=FEE[ch];
+    if(ch==="booth" && data.gp && data.gp[br]!==undefined) gp=num(data.gp[br]);
+    const agg={};
+    const days=data.branches[br]||{};
+    Object.keys(days).forEach(dt=>{
+      if(!isDateKey(dt)||dt<lo||dt>hi) return;
+      Object.keys(days[dt]).forEach(vid=>{
+        const v=VAR[vid]; if(!v) return; const q=days[dt][vid]; if(q<=0) return;
+        const k=v.modelId;
+        agg[k]=agg[k]||{name:MODEL[k].name, code:MODEL[k].code, q:0, amt:0, cost:0};
+        agg[k].q+=q; agg[k].amt+=q*priceOfVar(vid,br,dt); agg[k].cost+=q*v.cost;
+      });
+    });
+    Object.keys(agg).forEach(k=>{ const x=agg[k];
+      rows.push({chan:CHN[ch]||ch, branch:br, model:x.name, code:x.code,
+                 qty:x.q, amt:x.amt, cost:x.cost, gp:gp});
+    });
+  });
+  rows.sort((a,b)=> a.chan===b.chan ? (a.branch===b.branch ? b.amt-a.amt : a.branch.localeCompare(b.branch)) : a.chan.localeCompare(b.chan));
+  return {rows, lo, hi};
+}
+function xlsRangeText(lo,hi){ return lo+" ถึง "+hi; }
+function xlsScopeText(){
+  if(dashPickedBranches.size===0) return "ทุกสาขา";
+  return [...dashPickedBranches].join(", ");
+}
+// สร้าง AOA (array of arrays) สำหรับ 1 ตาราง
+function xlsTable(rows, hideCost){
+  const H = hideCost
+    ? ["ช่องทาง","สาขา","รุ่นสินค้า","รหัส","จำนวน (ชิ้น)","ยอดขาย (รวม VAT)","ฐานภาษี","VAT 7%"]
+    : ["ช่องทาง","สาขา","รุ่นสินค้า","รหัส","จำนวน (ชิ้น)","ยอดขาย (รวม VAT)","ฐานภาษี","VAT 7%","ต้นทุน","GP/ค่าธรรมเนียม","อัตรา %","กำไรขั้นต้น","% กำไร"];
+  const out=[H];
+  let tq=0,ta=0,tb=0,tv=0,tc=0,tg=0,tp=0;
+  rows.forEach(r=>{
+    const base=r.amt/(1+VAT), vat=r.amt-base, fee=base*r.gp/100, profit=base-r.cost-fee;
+    tq+=r.qty; ta+=r.amt; tb+=base; tv+=vat; tc+=r.cost; tg+=fee; tp+=profit;
+    const row=[r.chan, r.branch, r.model, r.code, r.qty,
+               rnd(r.amt), rnd(base), rnd(vat)];
+    if(!hideCost) row.push(rnd(r.cost), rnd(fee), r.gp/100, rnd(profit), base>0?profit/base:0);
+    out.push(row);
+  });
+  const tot=["รวม","","","",tq, rnd(ta), rnd(tb), rnd(tv)];
+  if(!hideCost) tot.push(rnd(tc), rnd(tg), "", rnd(tp), tb>0?tp/tb:0);
+  out.push(tot);
+  return out;
+}
+function rnd(x){ return Math.round(x*100)/100; }
+
+function xlsBuild(mode, hideCost){
+  const D=xlsCollect();
+  if(!D.rows.length){ toast("ไม่มีข้อมูลในช่วงที่เลือก"); return; }
+  const wb=XLSX.utils.book_new();
+  const head=[["รายงานสรุปยอดขาย CLOTHVIBES"],
+              ["ช่วงวันที่: "+xlsRangeText(D.lo,D.hi)],
+              ["ขอบเขต: "+xlsScopeText()+"  ·  ออกรายงาน "+todayISO],
+              [hideCost?"หมายเหตุ: ไม่แสดงต้นทุน/กำไร":"หมายเหตุ: ราคารวม VAT · ฐานภาษี = ยอดขาย ÷ 1.07 · กำไรขั้นต้นยังไม่หักค่าเช่า/ไฟ/เงินเดือน"],
+              []];
+  const mkSheet=(rows)=>{
+    const aoa=head.concat(xlsTable(rows,hideCost));
+    const ws=XLSX.utils.aoa_to_sheet(aoa);
+    const nC=hideCost?8:13;
+    ws["!cols"]=[{wch:11},{wch:22},{wch:26},{wch:17},{wch:11},{wch:16},{wch:13},{wch:11},
+                 {wch:13},{wch:16},{wch:9},{wch:14},{wch:10}].slice(0,nC);
+    ws["!freeze"]={xSplit:0,ySplit:6};
+    // รูปแบบตัวเลข
+    const R=XLSX.utils.decode_range(ws["!ref"]);
+    for(let r=6;r<=R.e.r;r++){
+      for(let c=4;c<nC;c++){
+        const ad=XLSX.utils.encode_cell({r,c}), cell=ws[ad];
+        if(!cell||cell.t!=="n") continue;
+        if(c===4) cell.z="#,##0";
+        else if(!hideCost && (c===10||c===12)) cell.z="0.0%";
+        else cell.z="#,##0.00";
+      }
+    }
+    return ws;
+  };
+  if(mode==="all"){
+    XLSX.utils.book_append_sheet(wb, mkSheet(D.rows), "สรุปยอดขาย");
+  } else {
+    XLSX.utils.book_append_sheet(wb, mkSheet(D.rows), "รวมทุกสาขา");
+    const brs=[...new Set(D.rows.map(r=>r.branch))];
+    brs.forEach(br=>{
+      const sub=D.rows.filter(r=>r.branch===br);
+      let nm=br.replace(/[\\\/\?\*\[\]:]/g,"").slice(0,28) || "สาขา";
+      let i=2; const used=wb.SheetNames;
+      while(used.indexOf(nm)>=0){ nm=nm.slice(0,26)+"_"+(i++); }
+      XLSX.utils.book_append_sheet(wb, mkSheet(sub), nm);
+    });
+  }
+  const fn="รายงานยอดขาย_"+D.lo+"_ถึง_"+D.hi+(hideCost?"_ไม่มีต้นทุน":"")+".xlsx";
+  XLSX.writeFile(wb, fn);
+  toast("ดาวน์โหลดแล้ว");
+}
+document.getElementById("dashXlsBtn").onclick=()=>{
+  const D=xlsCollect();
+  document.getElementById("xlsInfo").innerHTML=
+    "ช่วง <b>"+xlsRangeText(D.lo,D.hi)+"</b><br>"+xlsScopeText()+" · "+D.rows.length+" รายการ";
+  document.getElementById("xlsBox").style.display="flex";
+};
+document.getElementById("xlsCancel").onclick=()=>{ document.getElementById("xlsBox").style.display="none"; };
+document.getElementById("xlsAll").onclick=()=>{
+  const h=document.getElementById("xlsHide").checked;
+  document.getElementById("xlsBox").style.display="none"; xlsBuild("all",h);
+};
+document.getElementById("xlsEach").onclick=()=>{
+  const h=document.getElementById("xlsHide").checked;
+  document.getElementById("xlsBox").style.display="none"; xlsBuild("each",h);
+};
 
 /* ---------- init ---------- */
 document.getElementById("logoHome").src=LOGO_SRC;
