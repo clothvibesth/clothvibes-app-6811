@@ -225,6 +225,15 @@
   .exp-head .chev{color:var(--ink-soft);font-size:16px;width:14px;text-align:center;}
   .exp-row.open{background:#fbfdff;}
   .exp-body{padding:2px 14px 14px;}
+  .oth-sec{font-size:12px;font-weight:600;color:var(--accent-deep);margin:12px 0 7px;padding-bottom:4px;border-bottom:1px dashed #dce8f3;}
+  .oth-sec small{font-weight:400;color:#9aa8b8;font-size:11px;}
+  .oth-row{display:flex;gap:7px;align-items:center;margin-bottom:7px;}
+  .oth-n{flex:1;min-width:0;border:1px solid #d5dee8;border-radius:9px;padding:7px 9px;font-family:inherit;font-size:12.5px;}
+  .oth-v{width:96px;border:1px solid #d5dee8;border-radius:9px;padding:7px 9px;font-family:"Bai Jamjuree",sans-serif;font-weight:600;font-size:12.5px;text-align:right;}
+  .oth-v::-webkit-outer-spin-button,.oth-v::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .oth-v{-moz-appearance:textfield;appearance:textfield;}
+  .oth-del{background:none;border:none;color:#c9b190;font-size:18px;cursor:pointer;padding:0 3px;line-height:1;}
+  .oth-add{background:none;border:1px dashed #cfdcea;border-radius:10px;padding:8px 12px;font-family:inherit;font-size:12px;color:var(--ink-soft);cursor:pointer;width:100%;margin-top:2px;}
   .exp-hint{font-size:11.5px;color:var(--ink-soft);margin-bottom:8px;}
   .exp-showall{display:block;width:100%;background:none;border:1px dashed #cfdcea;border-radius:12px;padding:11px;color:var(--ink-soft);font-family:inherit;font-size:12.5px;cursor:pointer;margin-top:4px;}
   .gp-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid #eef3f8;}
@@ -1724,7 +1733,17 @@ function mergeData(into,inc){
   into.expenses=into.expenses||{};
   const ie=inc.expenses||{};
   for(const ym in ie){ into.expenses[ym]=into.expenses[ym]||{};
-    for(const br in ie[ym]){ into.expenses[ym][br]=Object.assign(into.expenses[ym][br]||{}, ie[ym][br]||{}); } }
+    for(const br in ie[ym]){
+      const cur=into.expenses[ym][br]||{}, add=ie[ym][br]||{};
+      // ค่าใช้จ่ายอื่น: รวมรายการตามชื่อ (ไม่ทับกัน)
+      const oth=(cur.others||[]).slice();
+      (add.others||[]).forEach(o=>{
+        const i=oth.findIndex(x=>String(x.n||"").trim()===String(o.n||"").trim());
+        if(i<0) oth.push(o); else oth[i]=o;
+      });
+      into.expenses[ym][br]=Object.assign(cur, add);
+      if(oth.length) into.expenses[ym][br].others=oth; else delete into.expenses[ym][br].others;
+    } }
   if(inc.vatMode) into.vatMode=inc.vatMode;
   if(typeof inc.hideCost==="boolean") into.hideCost=inc.hideCost;
   if(inc.gpPct!==undefined) into.gpPct=inc.gpPct;
@@ -1890,7 +1909,7 @@ function renderReport(){
     const E=expenseForRange(r.lo,r.hi,r.byBranch);                  // เฉลี่ยตามสัดส่วนวัน
     const F=onlineFeesForRange(r.lo,r.hi,r.byBranch);              // ค่าธรรมเนียมออนไลน์ (Shopee/TikTok)
     const feeSum=F.comm+F.txn+F.service+F.ship+F.order+(F.ads||0);
-    const net=r.base-E.gpAmt-r.cost-E.rent-E.elec-E.wage-E.comm-feeSum, nm=r.base>0?net/r.base:0;
+    const net=r.base-E.gpAmt-r.cost-E.rent-E.elec-E.wage-E.comm-(E.other||0)-feeSum, nm=r.base>0?net/r.base:0;
     N.style.display="block";
     let rows='<div class="nrow"><span>ยอดขายก่อน VAT</span><b>฿'+fmt2(r.base)+'</b></div>';
     if(E.gpAmt>0) rows+='<div class="nrow minus"><span>หัก GP (ตามสาขา)</span><b>−฿'+fmt2(E.gpAmt)+'</b></div>';
@@ -1905,6 +1924,7 @@ function renderReport(){
     if(E.elec>0) rows+='<div class="nrow minus"><span>หัก ค่าไฟ</span><b>−฿'+fmt2(E.elec)+'</b></div>';
     if(E.wage>0) rows+='<div class="nrow minus"><span>หัก ค่าจ้างพนักงาน</span><b>−฿'+fmt2(E.wage)+'</b></div>';
     if(E.comm>0) rows+='<div class="nrow minus"><span>หัก คอมมิชชั่น</span><b>−฿'+fmt2(E.comm)+'</b></div>';
+    if((E.other||0)>0) rows+='<div class="nrow minus"><span>หัก ค่าใช้จ่ายอื่น</span><b>−฿'+fmt2(E.other)+'</b></div>';
     rows+='<div class="nrow net"><span>กำไรสุทธิ</span><span>฿'+fmt2(net)+' ('+(nm*100).toFixed(1)+'%)</span></div>';
     if(F.est) rows+='<div class="exp-note" style="margin-top:9px">⚠️ บางออเดอร์ยังไม่ settle — ค่าธรรมเนียมบางส่วนเป็นตัวประมาณจาก %เฉลี่ย</div>';
     rows+='<div class="exp-note" style="margin-top:9px">ค่าใช้จ่ายเฉลี่ยตามจำนวนวันที่เลือก · แก้ได้ที่ <b>⚙️ ตั้งค่าค่าใช้จ่ายรายสาขา</b></div>';
@@ -1953,7 +1973,7 @@ document.getElementById("repCopy").onclick=()=>{
   if(r.hasMain) L.push("💵 เงินสด ฿"+fmt2(r.cash)+" · 💳 KSHOP ฿"+fmt2(r.kshop));
   if(detailed){
     const E=expenseForRange(r.lo,r.hi,r.byBranch);
-    const net=r.base-E.gpAmt-r.cost-E.rent-E.elec-E.wage-E.comm, nm=r.base>0?net/r.base:0;
+    const net=r.base-E.gpAmt-r.cost-E.rent-E.elec-E.wage-E.comm-(E.other||0), nm=r.base>0?net/r.base:0;
     L.push("ก่อน VAT ฿"+fmt2(r.base)+" · VAT 7% ฿"+fmt2(r.vat)+" · รวม ฿"+fmt2(r.inc));
     L.push("กำไรขั้นต้น ฿"+fmt2(r.profit)+" ("+(r.margin*100).toFixed(1)+"%)");
     if(E.gpAmt>0) L.push("หัก GP ฿"+fmt2(E.gpAmt));
@@ -1962,6 +1982,7 @@ document.getElementById("repCopy").onclick=()=>{
     if(E.elec>0) L.push("หัก ค่าไฟ ฿"+fmt2(E.elec));
     if(E.wage>0) L.push("หัก ค่าจ้าง ฿"+fmt2(E.wage));
     if(E.comm>0) L.push("หัก คอมมิชชั่น ฿"+fmt2(E.comm));
+    if((E.other||0)>0) L.push("หัก ค่าใช้จ่ายอื่น ฿"+fmt2(E.other));
     L.push("กำไรสุทธิ ฿"+fmt2(net)+" ("+(nm*100).toFixed(1)+"%)");
   }
   const txt=L.join("\n"); navigator.clipboard?.writeText(txt).then(()=>toast("คัดลอกสรุปแล้ว")).catch(()=>prompt("คัดลอก:",txt));
@@ -2061,7 +2082,7 @@ function overlapDays(ym,lo,hi){
 }
 // คำนวณค่าใช้จ่ายรวมของช่วง (เฉลี่ยตามสัดส่วนวัน) + GP เฉลี่ยถ่วงน้ำหนักตามยอดขาย
 function expenseForRange(lo,hi,branchesInRange){
-  let rent=0,elec=0,wage=0,comm=0,gpAmt=0;
+  let rent=0,elec=0,wage=0,comm=0,other=0,gpAmt=0;
   // ไล่ทุกเดือนที่คร่อมช่วง
   const months=new Set();
   let cur=monthOf(lo), _g=0;
@@ -2074,13 +2095,14 @@ function expenseForRange(lo,hi,branchesInRange){
       const isMain=BRANCH_TYPE[br]==="main";
       if(isMain){ rent+=(e.rent||0)*ratio; elec+=(e.elec||0)*ratio; }
       wage+=(e.wage||0)*ratio; comm+=(e.comm||0)*ratio;
+      other+=othersSum(e)*ratio;
       if(!isMain){ // บูท: GP คิดจากยอดขายก่อน VAT ของสาขานั้นในเดือนนั้น
         const baseInMonth=branchesInRange[br].baseByMonth[ym]||0;
         gpAmt += baseInMonth*((e.gp!==undefined&&e.gp!==null&&e.gp!==""?e.gp:(data.gp[br]||0))/100);
       }
     });
   });
-  return {rent,elec,wage,comm,gpAmt};
+  return {rent,elec,wage,comm,other,gpAmt};
 }
 
 /* ---------- ค่าธรรมเนียมออนไลน์ (Shopee/TikTok) รายเดือน + เฉลี่ยตามวัน ---------- */
@@ -2175,7 +2197,16 @@ function renderExp(){
           body.innerHTML='<div class="exp-fields">'+
             fields.map(f=>'<div class="exp-f"><label>'+f[1]+' (บาท/เดือน)</label>'+
               '<input type="number" inputmode="decimal" data-br="'+br.replace(/"/g,"&quot;")+'" data-f="'+f[0]+'" value="'+(e[f[0]]||"")+'" placeholder="0" autocomplete="off"></div>').join("")+
-            '</div>'+(isMain?"":'<div class="exp-hint">GP% ตั้งที่ปุ่ม ⚙️ GP รายสาขา (ตั้งครั้งเดียว ใช้ทุกเดือน)</div>');
+            '</div>'+
+            '<div class="oth-sec">ค่าใช้จ่ายอื่น ๆ <small>(ตั้งชื่อเองได้)</small></div>'+
+            '<div class="oth-list">'+
+              (e.others||[]).map((o,oi)=>'<div class="oth-row">'+
+                '<input type="text" class="oth-n" data-obr="'+br.replace(/"/g,"&quot;")+'" data-oi="'+oi+'" data-of="n" value="'+String(o.n||"").replace(/"/g,"&quot;")+'" placeholder="ระบุชื่อค่าใช้จ่าย" autocomplete="off">'+
+                '<input type="number" class="oth-v" inputmode="decimal" data-obr="'+br.replace(/"/g,"&quot;")+'" data-oi="'+oi+'" data-of="v" value="'+(o.v||"")+'" placeholder="0" autocomplete="off">'+
+                '<button type="button" class="oth-del" data-odel="'+br.replace(/"/g,"&quot;")+'|'+oi+'">×</button></div>').join("")+
+            '</div>'+
+            '<button type="button" class="oth-add" data-oadd="'+br.replace(/"/g,"&quot;")+'">+ เพิ่มค่าใช้จ่ายอื่น</button>'+
+            (isMain?"":'<div class="exp-hint">GP% ตั้งที่ปุ่ม ⚙️ GP รายสาขา (ตั้งครั้งเดียว ใช้ทุกเดือน)</div>');
         }
         row.appendChild(body);
       }
@@ -2223,9 +2254,25 @@ document.getElementById("gpBtn").onclick=()=>{
   if(on) renderGpPanel();
 };
 function hasExpData(ym,br){ const e=expOf(ym,br); return (e.rent||0)+(e.elec||0)+(e.wage||0)+(e.comm||0)>0; }
-function expTotalOf(ym,br){ const e=expOf(ym,br); return (e.rent||0)+(e.elec||0)+(e.wage||0)+(e.comm||0); }
+function othersSum(e){ return (e.others||[]).reduce((s,o)=>s+(num(o.v)||0),0); }
+function expTotalOf(ym,br){ const e=expOf(ym,br); return (e.rent||0)+(e.elec||0)+(e.wage||0)+(e.comm||0)+othersSum(e); }
 function feeTotalOf(br,ym){ const e=feeOf(br,ym); return (e.comm||0)+(e.txn||0)+(e.service||0)+(e.order||0)+(e.ship||0)+(e.ads||0); }
 
+document.getElementById("expList").addEventListener("click",e=>{
+  const add=e.target.closest("[data-oadd]"), del=e.target.closest("[data-odel]");
+  const ym=document.getElementById("expMonth").value||todayISO.slice(0,7);
+  if(add){
+    const br=add.dataset.oadd;
+    data.expenses[ym]=data.expenses[ym]||{}; data.expenses[ym][br]=data.expenses[ym][br]||{};
+    const ex=data.expenses[ym][br]; ex.others=ex.others||[]; ex.others.push({n:"",v:0});
+    store.write(data); renderExp(); return;
+  }
+  if(del){
+    const [br,oi]=del.dataset.odel.split("|");
+    const ex=(data.expenses[ym]||{})[br];
+    if(ex&&ex.others){ ex.others.splice(+oi,1); store.write(data); renderExp(); }
+  }
+});
 document.getElementById("expList").addEventListener("input",e=>{
   const t=e.target;
   const ym=document.getElementById("expMonth").value||todayISO.slice(0,7);
@@ -2237,6 +2284,14 @@ document.getElementById("expList").addEventListener("input",e=>{
   } else if(t.dataset.br){
     setExp(ym,t.dataset.br,t.dataset.f,parseFloat(t.value)||0);
     tot=expTotalOf(ym,t.dataset.br);
+  } else if(t.dataset.of!==undefined){
+    const br=t.dataset.obr, oi=+t.dataset.oi;
+    data.expenses[ym]=data.expenses[ym]||{}; data.expenses[ym][br]=data.expenses[ym][br]||{};
+    const ex=data.expenses[ym][br]; ex.others=ex.others||[];
+    if(!ex.others[oi]) ex.others[oi]={n:"",v:0};
+    ex.others[oi][t.dataset.of]= (t.dataset.of==="v") ? (parseFloat(t.value)||0) : t.value;
+    store.write(data);
+    tot=expTotalOf(ym,br);
   } else return;
   const vl=row.querySelector(".exp-head .vl");
   if(vl){ vl.textContent="฿"+fmt(tot); vl.classList.toggle("none",!(tot>0)); }
@@ -3184,7 +3239,7 @@ function dashData(arg){
   const ads=F.ads||0;                                    // ค่าโฆษณา แยกก้อนของตัวเอง
   const feeOnline=F.comm+F.txn+F.service+F.ship+F.order;  // ค่าธรรมเนียมแพลตฟอร์ม (ไม่รวมโฆษณา)
   const gp=E.gpAmt;
-  const opex=E.rent+E.elec+E.wage+E.comm;
+  const opex=E.rent+E.elec+E.wage+E.comm+(E.other||0);
   const profit=base-gp-feeOnline-ads-opex-cost;
   return {ym:(typeof arg==="string"?arg:""), lo, hi, sales,base,vat,cost,pieces,gp,feeOnline,ads,opex,profit,perChan,perBranch,byModel,byDay,est:F.est};
 }
