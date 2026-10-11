@@ -107,6 +107,56 @@
   .brprice-chk{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-soft);margin:6px 2px 2px;cursor:pointer;user-select:none;}
   .brprice-chk input{width:16px;height:16px;accent-color:var(--accent);}
   .brprice-chk small{color:#9aa8b8;}
+  .color-wrap{display:flex;flex-wrap:wrap;gap:6px;}
+  .color-chip{border:1.5px solid #d5dee8;background:#fff;border-radius:20px;padding:6px 13px;font-family:inherit;font-size:12.5px;color:var(--ink);cursor:pointer;line-height:1.2;}
+  .color-chip.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
+  .color-chip.none{color:var(--ink-soft);font-style:italic;}
+  .line-color{display:inline-block;background:#eef4fa;color:var(--accent-deep);font-size:10.5px;padding:1px 8px;border-radius:20px;margin-left:6px;vertical-align:middle;}
+  .sub-line .sc{color:var(--accent-deep);font-size:11.5px;min-width:52px;}
+  #screen-prod .rep-head{display:flex;align-items:center;gap:11px;padding:6px 0 12px;}
+  #screen-prod .rep-logo{height:30px;width:auto;max-width:150px;flex:none;}
+  #screen-prod .rep-ttl{font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:19px;color:var(--ink);}
+  #screen-prod .rep-card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:14px 14px 4px;margin-bottom:6px;}
+  .prod-entry{background:linear-gradient(135deg,#5a4ea3,#7c6fd0)!important;color:#fff!important;border:none!important;}
+  .prod-quick{display:flex;gap:7px;margin-bottom:10px;flex-wrap:wrap;}
+  .prod-quick button{background:#f2f8fd;border:1.5px solid var(--line);border-radius:20px;padding:6px 13px;font-family:inherit;font-size:12.5px;color:var(--accent-deep);cursor:pointer;}
+  .prod-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+  .prod-chips .bchip{padding:5px 11px;font-size:12px;}
+  .prod-kpis{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:14px 0;}
+  .prod-kpi{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:12px 14px;}
+  .prod-kpi small{display:block;font-size:11px;color:var(--ink-soft);}
+  .prod-kpi b{display:block;font-family:"Bai Jamjuree",sans-serif;font-size:19px;color:var(--ink);margin-top:2px;}
+  .prod-kpi em{font-style:normal;font-size:11.5px;color:var(--accent-deep);}
+  .prod-sec{font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:14.5px;color:var(--accent-deep);margin:18px 2px 8px;}
+  .prod-sec small{font-family:inherit;font-weight:400;font-size:11px;color:var(--ink-soft);margin-left:4px;}
+  .prod-scroll{overflow-x:auto;background:var(--card);border-radius:14px;box-shadow:var(--shadow);-webkit-overflow-scrolling:touch;}
+  .prod-mx{border-collapse:collapse;font-size:12px;min-width:100%;}
+  .prod-mx th,.prod-mx td{padding:7px 6px;text-align:center;white-space:nowrap;}
+  .prod-mx thead th{background:#0a86cf;color:#fff;font-weight:600;font-size:11.5px;}
+  .prod-mx th.c0,.prod-mx td.c0{position:sticky;left:0;background:#fff;text-align:left;font-weight:600;z-index:1;border-right:1px solid #e6eef6;}
+  .prod-mx thead th.c0{background:#0a86cf;color:#fff;}
+  .prod-mx td.tot,.prod-mx th.tot{font-weight:700;background:#eef6fd;color:var(--accent-deep);}
+  .prod-mx tr.trow td{font-weight:700;background:#eef6fd;color:var(--accent-deep);border-top:2px solid #0a86cf;}
+  .prod-mx tr.trow td.c0{background:#eef6fd;}
+  .prod-mx td.z{color:#c9d4df;}
+  .prod-ch{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:10px 14px;}
+  .prod-chr{display:flex;align-items:center;gap:9px;padding:6px 0;font-size:12.5px;}
+  .prod-chr .n{width:92px;flex-shrink:0;}
+  .prod-chr .bar{flex:1;height:9px;background:#eef3f8;border-radius:6px;overflow:hidden;}
+  .prod-chr .bar i{display:block;height:100%;border-radius:6px;}
+  .prod-chr .v{width:96px;text-align:right;font-family:"Bai Jamjuree",sans-serif;font-weight:600;flex-shrink:0;}
+  .prod-list{background:var(--card);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;}
+  .prod-li{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid #eef3f8;cursor:pointer;}
+  .prod-li:last-child{border-bottom:none;}
+  .prod-li:active{background:#f4f9fd;}
+  .prod-li .rk{width:22px;font-family:"Bai Jamjuree",sans-serif;font-weight:700;color:#9aa8b8;}
+  .prod-li .nm{flex:1;min-width:0;}
+  .prod-li .nm b{display:block;font-size:13.5px;font-weight:600;color:var(--ink);}
+  .prod-li .nm small{display:block;font-size:11px;color:var(--ink-soft);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .prod-li .q{text-align:right;font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:14px;}
+  .prod-li .q small{display:block;font-weight:500;font-size:11px;color:var(--ink-soft);}
+  .prod-note{font-size:11.5px;color:var(--ink-soft);margin:8px 2px;line-height:1.6;}
+  .prod-warn{background:#fff8e1;border-radius:12px;padding:9px 12px;font-size:12px;color:#8a6200;margin:10px 0;line-height:1.55;}
   .multi-tag{display:inline-block;background:#fff3e0;color:#c25e00;font-size:10px;padding:1px 7px;border-radius:20px;margin-left:6px;vertical-align:middle;}
   .sub-lines{margin:8px 0 4px;border-top:1px dashed #dce8f3;padding-top:7px;}
   .sub-line{display:flex;align-items:center;gap:7px;padding:5px 0;font-size:12.5px;}
@@ -673,6 +723,7 @@
   <button class="report-entry doc-entry" id="docBtnH">📄 เอกสารห้าง (ใบกำกับ/ใบลดหนี้)</button>
   <button class="report-entry" id="reportBtnSimpleH">📊 รายงาน / ดึงข้อมูลตามช่วงเวลา</button>
   <button class="report-entry alt" id="reportBtnDetailH">📒 รายงานการขายแบบละเอียด</button>
+  <button class="report-entry prod-entry" id="prodBtnH">👕 รายงานสินค้า (สี × ไซส์)</button>
   <div class="import-section">
     <div class="import-title">นำเข้าข้อมูลจากไฟล์</div>
     <button class="imp-btn" id="importBtn">
@@ -730,6 +781,8 @@
   <div class="addsale">
     <div class="ttl">+ บันทึกการขาย</div>
     <div class="fld"><label>รุ่น</label><select id="selModel" autocomplete="off"></select></div>
+    <div class="fld" id="colorFld"><label>สี <small style="color:#9aa8b8;font-weight:400">(ไม่ใส่ก็ได้)</small></label>
+      <div class="color-wrap" id="colorWrap"></div></div>
     <div class="row2">
       <div class="fld"><label>ไซส์</label><select id="selSize" autocomplete="off"></select></div>
       <div class="fld"><label>จำนวน</label>
@@ -909,6 +962,36 @@
 
   <div class="rep-acts"><button id="prBack">‹ กลับหน้าแรก</button></div>
   <div class="foot">ตัวช่วยตัดสินใจตั้งราคา · ยังไม่ได้รวมค่าเช่า/ค่าไฟ/เงินเดือน (ดูกำไรสุทธิจริงที่รายงาน)</div>
+</div>
+
+<!-- ===== รายงานสินค้า (แยกรุ่น · สี × ไซส์) ===== -->
+<div id="screen-prod" class="wrap" style="display:none">
+  <div class="rep-head"><img id="logoProd" class="rep-logo" alt=""><div class="rep-ttl">รายงานสินค้า</div></div>
+
+  <div class="rep-card">
+    <div class="prod-quick">
+      <button type="button" data-pq="this">เดือนนี้</button>
+      <button type="button" data-pq="prev">เดือนก่อน</button>
+      <button type="button" data-pq="30">30 วันล่าสุด</button>
+    </div>
+    <div class="rep-row">
+      <div class="rep-field"><label>จากวันที่</label><input type="date" id="prodFrom" autocomplete="off"></div>
+      <div class="rep-field"><label>ถึงวันที่</label><input type="date" id="prodTo" autocomplete="off"></div>
+    </div>
+    <div class="rep-field" style="margin-top:10px"><label>รุ่น</label><select id="prodModel" autocomplete="off"></select></div>
+    <div class="rep-field" style="margin-top:10px">
+      <label>สาขา/ช่องทาง <small style="color:var(--ink-soft)">(ไม่ติ๊ก = ทุกสาขา)</small></label>
+      <div id="prodBranchBox"></div>
+    </div>
+  </div>
+
+  <div id="prodBody"></div>
+
+  <div class="rep-acts">
+    <button id="prodCopy">📋 คัดลอกลงไลน์</button>
+    <button id="prodXls">📊 ส่งออก Excel</button>
+  </div>
+  <div class="rep-acts"><button id="prodBack">‹ กลับหน้าแรก</button></div>
 </div>
 
 <!-- ===== เอกสารห้าง (ใบกำกับ/ใบลดหนี้) ===== -->
@@ -1227,7 +1310,7 @@
 </div>
 
 <script>
-const CATALOG = [{"id":"m01","name":"กางเกง Premium Snow","code":"PMS","price":490,"sizes":[{"id":"m01s01","size":"28","cost":165},{"id":"m01s02","size":"30","cost":165},{"id":"m01s03","size":"32","cost":165},{"id":"m01s04","size":"34","cost":165},{"id":"m01s05","size":"36","cost":175},{"id":"m01s06","size":"38","cost":175},{"id":"m01s07","size":"40","cost":190},{"id":"m01s08","size":"42","cost":190},{"id":"m01s09","size":"44","cost":210,"pm":490,"ptiktok":550,"pshopee":790},{"id":"m01s10","size":"46","cost":210,"pm":490,"ptiktok":550,"pshopee":790}],"pmain":450,"ptiktok":490,"pshopee":590},{"id":"m02","name":"กางเกง STRETCH เอวยืด","code":"STRETCH","price":790,"sizes":[{"id":"m02s01","size":"28","cost":250},{"id":"m02s02","size":"30","cost":250},{"id":"m02s03","size":"32","cost":250},{"id":"m02s04","size":"34","cost":250},{"id":"m02s05","size":"36","cost":250},{"id":"m02s06","size":"38","cost":250},{"id":"m02s07","size":"40","cost":250},{"id":"m02s08","size":"42","cost":250},{"id":"m02s09","size":"44","cost":250},{"id":"m02s10","size":"46","cost":250}],"pmain":690,"ptiktok":890,"pshopee":950},{"id":"m03","name":"กางเกง Signature","code":"SIG","price":690,"sizes":[{"id":"m03s01","size":"28","cost":180},{"id":"m03s02","size":"30","cost":180},{"id":"m03s03","size":"32","cost":180},{"id":"m03s04","size":"34","cost":180},{"id":"m03s05","size":"36","cost":190},{"id":"m03s06","size":"38","cost":190},{"id":"m03s07","size":"40","cost":210},{"id":"m03s08","size":"42","cost":210},{"id":"m03s09","size":"44","cost":235,"pm":650,"ptiktok":690,"pshopee":850},{"id":"m03s10","size":"46","cost":235,"pm":650,"ptiktok":690,"pshopee":850},{"id":"m03s11","size":"48","cost":235,"pm":690,"ptiktok":690,"pshopee":850}],"pmain":590,"ptiktok":690,"pshopee":790},{"id":"m04","name":"กางเกง Premium IVY","code":"TP","price":490,"sizes":[{"id":"m04s01","size":"28","cost":170},{"id":"m04s02","size":"30","cost":170},{"id":"m04s03","size":"32","cost":170},{"id":"m04s04","size":"34","cost":170},{"id":"m04s05","size":"36","cost":170},{"id":"m04s06","size":"38","cost":170},{"id":"m04s07","size":"40","cost":175},{"id":"m04s08","size":"42","cost":175},{"id":"m04s09","size":"44","cost":185,"pm":450,"ptiktok":490,"pshopee":650},{"id":"m04s10","size":"46","cost":185,"pm":450,"ptiktok":490,"pshopee":650}],"pmain":390,"ptiktok":450,"pshopee":590},{"id":"m05","name":"กางเกง Premium Smart","code":"PM","price":590,"sizes":[{"id":"m05s01","size":"28","cost":175},{"id":"m05s02","size":"30","cost":175},{"id":"m05s03","size":"32","cost":175},{"id":"m05s04","size":"34","cost":175},{"id":"m05s05","size":"36","cost":185},{"id":"m05s06","size":"38","cost":185},{"id":"m05s07","size":"40","cost":200},{"id":"m05s08","size":"42","cost":200}],"pmain":550,"ptiktok":590,"pshopee":690},{"id":"m06","name":"กางเกง Deluxe","code":"DLS","price":790,"sizes":[{"id":"m06s01","size":"28","cost":250},{"id":"m06s02","size":"30","cost":250},{"id":"m06s03","size":"32","cost":250},{"id":"m06s04","size":"34","cost":250},{"id":"m06s05","size":"36","cost":250},{"id":"m06s06","size":"38","cost":250},{"id":"m06s07","size":"40","cost":250},{"id":"m06s08","size":"42","cost":250}],"pmain":690,"ptiktok":790,"pshopee":890},{"id":"m07","name":"กางเกง Refined","code":"Refined","price":890,"sizes":[{"id":"m07s01","size":"28","cost":250},{"id":"m07s02","size":"30","cost":250},{"id":"m07s03","size":"32","cost":250},{"id":"m07s04","size":"34","cost":250},{"id":"m07s05","size":"36","cost":250},{"id":"m07s06","size":"38","cost":250},{"id":"m07s07","size":"40","cost":250},{"id":"m07s08","size":"42","cost":250}],"pmain":790},{"id":"m08","name":"กางเกงขาสั้น","code":"CSP","price":590,"sizes":[{"id":"m08s01","size":"30","cost":160},{"id":"m08s02","size":"32","cost":160},{"id":"m08s03","size":"34","cost":160},{"id":"m08s04","size":"36","cost":160},{"id":"m08s05","size":"38","cost":160},{"id":"m08s06","size":"40","cost":160},{"id":"m08s07","size":"42","cost":160}],"pmain":450,"ptiktok":590,"pshopee":590},{"id":"m09","name":"กางเกงสูท Pario","code":"PARIO-Pants","price":1290,"sizes":[{"id":"m09s01","size":"30","cost":490},{"id":"m09s02","size":"32","cost":490},{"id":"m09s03","size":"34","cost":490},{"id":"m09s04","size":"36","cost":490},{"id":"m09s05","size":"38","cost":490},{"id":"m09s06","size":"40","cost":490},{"id":"m09s07","size":"42","cost":490}],"pmain":1090,"ptiktok":1090,"pshopee":1350},{"id":"m10","name":"เสื้อสูท Pario","code":"PARIO-Suits","price":1990,"sizes":[{"id":"m10s01","size":"M(50)","cost":690},{"id":"m10s02","size":"L(52)","cost":690},{"id":"m10s03","size":"XL(54)","cost":690},{"id":"m10s04","size":"2XL(56)","cost":690},{"id":"m10s05","size":"3XL(58)","cost":690},{"id":"m10s06","size":"4XL(60)","cost":690},{"id":"m10s07","size":"5XL(62)","cost":690}],"pmain":1990,"ptiktok":2090,"pshopee":2190},{"id":"m11","name":"เสื้อสูท Chato (M-4XL)","code":"Suits","price":1790,"sizes":[{"id":"m11s01","size":"M(50)","cost":590},{"id":"m11s02","size":"L(52)","cost":590},{"id":"m11s03","size":"XL(54)","cost":590},{"id":"m11s04","size":"2XL(56)","cost":590},{"id":"m11s05","size":"3XL(58)","cost":590},{"id":"m11s06","size":"4XL(60)","cost":690,"pshopee":2090}],"pmain":1590,"ptiktok":1690,"pshopee":1890},{"id":"m12","name":"เสื้อสูท Chato (5-6XL)","code":"Suits","price":1990,"sizes":[{"id":"m12s01","size":"5XL(62)","cost":720,"pshopee":2090},{"id":"m12s02","size":"6XL(64)","cost":720,"pshopee":2190}],"pmain":1890,"ptiktok":1890},{"id":"m13","name":"เสื้อสูท Chato (7XL)","code":"Suits","price":2090,"sizes":[{"id":"m13s01","size":"7XL(66)","cost":740}],"pmain":2090,"ptiktok":2090,"pshopee":2190},{"id":"m14","name":"เสื้อโปโล","code":"Polo","price":490,"sizes":[{"id":"m14s01","size":"M","cost":135},{"id":"m14s02","size":"L","cost":145},{"id":"m14s03","size":"XL","cost":155},{"id":"m14s04","size":"2XL","cost":165},{"id":"m14s05","size":"3XL","cost":175}],"pmain":350},{"id":"m15","name":"Cooltech Polo","code":"COOLPOLO","price":790,"sizes":[{"id":"m15s01","size":"M","cost":300},{"id":"m15s02","size":"L","cost":300},{"id":"m15s03","size":"XL","cost":300},{"id":"m15s04","size":"2XL","cost":300},{"id":"m15s05","size":"3XL","cost":300}],"pmain":690,"ptiktok":790,"pshopee":990},{"id":"m16","name":"Non Iron Shirt","code":"NONIRONSHIRT","price":890,"sizes":[{"id":"m16s01","size":"M","cost":250},{"id":"m16s02","size":"L","cost":250},{"id":"m16s03","size":"XL","cost":250},{"id":"m16s04","size":"2XL","cost":250},{"id":"m16s05","size":"3XL","cost":250}],"pmain":790,"ptiktok":790,"pshopee":990},{"id":"m17","name":"เสื้อเชิ้ตลินิน","code":"LININSHIRT","price":990,"sizes":[{"id":"m17s01","size":"M(42)","cost":300},{"id":"m17s02","size":"L(44)","cost":300},{"id":"m17s03","size":"XL(46)","cost":300},{"id":"m17s04","size":"2XL(48)","cost":300}],"pmain":690},{"id":"m18","name":"เสื้อเชิ้ต (รุ่นเก่า)","code":"SOS","price":490,"sizes":[{"id":"m18s01","size":"M","cost":130},{"id":"m18s02","size":"L","cost":140},{"id":"m18s03","size":"XL","cost":150},{"id":"m18s04","size":"2XL","cost":160},{"id":"m18s05","size":"3XL","cost":170}],"pmain":350},{"id":"m19","name":"กางเกง ESSENTIAL","code":"ESSENTIAL","price":1090,"sizes":[{"id":"m19s01","size":"28","cost":350},{"id":"m19s02","size":"30","cost":350},{"id":"m19s03","size":"32","cost":350},{"id":"m19s04","size":"34","cost":350},{"id":"m19s05","size":"36","cost":350},{"id":"m19s06","size":"38","cost":350},{"id":"m19s07","size":"40","cost":350},{"id":"m19s08","size":"42","cost":350}],"pmain":990},{"id":"m20","name":"เสื้อสูท Ceremony","code":"CEREMONY-Suits","price":2090,"sizes":[{"id":"m20s01","size":"M(50)","cost":690},{"id":"m20s02","size":"L(52)","cost":690},{"id":"m20s03","size":"XL(54)","cost":690},{"id":"m20s04","size":"2XL(56)","cost":690},{"id":"m20s05","size":"3XL(58)","cost":690},{"id":"m20s06","size":"4XL(60)","cost":690},{"id":"m20s07","size":"5XL(62)","cost":690}],"pmain":2090},{"id":"m21","name":"กางเกงสูท Ceremony","code":"CEREMONY-Pants","price":1290,"sizes":[{"id":"m21s01","size":"30","cost":390},{"id":"m21s02","size":"32","cost":390},{"id":"m21s03","size":"34","cost":390},{"id":"m21s04","size":"36","cost":390},{"id":"m21s05","size":"38","cost":390},{"id":"m21s06","size":"40","cost":390},{"id":"m21s07","size":"42","cost":390}],"pmain":1290},{"id":"m22","name":"กางเกง Classic","code":"Classic","price":1390,"pmain":1290,"pshopee":1390,"ptiktok":1290,"sizes":[{"id":"m22s01","size":"28","cost":350},{"id":"m22s02","size":"30","cost":350},{"id":"m22s03","size":"32","cost":350},{"id":"m22s04","size":"34","cost":350},{"id":"m22s05","size":"36","cost":350},{"id":"m22s06","size":"38","cost":350},{"id":"m22s07","size":"40","cost":350},{"id":"m22s08","size":"42","cost":350}]},{"id":"m23","name":"กางเกง Comfort","code":"Comfort","price":590,"pmain":590,"sizes":[{"id":"m23s01","size":"28","cost":180},{"id":"m23s02","size":"30","cost":180},{"id":"m23s03","size":"32","cost":180},{"id":"m23s04","size":"34","cost":180},{"id":"m23s05","size":"36","cost":180},{"id":"m23s06","size":"38","cost":180},{"id":"m23s07","size":"40","cost":180},{"id":"m23s08","size":"42","cost":180}]},{"id":"m24","name":"โปโลไหมพรม","code":"Knit-Basic","price":590,"pmain":590,"sizes":[{"id":"m24s01","size":"M","cost":250},{"id":"m24s02","size":"L","cost":250},{"id":"m24s03","size":"XL","cost":250}]}];
+const CATALOG = [{"id":"m01","name":"กางเกง Premium Snow","code":"PMS","price":490,"sizes":[{"id":"m01s01","size":"28","cost":165},{"id":"m01s02","size":"30","cost":165},{"id":"m01s03","size":"32","cost":165},{"id":"m01s04","size":"34","cost":165},{"id":"m01s05","size":"36","cost":175},{"id":"m01s06","size":"38","cost":175},{"id":"m01s07","size":"40","cost":190},{"id":"m01s08","size":"42","cost":190},{"id":"m01s09","size":"44","cost":210,"pm":490,"ptiktok":550,"pshopee":790},{"id":"m01s10","size":"46","cost":210,"pm":490,"ptiktok":550,"pshopee":790}],"pmain":450,"ptiktok":490,"pshopee":590,"colors":["Black","Brown","DarkGray","Ivory","KhaKi","LightGray","Navy"]},{"id":"m02","name":"กางเกง STRETCH เอวยืด","code":"STRETCH","price":790,"sizes":[{"id":"m02s01","size":"28","cost":250},{"id":"m02s02","size":"30","cost":250},{"id":"m02s03","size":"32","cost":250},{"id":"m02s04","size":"34","cost":250},{"id":"m02s05","size":"36","cost":250},{"id":"m02s06","size":"38","cost":250},{"id":"m02s07","size":"40","cost":250},{"id":"m02s08","size":"42","cost":250},{"id":"m02s09","size":"44","cost":250},{"id":"m02s10","size":"46","cost":250}],"pmain":690,"ptiktok":890,"pshopee":950,"colors":["Biege","Black","DG","Navy","White"]},{"id":"m03","name":"กางเกง Signature","code":"SIG","price":690,"sizes":[{"id":"m03s01","size":"28","cost":180},{"id":"m03s02","size":"30","cost":180},{"id":"m03s03","size":"32","cost":180},{"id":"m03s04","size":"34","cost":180},{"id":"m03s05","size":"36","cost":190},{"id":"m03s06","size":"38","cost":190},{"id":"m03s07","size":"40","cost":210},{"id":"m03s08","size":"42","cost":210},{"id":"m03s09","size":"44","cost":235,"pm":650,"ptiktok":690,"pshopee":850},{"id":"m03s10","size":"46","cost":235,"pm":650,"ptiktok":690,"pshopee":850},{"id":"m03s11","size":"48","cost":235,"pm":690,"ptiktok":690,"pshopee":850},{"id":"m03s12","size":"50","cost":250,"pm":790,"pb":890}],"pmain":590,"ptiktok":690,"pshopee":790,"colors":["Beige","Black","Brown","Gray","Khaki","Navy","Olive","White"]},{"id":"m04","name":"กางเกง Premium IVY","code":"TP","price":490,"sizes":[{"id":"m04s01","size":"28","cost":170},{"id":"m04s02","size":"30","cost":170},{"id":"m04s03","size":"32","cost":170},{"id":"m04s04","size":"34","cost":170},{"id":"m04s05","size":"36","cost":170},{"id":"m04s06","size":"38","cost":170},{"id":"m04s07","size":"40","cost":175},{"id":"m04s08","size":"42","cost":175},{"id":"m04s09","size":"44","cost":185,"pm":450,"ptiktok":490,"pshopee":650},{"id":"m04s10","size":"46","cost":185,"pm":450,"ptiktok":490,"pshopee":650}],"pmain":390,"ptiktok":450,"pshopee":590,"colors":["Black","Brown","Cream","Gray","Navy"]},{"id":"m05","name":"กางเกง Premium Smart","code":"PM","price":590,"sizes":[{"id":"m05s01","size":"28","cost":175},{"id":"m05s02","size":"30","cost":175},{"id":"m05s03","size":"32","cost":175},{"id":"m05s04","size":"34","cost":175},{"id":"m05s05","size":"36","cost":185},{"id":"m05s06","size":"38","cost":185},{"id":"m05s07","size":"40","cost":200},{"id":"m05s08","size":"42","cost":200}],"pmain":550,"ptiktok":590,"pshopee":690,"colors":["Black","Brown","Cream","Gray","Khaki","Navy"]},{"id":"m06","name":"กางเกง Deluxe","code":"DLS","price":790,"sizes":[{"id":"m06s01","size":"28","cost":250},{"id":"m06s02","size":"30","cost":250},{"id":"m06s03","size":"32","cost":250},{"id":"m06s04","size":"34","cost":250},{"id":"m06s05","size":"36","cost":250},{"id":"m06s06","size":"38","cost":250},{"id":"m06s07","size":"40","cost":250},{"id":"m06s08","size":"42","cost":250}],"pmain":690,"ptiktok":790,"pshopee":890,"colors":["AB","Beige","Black","Gray","Navy"]},{"id":"m07","name":"กางเกง Refined","code":"Refined","price":890,"sizes":[{"id":"m07s01","size":"28","cost":250},{"id":"m07s02","size":"30","cost":250},{"id":"m07s03","size":"32","cost":250},{"id":"m07s04","size":"34","cost":250},{"id":"m07s05","size":"36","cost":250},{"id":"m07s06","size":"38","cost":250},{"id":"m07s07","size":"40","cost":250},{"id":"m07s08","size":"42","cost":250}],"pmain":790,"colors":["Black","LightBeige","Navy","Olive","White"]},{"id":"m08","name":"กางเกงขาสั้น","code":"CSP","price":590,"sizes":[{"id":"m08s01","size":"30","cost":160},{"id":"m08s02","size":"32","cost":160},{"id":"m08s03","size":"34","cost":160},{"id":"m08s04","size":"36","cost":160},{"id":"m08s05","size":"38","cost":160},{"id":"m08s06","size":"40","cost":160},{"id":"m08s07","size":"42","cost":160}],"pmain":450,"ptiktok":590,"pshopee":590,"colors":["AB","Beige","Black","DG","Navy"]},{"id":"m09","name":"กางเกงสูท Pario","code":"PARIO-Pants","price":1290,"sizes":[{"id":"m09s01","size":"30","cost":490},{"id":"m09s02","size":"32","cost":490},{"id":"m09s03","size":"34","cost":490},{"id":"m09s04","size":"36","cost":490},{"id":"m09s05","size":"38","cost":490},{"id":"m09s06","size":"40","cost":490},{"id":"m09s07","size":"42","cost":490}],"pmain":1090,"ptiktok":1090,"pshopee":1350,"colors":["Beige","Black","LG","Navy"]},{"id":"m10","name":"เสื้อสูท Pario","code":"PARIO-Suits","price":1990,"sizes":[{"id":"m10s01","size":"M(50)","cost":690},{"id":"m10s02","size":"L(52)","cost":690},{"id":"m10s03","size":"XL(54)","cost":690},{"id":"m10s04","size":"2XL(56)","cost":690},{"id":"m10s05","size":"3XL(58)","cost":690},{"id":"m10s06","size":"4XL(60)","cost":690},{"id":"m10s07","size":"5XL(62)","cost":690}],"pmain":1990,"ptiktok":2090,"pshopee":2190,"colors":["Beige","Black","LG","Navy"]},{"id":"m11","name":"เสื้อสูท Chato (M-4XL)","code":"Suits","price":1790,"sizes":[{"id":"m11s01","size":"M(50)","cost":590},{"id":"m11s02","size":"L(52)","cost":590},{"id":"m11s03","size":"XL(54)","cost":590},{"id":"m11s04","size":"2XL(56)","cost":590},{"id":"m11s05","size":"3XL(58)","cost":590},{"id":"m11s06","size":"4XL(60)","cost":690,"pshopee":2090}],"pmain":1590,"ptiktok":1690,"pshopee":1890,"colors":["Beige","Black","Blue","Brown","DG","Khaki","Navy"]},{"id":"m12","name":"เสื้อสูท Chato (5-6XL)","code":"Suits","price":1990,"sizes":[{"id":"m12s01","size":"5XL(62)","cost":720,"pshopee":2090},{"id":"m12s02","size":"6XL(64)","cost":720,"pshopee":2190}],"pmain":1890,"ptiktok":1890,"colors":["Beige","Black","Blue","Brown","DG","Khaki","Navy"]},{"id":"m13","name":"เสื้อสูท Chato (7XL)","code":"Suits","price":2090,"sizes":[{"id":"m13s01","size":"7XL(66)","cost":740}],"pmain":2090,"ptiktok":2090,"pshopee":2190,"colors":["Beige","Black","Blue","Brown","DG","Khaki","Navy"]},{"id":"m14","name":"เสื้อโปโล","code":"Polo","price":490,"sizes":[{"id":"m14s01","size":"M","cost":135},{"id":"m14s02","size":"L","cost":145},{"id":"m14s03","size":"XL","cost":155},{"id":"m14s04","size":"2XL","cost":165},{"id":"m14s05","size":"3XL","cost":175}],"pmain":350,"colors":["Beige","Black","DG","Navy","Red","White"]},{"id":"m15","name":"Cooltech Polo","code":"COOLPOLO","price":790,"sizes":[{"id":"m15s01","size":"M","cost":300},{"id":"m15s02","size":"L","cost":300},{"id":"m15s03","size":"XL","cost":300},{"id":"m15s04","size":"2XL","cost":300},{"id":"m15s05","size":"3XL","cost":300}],"pmain":690,"ptiktok":790,"pshopee":990,"colors":["Black","Blue","LG","NAVY","White"]},{"id":"m16","name":"Non Iron Shirt","code":"NONIRONSHIRT","price":890,"sizes":[{"id":"m16s01","size":"M","cost":250},{"id":"m16s02","size":"L","cost":250},{"id":"m16s03","size":"XL","cost":250},{"id":"m16s04","size":"2XL","cost":250},{"id":"m16s05","size":"3XL","cost":250}],"pmain":790,"ptiktok":790,"pshopee":990,"colors":["Black","Blue","LG","Navy","White"]},{"id":"m17","name":"เสื้อเชิ้ตลินิน","code":"LININSHIRT","price":990,"sizes":[{"id":"m17s01","size":"M(42)","cost":300},{"id":"m17s02","size":"L(44)","cost":300},{"id":"m17s03","size":"XL(46)","cost":300},{"id":"m17s04","size":"2XL(48)","cost":300}],"pmain":690,"colors":["Beige","Blue","Olive"]},{"id":"m18","name":"เสื้อเชิ้ต (รุ่นเก่า)","code":"SOS","price":490,"sizes":[{"id":"m18s01","size":"M","cost":130},{"id":"m18s02","size":"L","cost":140},{"id":"m18s03","size":"XL","cost":150},{"id":"m18s04","size":"2XL","cost":160},{"id":"m18s05","size":"3XL","cost":170}],"pmain":350,"colors":["Biege","Black","Navy","Red","White"]},{"id":"m19","name":"กางเกง ESSENTIAL","code":"ESSENTIAL","price":1090,"sizes":[{"id":"m19s01","size":"28","cost":350},{"id":"m19s02","size":"30","cost":350},{"id":"m19s03","size":"32","cost":350},{"id":"m19s04","size":"34","cost":350},{"id":"m19s05","size":"36","cost":350},{"id":"m19s06","size":"38","cost":350},{"id":"m19s07","size":"40","cost":350},{"id":"m19s08","size":"42","cost":350}],"pmain":990,"colors":["Black","DG","Navy"]},{"id":"m20","name":"เสื้อสูท Ceremony","code":"CEREMONY-Suits","price":2090,"sizes":[{"id":"m20s01","size":"M(50)","cost":690},{"id":"m20s02","size":"L(52)","cost":690},{"id":"m20s03","size":"XL(54)","cost":690},{"id":"m20s04","size":"2XL(56)","cost":690},{"id":"m20s05","size":"3XL(58)","cost":690},{"id":"m20s06","size":"4XL(60)","cost":690},{"id":"m20s07","size":"5XL(62)","cost":690}],"pmain":2090},{"id":"m21","name":"กางเกงสูท Ceremony","code":"CEREMONY-Pants","price":1290,"sizes":[{"id":"m21s01","size":"30","cost":390},{"id":"m21s02","size":"32","cost":390},{"id":"m21s03","size":"34","cost":390},{"id":"m21s04","size":"36","cost":390},{"id":"m21s05","size":"38","cost":390},{"id":"m21s06","size":"40","cost":390},{"id":"m21s07","size":"42","cost":390}],"pmain":1290},{"id":"m22","name":"กางเกง Classic","code":"Classic","price":1390,"pmain":1290,"pshopee":1390,"ptiktok":1290,"sizes":[{"id":"m22s01","size":"28","cost":350},{"id":"m22s02","size":"30","cost":350},{"id":"m22s03","size":"32","cost":350},{"id":"m22s04","size":"34","cost":350},{"id":"m22s05","size":"36","cost":350},{"id":"m22s06","size":"38","cost":350},{"id":"m22s07","size":"40","cost":350},{"id":"m22s08","size":"42","cost":350}],"colors":["Biege","Black","Navy"]},{"id":"m23","name":"กางเกง Comfort","code":"Comfort","price":590,"pmain":590,"sizes":[{"id":"m23s01","size":"28","cost":180},{"id":"m23s02","size":"30","cost":180},{"id":"m23s03","size":"32","cost":180},{"id":"m23s04","size":"34","cost":180},{"id":"m23s05","size":"36","cost":180},{"id":"m23s06","size":"38","cost":180},{"id":"m23s07","size":"40","cost":180},{"id":"m23s08","size":"42","cost":180}],"colors":["Beige","Black","DG","Navy","Taupe"]},{"id":"m24","name":"โปโลไหมพรม","code":"Knit-Basic","price":590,"pmain":590,"sizes":[{"id":"m24s01","size":"M","cost":250},{"id":"m24s02","size":"L","cost":250},{"id":"m24s03","size":"XL","cost":250}],"colors":["Beige","Black","Olive","White"]},{"id":"m25","name":"เสื้อเชิ้ตลายทาง","code":"NONIRONSHIRT-Striped","price":890,"pmain":790,"pshopee":990,"ptiktok":790,"sizes":[{"id":"m25s01","size":"M","cost":250},{"id":"m25s02","size":"L","cost":250},{"id":"m25s03","size":"XL","cost":250},{"id":"m25s04","size":"2XL","cost":250},{"id":"m25s05","size":"3XL","cost":250},{"id":"m25s06","size":"4XL","cost":250}],"colors":["LG","White","Green","Blue","Black"]},{"id":"m26","name":"Blazer","code":"Blazer-EST","price":1390,"pmain":1290,"pshopee":1390,"ptiktok":1290,"sizes":[{"id":"m26s01","size":"S","cost":100},{"id":"m26s02","size":"M","cost":100},{"id":"m26s03","size":"L","cost":100},{"id":"m26s04","size":"XL","cost":100}],"colors":["DG","Black"]},{"id":"m27","name":"เสื้อสูทรุ่น VERO","code":"Vero-Stripedsuits","price":1890,"pmain":1790,"pshopee":1890,"ptiktok":1790,"sizes":[{"id":"m27s01","size":"M(50)","cost":500},{"id":"m27s02","size":"L(52)","cost":500},{"id":"m27s03","size":"XL(54)","cost":500},{"id":"m27s04","size":"2XL(56)","cost":500},{"id":"m27s05","size":"3XL(58)","cost":500}],"colors":["Black","Navy","Beige"]}];
 const LOGO_CO = "data:image/png;base64,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";
 const LOGO_SRC = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAjAAAABcCAYAAABwWI9nAAArxklEQVR4nO2dd9xsVXX3v0+5BS5NVK4QpCgYsEuwIhYQgYAlFH0tYCxg7GgMFmIjGktEsERJxALiK2I0KNiCBUHEAooRGyhNkV7upV3uU+b943d+79lz7swpM2dmzsyzf5/P+TzPzJyyzy5r/fZaa68NERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERGTjKlRF6APdCt7a6iliKgTsU0jIiIimoVOcrkRMrnpBGYq+DsdfG4B812uWRb8v5gcviaiGXA7TieHMdfl/JngvBZq01bwOSIiIiKiP3SSy4vAQodzp5FchnaZPFR53FQCY4XVTaGBiMosaYVNAevpXNk+v1tjDAJTqHxlkEfIJgVTqF1b5LfBxqSk01iXc/6g2jUkTZOKeTYUOFXee4EN22pYCAVoEbL9Y5bysq/pY7NKPXjsuc2rXFu2ravIvTyEZZ1ieIpx3MZ9Hf1zBtVxt/tsRPuEcQa4q8u5lvNDGTNNIjBWbuEgWQ7cC9gK+Dtgx+ScWWBnYEVw/jSq1D+QVvY5wLeAO4A7C54VUT+6deYtUdvtCexDSkK2B+4dnG/B9UfUflPATcDngWuBW2gnubbSDYukRkREDAe2CoRW9Yj+MEO7rNwckZVDgL9BsncTYCfa63wWuBrJ4mngVuBE4Dbg+sz9Q2t57Rg1gbFrKCQTy4B9gd2B/YHdSBliL5hHCvCLwI+A75IqyEEQGSvd1cDLaHdpZeHZxRrg+BrLMGp0IhJbAYcB2yZ/N6f3mZpnZz8BvgNcAnyVlMz4+b0MHrfffsDjknuM04ysCk5AQid0zT4X2JW0b3aC6+SLwG9JFcsw4Gc9BDiU/PbxO/wGOD249khgG/Lf0bgLOI7mTXgsN3cCXkC5fnoX8B9I3oCU1DMo19ZnAhfRva1DuXck5S073Z55BfADNFGxdd3w+K6zTXy//YHH0vxx7za7Bvgk1cag+45l415oInkYar9e5LItQV8Czgc+S2qlyRKlsYdn5iH2Aj4AXEdaueExjxSUj3lUKQvBb+uBe5LD7qTsfa4E3gBsFzy7H4KUhd9rny7v0em4o6Zn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";
 
@@ -1293,7 +1376,7 @@ function linesOf(vid,br,dt){
 // ทำให้ทุกสูตรเดิมคำนวณยอดได้ถูกต้องโดยไม่ต้องแก้
 function setLines(vid,arr,br,dt){
   br=br||currentBranch; dt=dt||currentDate;
-  arr=(arr||[]).filter(x=>num(x.q)>0);
+  arr=(arr||[]).filter(x=>num(x.q)>0).map(x=>x.c?{q:num(x.q),p:num(x.p),c:x.c}:{q:num(x.q),p:num(x.p)});
   data.lines[br]=data.lines[br]||{}; data.lines[br][dt]=data.lines[br][dt]||{};
   if(!arr.length){
     delete data.lines[br][dt][vid];
@@ -1318,7 +1401,7 @@ function setLines(vid,arr,br,dt){
 function ensureLines(vid,br,dt){
   br=br||currentBranch; dt=dt||currentDate;
   let L=linesOf(vid,br,dt);
-  if(L) return L.map(x=>({q:num(x.q),p:num(x.p)}));
+  if(L) return L.map(x=>x.c?{q:num(x.q),p:num(x.p),c:x.c}:{q:num(x.q),p:num(x.p)});
   const q=((data.branches[br]||{})[dt]||{})[vid]||0;
   if(q<=0) return [];
   return [{q, p:priceOfVar(vid,br,dt)}];
@@ -1354,7 +1437,10 @@ function priceOfVar(vid, br, dt){
   const ov=(data.prices2 && data.prices2[ch] && data.prices2[ch][v.modelId]);   // ผู้ใช้แก้ราคาเอง
   if(ov!==undefined && ov!==null) return ov;
   const M=MODEL[v.modelId];
-  if(ch==="main"){ const sz=M.sizes.find(x=>x.id===vid); return (sz && sz.pm!==undefined) ? sz.pm : (M.pmain ?? M.price); }
+  const sz=M.sizes.find(x=>x.id===vid);
+  // sz.pm = ราคาสาขาหลักเฉพาะไซส์ · sz.pb = ราคาบูทเฉพาะไซส์ (ไซส์ใหญ่ตั้งแพงกว่าได้)
+  if(ch==="main") return (sz && sz.pm!==undefined) ? sz.pm : (M.pmain ?? M.price);
+  if(ch==="booth" && sz && sz.pb!==undefined) return sz.pb;
   return M.price;
 }
 const priceOf=mid=>{ const M=MODEL[mid]; const ch=chanOfBranch(currentBranch);
@@ -1465,10 +1551,26 @@ function fillModels(){
   sel.innerHTML=CATALOG.map(m=>'<option value="'+m.id+'">'+m.name+'</option>').join("");
   fillSizes();
 }
+let curColor="";   // สีที่เลือกอยู่ (ว่าง = ไม่ระบุ)
+function fillColors(){
+  const mid=document.getElementById("selModel").value;
+  const M=MODEL[mid], wrap=document.getElementById("colorWrap");
+  const cs=(M && M.colors) || [];
+  document.getElementById("colorFld").style.display = cs.length ? "block" : "none";
+  if(!cs.length){ curColor=""; wrap.innerHTML=""; return; }
+  if(cs.indexOf(curColor)<0) curColor="";   // เปลี่ยนรุ่นแล้วสีเดิมไม่มี → ล้าง
+  wrap.innerHTML='<button type="button" class="color-chip none'+(curColor===""?" on":"")+'" data-c="">ไม่ระบุ</button>'+
+    cs.map(c=>'<button type="button" class="color-chip'+(curColor===c?" on":"")+'" data-c="'+c.replace(/"/g,"&quot;")+'">'+c+'</button>').join("");
+}
+document.getElementById("colorWrap").addEventListener("click",e=>{
+  const b=e.target.closest(".color-chip"); if(!b) return;
+  curColor=b.dataset.c||""; fillColors();
+});
 function fillSizes(){
   const mid=document.getElementById("selModel").value;
   const sel=document.getElementById("selSize");
   sel.innerHTML=MODEL[mid].sizes.map(s=>'<option value="'+s.id+'">'+s.size+'</option>').join("");
+  fillColors();
   syncFormPrice();
 }
 function syncFormPrice(){   // ราคาเปลี่ยนตามไซส์ที่เลือก (สาขาหลักบางรุ่นแยกไซส์)
@@ -1490,8 +1592,9 @@ function addLine(){
   // ราคาที่กรอกในช่อง (รองรับส่วนลดเฉพาะบางตัว)
   const pIn=num(document.getElementById("selPrice").value);
   const cur=ensureLines(vid);
-  const same=cur.find(x=>Math.abs(num(x.p)-pIn)<0.005);
-  if(same) same.q=num(same.q)+q; else cur.push({q, p:pIn});
+  // บรรทัดเดียวกันต้องตรงทั้งราคาและสี
+  const same=cur.find(x=>Math.abs(num(x.p)-pIn)<0.005 && (x.c||"")===curColor);
+  if(same) same.q=num(same.q)+q; else cur.push(curColor?{q,p:pIn,c:curColor}:{q,p:pIn});
   const before=qtyVar(vid);
   setLines(vid,cur);
   // วิธีชำระ (เฉพาะสาขาหลัก)
@@ -1520,10 +1623,11 @@ function renderLines(){
     const LN=linesOf(vid);
     // แสดงแยกบรรทัดเมื่อมีหลายราคาในไซส์เดียวกัน
     let sub="";
-    if(LN && LN.length>1){
+    if(LN && LN.length>1){   // หลายราคา หรือหลายสีในไซส์เดียวกัน
       sub='<div class="sub-lines">'+LN.map((x,li)=>{
         const std=priceOfVar(vid,currentBranch,currentDate);
-        return '<div class="sub-line"><span class="sp">฿'+fmt2(num(x.p))+'</span>'+
+        return '<div class="sub-line">'+(x.c?'<span class="sc">'+x.c+'</span>':'<span class="sc"></span>')+
+          '<span class="sp">฿'+fmt2(num(x.p))+'</span>'+
           '<span class="sq">× '+num(x.q)+' ตัว</span>'+
           '<span class="sa">฿'+fmt2(num(x.q)*num(x.p))+'</span>'+
           '<button class="sl-b" data-sl="dec" data-v="'+vid+'" data-i="'+li+'">−</button>'+
@@ -1533,7 +1637,8 @@ function renderLines(){
     }
     return '<div class="line">'+
       '<div class="line-top"><div class="line-name">'+v.modelName+' <span class="sz">· ไซส์ '+v.size+'</span>'+
-        (LN&&LN.length>1?'<span class="multi-tag">'+LN.length+' ราคา</span>':'')+'</div>'+
+        (LN&&LN.length>1?'<span class="multi-tag">'+LN.length+' รายการ</span>':'')+
+        (LN&&LN.length===1&&LN[0].c?'<span class="line-color">'+LN[0].c+'</span>':'')+'</div>'+
       '<button class="del" data-del="'+vid+'">✕</button></div>'+
       '<div class="line-money">'+money+'<span style="color:var(--accent-deep)">'+payTxt+'</span></div>'+
       sub+
@@ -1666,7 +1771,10 @@ function basePriceNoPxn(vid,br){
   const ov=(data.prices2[ch]||{})[v.modelId];
   if(ov!==undefined && ov!==null) return ov;
   const M=MODEL[v.modelId];
-  if(ch==="main"){ const sz=M.sizes.find(x=>x.id===vid); return (sz && sz.pm!==undefined) ? sz.pm : (M.pmain ?? M.price); }
+  const sz=M.sizes.find(x=>x.id===vid);
+  // sz.pm = ราคาสาขาหลักเฉพาะไซส์ · sz.pb = ราคาบูทเฉพาะไซส์ (ไซส์ใหญ่ตั้งแพงกว่าได้)
+  if(ch==="main") return (sz && sz.pm!==undefined) ? sz.pm : (M.pmain ?? M.price);
+  if(ch==="booth" && sz && sz.pb!==undefined) return sz.pb;
   return M.price;
 }
 function setDayPrice(vid,val){
@@ -2464,6 +2572,55 @@ let impData=null;   // ผลการแปลงไฟล์ รอยืน�
 const SKUMAP={};
 CATALOG.forEach(m=>m.sizes.forEach(sz=>{ SKUMAP[m.code.toUpperCase()+"|"+sz.size]=sz.id; }));
 
+// ดึงสีจาก SKU: ส่วนที่อยู่ระหว่างรหัสรุ่นกับไซส์ เช่น "SIG-Black-32" -> "Black"
+// สะกดตามรายการสีในแค็ตตาล็อก (ไม่สนตัวพิมพ์เล็ก/ใหญ่) ถ้าไม่มีในรายการ ใช้ตามที่เขียนในไฟล์
+function colorOfSku(sku, vid){
+  const v=VAR[vid]; if(!v) return "";
+  const M=MODEL[v.modelId]; if(!M) return "";
+  const t=String(sku||"").split("-").map(x=>x.trim()).filter(x=>x!=="");
+  const k=M.code.split("-").length;
+  if(t.length<=k+1) return "";            // ไม่มีส่วนสี เช่น "SIG-32"
+  const raw=t.slice(k, t.length-1).join("-");
+  if(!raw) return "";
+  return normColor(raw, M);
+}
+// ชื่อสีที่ใช้เรียกต่างกันในแต่ละแพลตฟอร์ม -> ตัวเลือกตามลำดับ (เลือกตัวแรกที่รุ่นนั้นมีจริง)
+const COLOR_ALIAS={
+  "ดำ":["Black"], "ขาว":["White"], "กรม":["Navy"], "กรมเข้ม":["Navy"],
+  "เทา":["Gray","DarkGray","DG"], "เทาเข้ม":["DarkGray","DG"], "ทข":["DarkGray","DG"],
+  "เทาอ่อน":["LightGray","LG"], "ทอ":["LightGray","LG"],
+  "น้ำตาล":["Brown"], "นต":["Brown"], "กากี":["Khaki"],
+  "ครีม":["Cream","Ivory","LightBeige"], "เบจ":["Beige","Biege","LightBeige"],
+  "เขียว":["Olive","Green"], "แดง":["Red"], "ฟ้า":["Blue"], "น้ำเงิน":["Blue","Navy"],
+  // ภาษาอังกฤษที่สะกดต่างกัน
+  "beige":["Beige","Biege"], "biege":["Biege","Beige"],
+  "dg":["DG","DarkGray"], "darkgray":["DarkGray","DG"],
+  "lg":["LG","LightGray"], "lightgray":["LightGray","LG"],
+  "grey":["Gray"], "khaki":["Khaki"]
+};
+function normColor(raw, M){
+  const cs=(M&&M.colors)||[];
+  const find=x=>cs.find(c=>c.toLowerCase()===String(x).toLowerCase());
+  const direct=find(raw); if(direct) return direct;          // ตรงกับรายการอยู่แล้ว
+  const al=COLOR_ALIAS[raw]||COLOR_ALIAS[String(raw).toLowerCase()];
+  if(al){ for(const a of al){ const h=find(a); if(h) return h; } return al[0]; }
+  return raw;                                                 // ไม่รู้จัก -> เก็บตามที่เขียนในไฟล์
+}
+// รวมบรรทัดสีจากรายการนำเข้า -> data.lines (ไม่แตะ branches/pxn ยอดเงินจึงเท่าเดิมทุกบาท)
+function writeImportLines(br, acc){
+  // acc: { "วันที่|vid": { "สี": {q, amt} } }
+  data.lines[br]=data.lines[br]||{};
+  Object.keys(acc).forEach(k=>{
+    const [d,vid]=k.split("|"), byC=acc[k];
+    const cs=Object.keys(byC);
+    if(!cs.some(c=>c!=="")) return;          // ไม่มีสีเลย -> ไม่ต้องเก็บบรรทัด
+    const arr=cs.map(c=>{ const x=byC[c]; const p=x.q>0?Math.round(x.amt/x.q*100)/100:0;
+      return c?{q:x.q,p,c}:{q:x.q,p}; }).filter(x=>x.q>0);
+    if(!arr.length) return;
+    data.lines[br][d]=data.lines[br][d]||{};
+    data.lines[br][d][vid]=arr;
+  });
+}
 function parseSku(x){   // POS: "PMS-KhaKi-32*1" -> {vid,qty,raw}
   const mm=x.trim().match(/^(.+?)\*(\d+)$/);
   const sku=mm?mm[1]:x.trim(), q=mm?parseInt(mm[2]):1;
@@ -2472,10 +2629,14 @@ function parseSku(x){   // POS: "PMS-KhaKi-32*1" -> {vid,qty,raw}
 // จับคู่ SKU -> variantId (ยืดหยุ่น: case-insensitive, PARIO 2 ระดับ, Polo ติดกัน)
 function matchSku(sku){
   sku=String(sku||"").trim();
-  const t=sku.split("-");
+  // ตัดช่องว่างรอบแต่ละส่วน กัน SKU ที่พิมพ์เว้นวรรค เช่น "Vero- Stripedsuits-Black-M"
+  const t=sku.split("-").map(x=>x.trim()).filter(x=>x!=="");
   if(t.length>=2){
     const size=t[t.length-1];
-    for(let cp=1;cp<=2;cp++){
+    // สำคัญ: ไล่จากรหัสยาวไปสั้น เพื่อให้รุ่นที่รหัสขึ้นต้นเหมือนกันไม่ชนกัน
+    // เช่น NONIRONSHIRT-Striped ต้องจับคู่ก่อน NONIRONSHIRT
+    const maxCp=Math.min(3, t.length-1);
+    for(let cp=maxCp;cp>=1;cp--){
       const code=t.slice(0,cp).join("-").toUpperCase();
       const v=SKUMAP[code+"|"+size]; if(v) return v;
     }
@@ -2611,7 +2772,7 @@ function buildImport(rows){
     const list=[];
     parts.forEach(pt=>{
       if(!pt.vid){ unmatched[pt.raw]=(unmatched[pt.raw]||0)+pt.qty; return; }
-      list.push({vid:pt.vid,qty:pt.qty});
+      list.push({vid:pt.vid,qty:pt.qty,c:colorOfSku(pt.raw,pt.vid)});
     });
     if(!list.length) return;
     const method = /เงินสด/.test(o.pay) ? "cash" : "kshop";
@@ -2687,13 +2848,18 @@ function confirmImportOnline(){
   if(!confirm(msg+"\n\nยืนยัน?")) return;
 
   data.branches[br]=data.branches[br]||{}; data.pxn[br]=data.pxn[br]||{};
-  dates.forEach(d=>{ data.branches[br][d]={}; data.pxn[br][d]={}; });
+  data.lines[br]=data.lines[br]||{};
+  dates.forEach(d=>{ data.branches[br][d]={}; data.pxn[br][d]={}; delete data.lines[br][d]; });
+  const lineAcc={};
   // รวมยอด net ต่อ (วัน,vid) แล้วหาราคาต่อชิ้นจริง
   const netAcc={}, qtyAcc={};
   all.forEach(o=>{
     data.branches[br][o.dt][o.vid]=(data.branches[br][o.dt][o.vid]||0)+o.qty;
     const k=o.dt+"|"+o.vid; netAcc[k]=(netAcc[k]||0)+o.net; qtyAcc[k]=(qtyAcc[k]||0)+o.qty;
+    const c=o.c||""; lineAcc[k]=lineAcc[k]||{}; lineAcc[k][c]=lineAcc[k][c]||{q:0,amt:0};
+    lineAcc[k][c].q+=o.qty; lineAcc[k][c].amt+=o.net;
   });
+  writeImportLines(br, lineAcc);
   Object.keys(netAcc).forEach(k=>{
     const [d,vid]=k.split("|");
     data.pxn[br][d][vid]=Math.round((netAcc[k]/qtyAcc[k])*100)/100;   // ราคาขายจริงต่อชิ้น (จากแพลตฟอร์ม)
@@ -2812,7 +2978,7 @@ function buildImportShopeeJoin(){
     months[dt.slice(0,7)]=(months[dt.slice(0,7)]||0)+1;
     const net=num(r[kNet]); netAll+=net;
     if(!vid){ unmatched[sku]=(unmatched[sku]||0)+q; return; }
-    items.push({dt,vid,qty:q,net,oid});
+    items.push({dt,vid,qty:q,net,oid,c:colorOfSku(sku,vid)});
     if(inc[oid]) settledIds.add(oid);
   });
   // ค่าธรรมเนียมจริงจากออเดอร์ที่ settle
@@ -2940,7 +3106,7 @@ function buildImportTikTok(){
     }
     netAll+=nsale;
     if(!vid){ unmatched[sku]=(unmatched[sku]||0)+q; continue; }
-    items.push({dt,vid,qty:q,net:nsale,oid});
+    items.push({dt,vid,qty:q,net:nsale,oid,c:colorOfSku(sku,vid)});
     if(inc[oid]) settledIds.add(oid);
   }
   // ค่าธรรมเนียมจริงจากออเดอร์ที่ settle (จับคู่ได้)
@@ -3093,9 +3259,10 @@ function confirmImport(){
 
   // เคลียร์วันที่ที่จะลง (แทนที่ ไม่บวกทับ)
   data.branches[br]=data.branches[br]||{}; data.pay[br]=data.pay[br]||{}; data.pxn[br]=data.pxn[br]||{};
-  dates.forEach(d=>{ data.branches[br][d]={}; data.pay[br][d]={}; data.pxn[br][d]={}; });
+  data.lines[br]=data.lines[br]||{};
+  dates.forEach(d=>{ data.branches[br][d]={}; data.pay[br][d]={}; data.pxn[br][d]={}; delete data.lines[br][d]; });
 
-  const amtAcc={}, qtyAcc={};
+  const amtAcc={}, qtyAcc={}, lineAcc={};
   all.forEach(o=>{
     const lt=labelTotal(o.list,br);
     o.list.forEach(x=>{
@@ -3109,8 +3276,11 @@ function confirmImport(){
       const real= lt>0 ? o.amt*(label/lt) : 0;
       const k=d+"|"+vid;
       amtAcc[k]=(amtAcc[k]||0)+real; qtyAcc[k]=(qtyAcc[k]||0)+x.qty;
+      const c=x.c||""; lineAcc[k]=lineAcc[k]||{}; lineAcc[k][c]=lineAcc[k][c]||{q:0,amt:0};
+      lineAcc[k][c].q+=x.qty; lineAcc[k][c].amt+=real;
     });
   });
+  writeImportLines(br, lineAcc);
   // ราคาจริงต่อชิ้น (override เมื่อต่างจากราคาป้าย เช่นมีส่วนลด)
   Object.keys(amtAcc).forEach(k=>{
     const [d,vid]=k.split("|");
@@ -4881,6 +5051,312 @@ document.getElementById("xlsEach").onclick=()=>{
   const h=document.getElementById("xlsHide").checked;
   document.getElementById("xlsBox").style.display="none"; xlsBuild("each",h);
 };
+
+/* ---------- รายงานสินค้า (แยกรุ่น · สี × ไซส์) ---------- */
+const prodPicked=new Set();     // สาขาที่ติ๊ก (ว่าง = ทุกสาขา)
+let prodSel="__all__";          // รุ่นที่เลือก
+
+// อัตราค่าธรรมเนียม/GP ต่อสาขา (ตรงกับที่ใช้ในส่งออก Excel ของรายงานแบบละเอียด)
+function prodFeeRate(br){
+  const ch=chanOfBranch(br);
+  if(ch==="main") return 0;
+  if(ch==="booth"){ if(data.gp && data.gp[br]!==undefined && data.gp[br]!=="") return num(data.gp[br]); return num(data.prcfg.fee_booth)||25; }
+  if(ch==="shopee") return num(data.prcfg.fee_shopee)||32;
+  if(ch==="tiktok") return num(data.prcfg.fee_tiktok)||26.3;
+  return 0;
+}
+function prodRange(){
+  let lo=toAD(document.getElementById("prodFrom").value), hi=toAD(document.getElementById("prodTo").value);
+  if(!lo||!hi){ lo=todayISO.slice(0,7)+"-01"; hi=todayISO; }
+  if(lo>hi){ const t=lo; lo=hi; hi=t; }
+  return {lo,hi};
+}
+// รวบรวมยอดต่อรุ่น
+// ยอดเงินต่อ (สาขา,วัน,ไซส์) ใช้ราคาเดียวกับทุกรายงาน (priceOfVar) แล้วปันส่วนให้แต่ละสีตามบรรทัด
+// -> ยอดรวมจึงเท่ากับรายงานแบบละเอียดทุกบาท
+function prodCollect(){
+  const {lo,hi}=prodRange();
+  const M={};   // modelId -> สรุป
+  Object.keys(data.branches).forEach(br=>{
+    if(prodPicked.size && !prodPicked.has(br)) return;
+    const ch=chanOfBranch(br), fr=prodFeeRate(br)/100;
+    const days=data.branches[br]||{};
+    Object.keys(days).forEach(dt=>{
+      if(!isDateKey(dt)||dt<lo||dt>hi) return;
+      Object.keys(days[dt]).forEach(vid=>{
+        const v=VAR[vid]; if(!v) return; const q=days[dt][vid]; if(!(q>0)) return;
+        const amt=q*priceOfVar(vid,br,dt);
+        const mid=v.modelId;
+        const R=M[mid]=M[mid]||{mid,q:0,amt:0,base:0,cost:0,fee:0,mx:{},ch:{},col:{},sz:{}};
+        const base=amt/(1+VAT);
+        R.q+=q; R.amt+=amt; R.base+=base; R.cost+=q*v.cost; R.fee+=base*fr;
+        R.ch[ch]=R.ch[ch]||{q:0,amt:0}; R.ch[ch].q+=q; R.ch[ch].amt+=amt;
+        // แตกสีจากบรรทัด
+        const L=linesOf(vid,br,dt)||[];
+        let lq=0, lamt=0; L.forEach(x=>{ lq+=num(x.q); lamt+=num(x.q)*num(x.p); });
+        // parts: {c สี, q ชิ้น, a ยอดเงินที่ปันให้}
+        const parts=[];
+        if(lq>0 && lq<=q){
+          const linesAmt=amt*(lq/q);            // ส่วนของยอดที่มีบรรทัดสี
+          L.forEach(x=>{ const xq=num(x.q); if(xq<=0) return;
+            const w = lamt>0 ? xq*num(x.p)/lamt : xq/lq;
+            parts.push({c:x.c||"ไม่ระบุ", q:xq, a:linesAmt*w}); });
+          if(q-lq>0) parts.push({c:"ไม่ระบุ", q:q-lq, a:amt-linesAmt});
+        } else parts.push({c:"ไม่ระบุ", q, a:amt});   // ไม่มีบรรทัดสี -> ยอดทั้งหมดเป็น "ไม่ระบุ"
+        parts.forEach(pt=>{
+          const a=pt.a;
+          const sz=v.size;
+          R.mx[pt.c]=R.mx[pt.c]||{}; R.mx[pt.c][sz]=(R.mx[pt.c][sz]||0)+pt.q;
+          R.col[pt.c]=R.col[pt.c]||{q:0,amt:0}; R.col[pt.c].q+=pt.q; R.col[pt.c].amt+=a;
+          R.sz[sz]=(R.sz[sz]||0)+pt.q;
+        });
+      });
+    });
+  });
+  const list=Object.values(M).sort((a,b)=>b.q-a.q||b.amt-a.amt);
+  list.forEach(R=>{ R.profit=R.base-R.cost-R.fee; R.known=R.q-((R.col["ไม่ระบุ"]||{}).q||0); });
+  return {lo,hi,list,byId:M};
+}
+function prodColorsOrder(R){
+  return Object.keys(R.col).sort((a,b)=>{
+    if(a==="ไม่ระบุ") return 1; if(b==="ไม่ระบุ") return -1;
+    return R.col[b].q-R.col[a].q; });
+}
+function prodSizesOrder(R){
+  const all=(MODEL[R.mid]&&MODEL[R.mid].sizes||[]).map(z=>z.size);
+  return all.filter(s=>R.sz[s]>0);
+}
+function prodScopeText(){ return prodPicked.size? [...prodPicked].join(", ") : "ทุกสาขา"; }
+function prodShortName(mid){ return (MODEL[mid]||{}).name||mid; }
+
+function buildProdBranchBox(){
+  const box=document.getElementById("prodBranchBox");
+  let h='<div class="branch-check prod-chips">';
+  Object.keys(CHANNELS).forEach(key=>{
+    const m=CHAN_META[key]||{c:"#3fb2e8"};
+    CHANNELS[key].groups.forEach(g=>g.items.forEach(n=>{
+      const on=prodPicked.has(n);
+      h+='<label class="bchip'+(on?" on":"")+'"><span class="grp-dot" style="background:'+m.c+'"></span>'+
+         '<input type="checkbox" '+(on?"checked":"")+' data-pbr="'+n.replace(/"/g,"&quot;")+'" autocomplete="off">'+n+'</label>';
+    }));
+  });
+  h+='</div>';
+  box.innerHTML=h;
+  box.querySelectorAll("[data-pbr]").forEach(cb=>cb.onchange=()=>{
+    const n=cb.dataset.pbr; if(cb.checked) prodPicked.add(n); else prodPicked.delete(n);
+    cb.closest(".bchip").classList.toggle("on",cb.checked); renderProd(); });
+}
+function fillProdModels(D){
+  const sel=document.getElementById("prodModel");
+  const sold=new Set(D.list.map(R=>R.mid));
+  let h='<option value="__all__">ทุกรุ่น (เรียงตามยอดขาย)</option>';
+  D.list.forEach(R=>{ h+='<option value="'+R.mid+'">'+prodShortName(R.mid)+' ('+fmt(R.q)+')</option>'; });
+  CATALOG.forEach(m=>{ if(!sold.has(m.id)) h+='<option value="'+m.id+'">'+m.name+' (0)</option>'; });
+  sel.innerHTML=h;
+  sel.value = [...sel.options].some(o=>o.value===prodSel) ? prodSel : "__all__";
+  prodSel=sel.value;
+}
+function prodHeat(n,max){
+  if(!n) return '';
+  const a=Math.max(0.10, Math.min(0.9, n/max*0.9));
+  return 'background:rgba(10,134,207,'+a.toFixed(2)+');color:'+(a>0.5?'#fff':'#0b3a5c')+';font-weight:'+(a>0.5?'700':'500');
+}
+function renderProd(){
+  const D=prodCollect();
+  fillProdModels(D);
+  // ปุ่มย้อนกลับ: ดูรุ่นอยู่ -> กลับไปรายการทุกรุ่น
+  document.getElementById("prodBack").textContent = prodSel==="__all__" ? "‹ กลับหน้าแรก" : "‹ กลับไปดูทุกรุ่น";
+  const body=document.getElementById("prodBody");
+  const hide=!!data.hideCost;
+  if(!D.list.length){ body.innerHTML='<div class="empty" style="margin-top:14px">ไม่มียอดขายในช่วงที่เลือก</div>'; return; }
+
+  // ---------- ภาพรวมทุกรุ่น ----------
+  if(prodSel==="__all__"){
+    const tq=D.list.reduce((s,R)=>s+R.q,0), ta=D.list.reduce((s,R)=>s+R.amt,0);
+    const tk=D.list.reduce((s,R)=>s+R.known,0);
+    let h='<div class="prod-kpis">'+
+      '<div class="prod-kpi"><small>จำนวนขาย</small><b>'+fmt(tq)+' ชิ้น</b><em>'+D.list.length+' รุ่น</em></div>'+
+      '<div class="prod-kpi"><small>ยอดขาย (รวม VAT)</small><b>฿'+fmt(ta)+'</b><em>'+D.lo+' ถึง '+D.hi+'</em></div></div>';
+    if(tq>0 && tk/tq<0.9) h+='<div class="prod-warn">⚠️ ระบุสีได้ '+(tk/tq*100).toFixed(0)+'% ของชิ้นทั้งหมด — ข้อมูลที่ลง/นำเข้าก่อนมีระบบสีจะขึ้นเป็น "ไม่ระบุ" (นำเข้าไฟล์เดือนนั้นใหม่จะได้สี ยอดเงินเท่าเดิม)</div>';
+    h+='<div class="prod-sec">รุ่นที่ขายได้ <small>แตะเพื่อดูสี × ไซส์</small></div><div class="prod-list">';
+    D.list.forEach((R,i)=>{
+      const cs=prodColorsOrder(R).filter(c=>c!=="ไม่ระบุ").slice(0,3).map(c=>c+" "+R.col[c].q).join(" · ");
+      h+='<div class="prod-li" data-pm="'+R.mid+'"><div class="rk">'+(i+1)+'</div>'+
+        '<div class="nm"><b>'+prodShortName(R.mid)+'</b><small>'+(cs||"ยังไม่มีข้อมูลสี")+'</small></div>'+
+        '<div class="q">'+fmt(R.q)+'<small>฿'+fmt(R.amt)+'</small></div></div>';
+    });
+    h+='</div>';
+    body.innerHTML=h;
+    body.querySelectorAll("[data-pm]").forEach(el=>el.onclick=()=>{ prodSel=el.dataset.pm; renderProd(); window.scrollTo(0,0); });
+    return;
+  }
+
+  // ---------- รายรุ่น ----------
+  const R=D.byId[prodSel];
+  if(!R){ body.innerHTML='<div class="empty" style="margin-top:14px">รุ่นนี้ไม่มียอดขายในช่วงที่เลือก</div>'; return; }
+  const cols=prodColorsOrder(R), sizes=prodSizesOrder(R);
+  let max=0; cols.forEach(c=>sizes.forEach(s=>{ max=Math.max(max,(R.mx[c]||{})[s]||0); }));
+  const avg=R.q>0?R.amt/R.q:0, margin=R.base>0?R.profit/R.base:0;
+  let h='<div class="prod-kpis">'+
+    '<div class="prod-kpi"><small>จำนวนขาย</small><b>'+fmt(R.q)+' ชิ้น</b><em>'+cols.filter(c=>c!=="ไม่ระบุ").length+' สี · '+sizes.length+' ไซส์</em></div>'+
+    '<div class="prod-kpi"><small>ยอดขาย (รวม VAT)</small><b>฿'+fmt(R.amt)+'</b><em>เฉลี่ย ฿'+fmt2(avg)+'/ชิ้น</em></div>';
+  if(!hide) h+='<div class="prod-kpi"><small>กำไรขั้นต้น</small><b>฿'+fmt(R.profit)+'</b><em>'+(margin*100).toFixed(1)+'% ของฐานก่อน VAT</em></div>'+
+    '<div class="prod-kpi"><small>ต้นทุนรวม</small><b>฿'+fmt(R.cost)+'</b><em>หักค่าธรรมเนียม/GP ฿'+fmt(R.fee)+'</em></div>';
+  h+='</div>';
+  if(R.q>0 && R.known/R.q<0.9) h+='<div class="prod-warn">⚠️ ระบุสีได้ '+fmt(R.known)+' จาก '+fmt(R.q)+' ชิ้น — ที่เหลือเป็นข้อมูลก่อนมีระบบสี</div>';
+
+  // ตาราง สี × ไซส์
+  h+='<div class="prod-sec">สี × ไซส์ <small>จำนวนชิ้น · สีเข้ม = ขายดี</small></div><div class="prod-scroll"><table class="prod-mx"><thead><tr><th class="c0">สี \\ ไซส์</th>';
+  sizes.forEach(s=>{ h+='<th>'+s+'</th>'; });
+  h+='<th class="tot">รวม</th></tr></thead><tbody>';
+  cols.forEach(c=>{
+    h+='<tr><td class="c0">'+c+'</td>';
+    sizes.forEach(s=>{ const n=(R.mx[c]||{})[s]||0; h+= n? '<td style="'+prodHeat(n,max)+'">'+n+'</td>' : '<td class="z">·</td>'; });
+    h+='<td class="tot">'+fmt(R.col[c].q)+'</td></tr>';
+  });
+  h+='<tr class="trow"><td class="c0">รวม</td>';
+  sizes.forEach(s=>{ h+='<td>'+fmt(R.sz[s]||0)+'</td>'; });
+  h+='<td>'+fmt(R.q)+'</td></tr></tbody></table></div>';
+
+  // สัดส่วนสี
+  h+='<div class="prod-sec">สัดส่วนสี</div><div class="prod-ch">';
+  cols.forEach(c=>{ const x=R.col[c], pc=R.q>0?x.q/R.q*100:0;
+    h+='<div class="prod-chr"><span class="n">'+c+'</span><span class="bar"><i style="width:'+pc.toFixed(1)+'%;background:'+(c==="ไม่ระบุ"?"#c9d4df":"#0a86cf")+'"></i></span>'+
+       '<span class="v">'+fmt(x.q)+' · '+pc.toFixed(0)+'%</span></div>'; });
+  h+='</div>';
+
+  // แยกช่องทาง
+  h+='<div class="prod-sec">แยกช่องทาง</div><div class="prod-ch">';
+  Object.keys(R.ch).sort((a,b)=>R.ch[b].q-R.ch[a].q).forEach(k=>{ const x=R.ch[k], m=CHAN_META[k]||{n:k,c:"#3fb2e8"}, pc=R.q>0?x.q/R.q*100:0;
+    h+='<div class="prod-chr"><span class="n">'+m.n+'</span><span class="bar"><i style="width:'+pc.toFixed(1)+'%;background:'+m.c+'"></i></span>'+
+       '<span class="v">'+fmt(x.q)+' · ฿'+fmt(x.amt)+'</span></div>'; });
+  h+='</div>';
+  h+='<div class="prod-note">ยอดเงินคำนวณแบบเดียวกับรายงานแบบละเอียด · ช่วง '+D.lo+' ถึง '+D.hi+' · '+prodScopeText()+'</div>';
+  body.innerHTML=h;
+}
+
+// ---------- คัดลอกลงไลน์ ----------
+function prodCopyText(){
+  const D=prodCollect(); if(!D.list.length){ toast("ไม่มียอดขายในช่วงที่เลือก"); return ""; }
+  const L=["👕 รายงานสินค้า CLOTHVIBES","ช่วง "+D.lo+" ถึง "+D.hi+" · "+prodScopeText(),"──────────────"];
+  if(prodSel==="__all__"){
+    L.push("🎨 สีขายดีแยกรุ่น");
+    D.list.forEach(R=>{
+      const cs=prodColorsOrder(R).filter(c=>c!=="ไม่ระบุ");
+      const top=cs.slice(0,4).map(c=>c+" "+R.col[c].q).join(" · ");
+      const rest=R.q-cs.slice(0,4).reduce((s,c)=>s+R.col[c].q,0);
+      L.push("• "+prodShortName(R.mid)+" ("+fmt(R.q)+"): "+(top||"ไม่ระบุสี")+(top&&rest>0?" · อื่นๆ "+rest:""));
+    });
+  } else {
+    const R=D.byId[prodSel]; if(!R){ toast("รุ่นนี้ไม่มียอดขาย"); return ""; }
+    const cols=prodColorsOrder(R), sizes=prodSizesOrder(R);
+    L.push("📦 "+prodShortName(R.mid)+" — "+fmt(R.q)+" ชิ้น · ฿"+fmt(R.amt));
+    L.push("");
+    cols.forEach(c=>{
+      const parts=sizes.filter(s=>(R.mx[c]||{})[s]).map(s=>s+":"+R.mx[c][s]);
+      L.push("• "+c+" ("+fmt(R.col[c].q)+") — "+parts.join(" "));
+    });
+    L.push("");
+    L.push("📏 รวมตามไซส์: "+sizes.map(s=>s+":"+R.sz[s]).join(" "));
+  }
+  return L.join("\n");
+}
+// ---------- ส่งออก Excel: ชีตสรุป + ชีตละรุ่น (สี × ไซส์) ----------
+function prodHeatRgb(n,max){
+  if(!n) return null;
+  const a=Math.max(0.10, Math.min(0.9, n/max*0.9));
+  const mix=(c)=>Math.round(255-(255-c)*a);
+  const hx=x=>x.toString(16).padStart(2,"0");
+  return {rgb:(hx(mix(10))+hx(mix(134))+hx(mix(207))).toUpperCase(), dark:a>0.5};
+}
+function prodExportXls(){
+  const D=prodCollect(); if(!D.list.length){ toast("ไม่มียอดขายในช่วงที่เลือก"); return; }
+  const hide=!!data.hideCost;
+  const wb=XLSX.utils.book_new();
+  const head=(t)=>[[t],["ช่วงวันที่: "+D.lo+"  ถึง  "+D.hi],["สาขา: "+prodScopeText()],[]];
+  // ชีตสรุป
+  const H=["#","รุ่นสินค้า","จำนวน (ชิ้น)","ยอดขาย (รวม VAT)","ระบุสีได้ (ชิ้น)","สีขายดี"].concat(hide?[]:["ต้นทุน","GP/ค่าธรรมเนียม","กำไรขั้นต้น","% กำไร"]);
+  const aoa=head("รายงานสินค้า CLOTHVIBES").concat([H]);
+  D.list.forEach((R,i)=>{
+    const cs=prodColorsOrder(R).filter(c=>c!=="ไม่ระบุ").slice(0,4).map(c=>c+" "+R.col[c].q).join(", ");
+    const row=[i+1,prodShortName(R.mid),R.q,rnd(R.amt),R.known,cs];
+    if(!hide) row.push(rnd(R.cost),rnd(R.fee),rnd(R.profit),R.base>0?R.profit/R.base:0);
+    aoa.push(row);
+  });
+  const ws=XLSX.utils.aoa_to_sheet(aoa);
+  const nC=H.length, HR=4;
+  const at=(w,r,c)=>{ const a=XLSX.utils.encode_cell({r,c}); if(!w[a]) w[a]={t:"z",v:""}; return w[a]; };
+  at(ws,0,0).s=XB.ttl; at(ws,1,0).s=XB.sub; at(ws,2,0).s=XB.sub;
+  for(let c=0;c<nC;c++) at(ws,HR,c).s=XB.hdr;
+  for(let r=HR+1;r<aoa.length;r++) for(let c=0;c<nC;c++){ const cell=at(ws,r,c); cell.s=XB.cell;
+    if(c===2||c===4) cell.z="#,##0"; else if(c===3||c===6||c===7||c===8) cell.z="#,##0.00"; else if(c===9) cell.z="0.0%"; }
+  ws["!cols"]=[{wch:5},{wch:28},{wch:12},{wch:17},{wch:14},{wch:40},{wch:13},{wch:16},{wch:14},{wch:10}].slice(0,nC);
+  ws["!autofilter"]={ref:XLSX.utils.encode_range({s:{r:HR,c:0},e:{r:aoa.length-1,c:nC-1}})};
+  XLSX.utils.book_append_sheet(wb, ws, "สรุปทุกรุ่น");
+  // ชีตละรุ่น
+  const targets = prodSel==="__all__" ? D.list : D.list.filter(R=>R.mid===prodSel);
+  targets.forEach(R=>{
+    const cols=prodColorsOrder(R), sizes=prodSizesOrder(R);
+    let max=0; cols.forEach(c=>sizes.forEach(s=>{ max=Math.max(max,(R.mx[c]||{})[s]||0); }));
+    const a2=head(prodShortName(R.mid)+" — "+fmt(R.q)+" ชิ้น · ฿"+fmt(R.amt));
+    a2.push(["สี \\ ไซส์"].concat(sizes,["รวม"]));
+    cols.forEach(c=>a2.push([c].concat(sizes.map(s=>(R.mx[c]||{})[s]||null),[R.col[c].q])));
+    a2.push(["รวม"].concat(sizes.map(s=>R.sz[s]||0),[R.q]));
+    const w=XLSX.utils.aoa_to_sheet(a2);
+    const nc=sizes.length+2, hr=4, last=a2.length-1;
+    at(w,0,0).s=XB.ttl; at(w,1,0).s=XB.sub; at(w,2,0).s=XB.sub;
+    for(let c=0;c<nc;c++) at(w,hr,c).s=XB.hdr;
+    for(let r=hr+1;r<last;r++) for(let c=0;c<nc;c++){
+      const cell=at(w,r,c);
+      if(c===0){ cell.s=Object.assign({},XB.cell,{font:{name:"Arial",sz:10,bold:true}}); continue; }
+      if(c===nc-1){ cell.s=XB.tot; cell.z="#,##0"; continue; }
+      const hv=prodHeatRgb(cell.v,max);
+      cell.s = hv ? Object.assign({},XB.cell,{fill:{fgColor:{rgb:hv.rgb}},alignment:{horizontal:"center"},
+                 font:{name:"Arial",sz:10,bold:hv.dark,color:{rgb:hv.dark?"FFFFFF":"0B3A5C"}}})
+               : Object.assign({},XB.cell,{alignment:{horizontal:"center"}});
+    }
+    for(let c=0;c<nc;c++){ const cell=at(w,last,c); cell.s=XB.tot; if(c>0) cell.z="#,##0"; }
+    w["!cols"]=[{wch:14}].concat(sizes.map(()=>({wch:8})),[{wch:9}]);
+    let nm=prodShortName(R.mid).replace(/[\\\/\?\*\[\]:]/g,"").slice(0,28)||"รุ่น";
+    let k=2; while(wb.SheetNames.indexOf(nm)>=0){ nm=nm.slice(0,26)+"_"+(k++); }
+    XLSX.utils.book_append_sheet(wb, w, nm);
+  });
+  const fn="รายงานสินค้า_"+D.lo+"_ถึง_"+D.hi+(prodSel==="__all__"?"":"_"+(MODEL[prodSel]||{}).code)+".xlsx";
+  XLSX.writeFile(wb, fn, {cellStyles:true});
+  toast("ดาวน์โหลดแล้ว");
+}
+
+function prodSetQuick(k){
+  const f=document.getElementById("prodFrom"), t=document.getElementById("prodTo");
+  const ym=todayISO.slice(0,7);
+  if(k==="this"){ f.value=ym+"-01"; t.value=todayISO; }
+  else if(k==="prev"){ const pm=prevYm(ym); f.value=pm+"-01"; t.value=pm+"-"+String(daysInMonth(pm)).padStart(2,"0"); }
+  else { const d=new Date(todayISO+"T00:00:00"); d.setDate(d.getDate()-29); f.value=d.toISOString().slice(0,10); t.value=todayISO; }
+  renderProd();
+}
+function openProd(){
+  const lg=document.getElementById("logoProd"); if(lg) lg.src=LOGO_SRC;
+  const f=document.getElementById("prodFrom"), t=document.getElementById("prodTo");
+  if(!f.value||!t.value){ f.value=todayISO.slice(0,7)+"-01"; t.value=todayISO; }
+  buildProdBranchBox();
+  document.getElementById("screen-home").style.display="none";
+  document.getElementById("screen-prod").style.display="block";
+  renderProd(); window.scrollTo(0,0);
+}
+document.getElementById("prodBtnH").onclick=openProd;
+document.getElementById("prodBack").onclick=()=>{
+  if(prodSel!=="__all__"){ prodSel="__all__"; renderProd(); window.scrollTo(0,0); return; }   // ดูรุ่นอยู่ -> กลับรายการทุกรุ่นก่อน
+  document.getElementById("screen-prod").style.display="none";
+  document.getElementById("screen-home").style.display="flex"; window.scrollTo(0,0);
+};
+document.getElementById("prodModel").onchange=e=>{ prodSel=e.target.value; renderProd(); };
+["prodFrom","prodTo"].forEach(id=>document.getElementById(id).addEventListener("change",renderProd));
+document.querySelectorAll("[data-pq]").forEach(b=>b.onclick=()=>prodSetQuick(b.dataset.pq));
+document.getElementById("prodCopy").onclick=()=>{
+  const txt=prodCopyText(); if(!txt) return;
+  navigator.clipboard?.writeText(txt).then(()=>toast("คัดลอกแล้ว")).catch(()=>prompt("คัดลอก:",txt));
+};
+document.getElementById("prodXls").onclick=prodExportXls;
 
 /* ---------- init ---------- */
 document.getElementById("logoHome").src=LOGO_SRC;
