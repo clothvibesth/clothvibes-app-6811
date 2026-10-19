@@ -157,6 +157,40 @@
   .prod-li .q small{display:block;font-weight:500;font-size:11px;color:var(--ink-soft);}
   .prod-note{font-size:11.5px;color:var(--ink-soft);margin:8px 2px;line-height:1.6;}
   .prod-warn{background:#fff8e1;border-radius:12px;padding:9px 12px;font-size:12px;color:#8a6200;margin:10px 0;line-height:1.55;}
+  .bill{margin-top:14px;border-top:2px dashed #dce8f3;padding-top:12px;}
+  .bill-empty{font-size:12.5px;color:var(--ink-soft);text-align:center;padding:6px 0 2px;}
+  .bill-edit{background:#fff3e0;color:#a35400;border-radius:10px;padding:7px 10px;font-size:12px;margin-bottom:9px;display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .bill-edit button{background:none;border:1px solid #f0c48a;border-radius:8px;padding:3px 9px;font-family:inherit;font-size:11.5px;color:#a35400;cursor:pointer;}
+  .bill-it{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f0f4f8;font-size:13px;}
+  .bill-it .nm{flex:1;min-width:0;}
+  .bill-it .nm b{font-weight:600;}
+  .bill-it .nm small{display:block;color:var(--ink-soft);font-size:11px;}
+  .bill-it .am{font-family:"Bai Jamjuree",sans-serif;font-weight:600;white-space:nowrap;}
+  .bill-it button{width:26px;height:26px;border:1px solid #d5dee8;background:#fff;border-radius:8px;font-size:14px;color:var(--accent-deep);cursor:pointer;padding:0;line-height:1;flex:none;}
+  .bill-it button.x{border:none;color:#e0a0a0;}
+  .bill-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:9px;font-size:13px;}
+  .bill-row input{width:70px;border:1px solid #d5dee8;border-radius:9px;padding:6px 8px;font-family:"Bai Jamjuree",sans-serif;font-weight:600;text-align:right;font-size:13px;}
+  .bill-row input[type=time]{width:110px;text-align:left;font-family:inherit;font-weight:400;}
+  .bill-pay{display:flex;gap:6px;}
+  .bill-pay button{border:1.5px solid #d5dee8;background:#fff;border-radius:20px;padding:6px 12px;font-family:inherit;font-size:12.5px;cursor:pointer;color:var(--ink);}
+  .bill-pay button.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
+  .bill-tot{display:flex;justify-content:space-between;align-items:baseline;margin-top:11px;padding-top:9px;border-top:1px solid #e6eef6;}
+  .bill-tot span{font-size:13px;color:var(--ink-soft);}
+  .bill-tot b{font-family:"Bai Jamjuree",sans-serif;font-size:22px;color:var(--ink);}
+  .bill-acts{display:flex;gap:8px;margin-top:11px;}
+  .bill-acts button{flex:1;border-radius:12px;padding:12px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid #d5dee8;background:#fff;color:var(--ink-soft);}
+  .bill-acts button.save{background:var(--grad);color:#fff;border:none;flex:2;}
+  .ord{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:11px 13px;margin-bottom:9px;}
+  .ord.leg{background:#fbfaf7;border:1px dashed #d8d2c4;box-shadow:none;}
+  .ord-h{display:flex;align-items:center;gap:8px;}
+  .ord-no{font-family:"Bai Jamjuree",sans-serif;font-weight:700;color:var(--accent-deep);font-size:14px;}
+  .ord-meta{flex:1;font-size:11.5px;color:var(--ink-soft);}
+  .ord-amt{font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:16px;}
+  .ord-items{font-size:12.5px;color:var(--ink);margin:6px 0 4px;line-height:1.6;}
+  .ord-items .dc{display:inline-block;background:#fff3e0;color:#c25e00;font-size:10.5px;padding:0 7px;border-radius:20px;margin-left:4px;}
+  .ord-acts{display:flex;gap:6px;justify-content:flex-end;}
+  .ord-acts button{background:#fff;border:1px solid #d5dee8;border-radius:8px;padding:4px 12px;font-family:inherit;font-size:12px;color:var(--accent-deep);cursor:pointer;}
+  .ord-acts button.del{color:var(--minus);border-color:#f3c8bd;}
   .multi-tag{display:inline-block;background:#fff3e0;color:#c25e00;font-size:10px;padding:1px 7px;border-radius:20px;margin-left:6px;vertical-align:middle;}
   .sub-lines{margin:8px 0 4px;border-top:1px dashed #dce8f3;padding-top:7px;}
   .sub-line{display:flex;align-items:center;gap:7px;padding:5px 0;font-size:12.5px;}
@@ -779,7 +813,7 @@
   </div>
 
   <div class="addsale">
-    <div class="ttl">+ บันทึกการขาย</div>
+    <div class="ttl" id="billTtl">+ บิลใหม่</div>
     <div class="fld"><label>รุ่น</label><select id="selModel" autocomplete="off"></select></div>
     <div class="fld" id="colorFld"><label>สี <small style="color:#9aa8b8;font-weight:400">(ไม่ใส่ก็ได้)</small></label>
       <div class="color-wrap" id="colorWrap"></div></div>
@@ -793,24 +827,25 @@
         </div>
       </div>
     </div>
-    <div class="fld" id="payField"><label>วิธีชำระ</label><select id="selPay" autocomplete="off">
+    <div class="fld" id="payField" style="display:none!important"><label>วิธีชำระ</label><select id="selPay" autocomplete="off">
       <option value="kshop">BTND KSHOP</option>
       <option value="cash">เงินสด</option>
     </select></div>
     <div class="priceline">ราคาขาย/ชิ้น: ฿<input id="selPrice" type="number" inputmode="numeric" autocomplete="off"> (รวม VAT, แก้ได้)</div>
     <label class="brprice-chk" id="brPriceWrap"><input type="checkbox" id="brPriceChk" autocomplete="off"> ตั้งเป็นราคาเฉพาะสาขานี้ <small>(ไม่กระทบสาขาอื่น)</small></label>
-    <label class="brprice-chk" id="dayPriceWrap"><input type="checkbox" id="dayPriceChk" autocomplete="off"> ส่วนลด/ราคาเฉพาะวันนี้ <small>(ครั้งเดียว ไม่เปลี่ยนราคามาตรฐาน)</small></label>
+    <label class="brprice-chk" id="dayPriceWrap"><input type="checkbox" id="dayPriceChk" autocomplete="off"> ลดราคาชิ้นนี้ <small>(เฉพาะในบิลนี้)</small></label>
     <div class="disc-row" id="discRow" style="display:none">
       ลด <input type="number" id="discPct" inputmode="decimal" placeholder="0" autocomplete="off"> %
       <span class="disc-eq">→ สุทธิ ฿<b id="discNet">0</b>/ชิ้น</span>
       <button type="button" class="disc-clr" id="discClr">ล้าง</button>
     </div>
-    <button class="add-btn" id="addLine">เพิ่มรายการขาย</button>
+    <button class="add-btn" id="addLine">+ ใส่ในบิล</button>
+    <div class="bill" id="billBox"></div>
   </div>
 
-  <div class="lines-ttl">รายการขายของวันนี้</div>
+  <div class="lines-ttl" id="ordersTtl">ออเดอร์วันนี้</div>
   <div id="lines"></div>
-  <div class="foot">เลือกรุ่น → ไซส์ → จำนวน → กดเพิ่ม · ลงซ้ำจะรวมยอดให้ · แก้/ลบได้</div>
+  <div class="foot">เลือกสินค้า → ใส่ในบิล → ใส่ส่วนลดทั้งบิล (ถ้ามี) → บันทึกออเดอร์ · ลูกค้า 1 คน = 1 บิล · แก้/ลบบิลได้</div>
 </div>
 
 <!-- ===== หน้าตั้งค่าค่าใช้จ่ายรายสาขา (รายเดือน) ===== -->
@@ -1364,6 +1399,8 @@ data.pxn=data.pxn||{};   // ราคาจริงที่เก็บรา�
 data.fees=data.fees||{};
 // ราคาเฉพาะสาขา (override ราคาช่องทาง): pbr["Central Ladprao"][modelId]=ราคา
 data.pbr=data.pbr||{};
+data.orders=data.orders||{};     // บิลรายวัน: orders[สาขา][วันที่]=[{id,items,disc,pay,t,ts}]
+data.orderDel=data.orderDel||{}; // บิลที่ลบแล้ว (กันเด้งกลับตอนซิงค์)
 data.lines=data.lines||{};   // บรรทัดแยกราคา: lines[สาขา][วันที่][ไซส์]=[{q,p}]
 
 /* ---------- บรรทัดแยกราคา (ไซส์เดียวกัน หลายราคาในวันเดียว) ---------- */
@@ -1485,7 +1522,7 @@ function openBranch(name,chain,color){
   currentBranch=name; currentChain=chain; currentDate=todayISO;
   // บูท: ไม่รับเงินสด/KSHOP ตรง (เงินผ่านห้าง) -> ซ่อนช่องวิธีชำระ + สรุปเงินสด
   const isMainBr = BRANCH_TYPE[name]==="main";  // เฉพาะสาขาหลักที่แยกเงินสด/KSHOP (บูท+ออนไลน์ เงินผ่านคนกลาง)
-  const pf=document.getElementById("payField"); if(pf) pf.style.display=isMainBr?"":"none";
+  const pf=document.getElementById("payField"); if(pf) pf.style.display="none";   // เลือกเงินสด/KSHOP ที่บิลแทน
   const pb=document.getElementById("payBreak"); if(pb) pb.style.display=isMainBr?"":"none";
   const bw=document.getElementById("brPriceWrap"); if(bw) bw.style.display=isOnline(name)?"none":"flex";
   const dw=document.getElementById("dayPriceWrap"); if(dw) dw.style.display=isOnline(name)?"none":"flex";
@@ -1575,7 +1612,7 @@ function fillSizes(){
 }
 function syncFormPrice(){   // ราคาเปลี่ยนตามไซส์ที่เลือก (สาขาหลักบางรุ่นแยกไซส์)
   const vid=document.getElementById("selSize").value;
-  if(vid) document.getElementById("selPrice").value=priceOfVar(vid,currentBranch);
+  if(vid) document.getElementById("selPrice").value=basePriceNoPxn(vid,currentBranch);
   // ติ๊ก "ราคาเฉพาะสาขา" อัตโนมัติ ถ้าสาขานี้มี override ของรุ่นนี้
   const mid=document.getElementById("selModel").value;
   const chk=document.getElementById("brPriceChk");
@@ -1583,71 +1620,216 @@ function syncFormPrice(){   // ราคาเปลี่ยนตามไซ�
   if(typeof refreshDiscUI==="function") refreshDiscUI();
 }
 document.getElementById("selSize").addEventListener("change",syncFormPrice);
+/* ---------- ลงทีละบิล (ออเดอร์) ----------
+   เก็บบิลไว้ที่ data.orders[สาขา][วันที่] = [ {id, items:[{vid,c,q,p,pay?}], disc, pay, t, ts, legacy?} ]
+   ทุกครั้งที่บันทึก/แก้/ลบบิล จะสร้างยอดรายวันแบบเดิม (branches / pxn / lines / pay) ใหม่จากบิลทั้งหมดของวันนั้น
+   -> รายงานทุกหน้าใช้ข้อมูลชุดเดิม ไม่ต้องแก้ */
+let bill={items:[], disc:"", pay:"kshop", t:"", editId:null, br:null, dt:null};
+const r2=x=>Math.round(x*100)/100;
+function ordersOf(br,dt){ const b=data.orders[br]; return b&&Array.isArray(b[dt]) ? b[dt] : null; }
+function itemNet(it,o){ return r2(num(it.p)*(1-(num(o.disc)||0)/100)); }     // ราคาต่อชิ้นหลังส่วนลดทั้งบิล
+function orderTotal(o){ return r2((o.items||[]).reduce((s,it)=>s+num(it.q)*itemNet(it,o),0)); }
+function orderQty(o){ return (o.items||[]).reduce((s,it)=>s+num(it.q),0); }
+function newOrderId(){ return "O"+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+
+// แปลงข้อมูลแบบเดิมของวันนั้นเป็น 1 บิล "ยอดก่อนแยกบิล" (ยอดเงินเท่าเดิมทุกบาท)
+function legacyToOrder(br,dt){
+  const day=(data.branches[br]||{})[dt]||{};
+  const vids=Object.keys(day).filter(v=>day[v]>0 && VAR[v]);
+  if(!vids.length) return null;
+  const isMain=BRANCH_TYPE[br]==="main", items=[];
+  vids.forEach(vid=>{
+    const L=linesOf(vid,br,dt);
+    let parts = (L && L.reduce((s,x)=>s+num(x.q),0)===day[vid])
+      ? L.map(x=>({vid,c:x.c||"",q:num(x.q),p:num(x.p)}))
+      : [{vid,c:"",q:day[vid],p:priceOfVar(vid,br,dt)}];
+    if(isMain){   // แยกเงินสด/KSHOP ตามที่เคยบันทึกไว้
+      let cash=((payMap(br,dt)[vid])||{}).cash||0; const out=[];
+      parts.forEach(it=>{
+        if(cash>=it.q){ out.push(Object.assign({},it,{pay:"cash"})); cash-=it.q; }
+        else if(cash>0){ out.push(Object.assign({},it,{q:cash,pay:"cash"})); out.push(Object.assign({},it,{q:it.q-cash,pay:"kshop"})); cash=0; }
+        else out.push(Object.assign({},it,{pay:"kshop"}));
+      });
+      parts=out;
+    }
+    parts.forEach(it=>items.push(it));
+  });
+  return {id:"LEG|"+br+"|"+dt, legacy:true, items, disc:0, pay:"kshop", t:"", ts:1};
+}
+
+// สร้างยอดรายวันใหม่จากบิลทั้งหมดของวันนั้น
+function rebuildDay(br,dt){
+  const os=(ordersOf(br,dt)||[]).filter(o=>!(data.orderDel||{})[o.id]);
+  ["branches","pxn","lines","pay"].forEach(k=>{ data[k]=data[k]||{}; if(data[k][br]) delete data[k][br][dt]; });
+  if(!os.length) return;
+  const isMain=BRANCH_TYPE[br]==="main";
+  const agg={};   // vid -> {q, amt, lines:{c|p:{q,p,c}}, cash, kshop}
+  os.forEach(o=>(o.items||[]).forEach(it=>{
+    const vid=it.vid, q=num(it.q); if(!VAR[vid]||q<=0) return;
+    const net=itemNet(it,o), c=it.c||"";
+    const A=agg[vid]=agg[vid]||{q:0,amt:0,lines:{},cash:0,kshop:0};
+    A.q+=q; A.amt+=q*net;
+    const k=c+"|"+net; A.lines[k]=A.lines[k]||{q:0,p:net,c}; A.lines[k].q+=q;
+    if((it.pay||o.pay)==="cash") A.cash+=q; else A.kshop+=q;
+  }));
+  const vids=Object.keys(agg); if(!vids.length) return;
+  ["branches","pxn","lines"].forEach(k=>{ data[k][br]=data[k][br]||{}; data[k][br][dt]={}; });
+  if(isMain){ data.pay[br]=data.pay[br]||{}; data.pay[br][dt]={}; }
+  vids.forEach(vid=>{
+    const A=agg[vid];
+    data.branches[br][dt][vid]=A.q;
+    data.pxn[br][dt][vid]=A.amt/A.q;
+    data.lines[br][dt][vid]=Object.values(A.lines).map(x=>x.c?{q:x.q,p:x.p,c:x.c}:{q:x.q,p:x.p});
+    if(isMain) data.pay[br][dt][vid]={cash:A.cash,kshop:A.kshop};
+  });
+}
+
+function resetBill(){
+  bill={items:[], disc:"", pay:"kshop", t:"", editId:null, br:null, dt:null};
+  document.getElementById("billTtl").textContent="+ บิลใหม่";
+}
+// ปุ่ม "+ ใส่ในบิล"
 function addLine(){
-  const mid=document.getElementById("selModel").value;
   const vid=document.getElementById("selSize").value;
   const q=parseInt(document.getElementById("formQty").value)||0;
-  const pay=document.getElementById("selPay").value||"kshop";
+  if(!vid){ toast("เลือกสินค้าก่อน"); return; }
   if(q<=0){ toast("ใส่จำนวนก่อน"); return; }
-  // ราคาที่กรอกในช่อง (รองรับส่วนลดเฉพาะบางตัว)
-  const pIn=num(document.getElementById("selPrice").value);
-  const cur=ensureLines(vid);
-  // บรรทัดเดียวกันต้องตรงทั้งราคาและสี
-  const same=cur.find(x=>Math.abs(num(x.p)-pIn)<0.005 && (x.c||"")===curColor);
-  if(same) same.q=num(same.q)+q; else cur.push(curColor?{q,p:pIn,c:curColor}:{q,p:pIn});
-  const before=qtyVar(vid);
-  setLines(vid,cur);
-  // วิธีชำระ (เฉพาะสาขาหลัก)
-  if(BRANCH_TYPE[currentBranch]==="main"){ addPay(vid, pay, q); trimPay(vid, before+q); }
-  if(cur.length>1) toast("แยกบรรทัดราคา ฿"+fmt2(pIn));
+  const p=num(document.getElementById("selPrice").value);
+  const same=bill.items.find(x=>x.vid===vid && (x.c||"")===curColor && Math.abs(num(x.p)-p)<0.005);
+  if(same) same.q=num(same.q)+q; else bill.items.push({vid,c:curColor,q,p});
   document.getElementById("formQty").value=1;
-  renderLines(); refreshSummary(); fitBottomPad();
-  if(cur.length<=1) toast("เพิ่ม "+MODEL[mid].name+" ไซส์ "+VAR[vid].size+" × "+q);
+  resetItemDisc();
+  renderBill();
+  toast("ใส่ในบิล: "+VAR[vid].modelName+" "+(curColor?curColor+" ":"")+VAR[vid].size+" ×"+q);
+}
+function renderBill(){
+  const box=document.getElementById("billBox"); if(!box) return;
+  const isMain=BRANCH_TYPE[currentBranch]==="main";
+  if(!bill.items.length && !bill.editId){
+    box.innerHTML='<div class="bill-empty">ยังไม่มีสินค้าในบิล — เลือกสินค้าแล้วกด "+ ใส่ในบิล"</div>'; return;
+  }
+  const o={items:bill.items, disc:bill.disc};
+  const sub=r2(bill.items.reduce((s,it)=>s+num(it.q)*num(it.p),0)), tot=orderTotal(o);
+  let h='';
+  if(bill.editId){
+    const lab = bill.editId.indexOf("LEG|")===0 ? "ยอดก่อนแยกบิล" : "บิลที่แก้";
+    h+='<div class="bill-edit"><span>✏️ กำลังแก้ '+lab+'</span><button type="button" data-bill="cancel">ยกเลิกการแก้</button></div>';
+  }
+  bill.items.forEach((it,i)=>{
+    const v=VAR[it.vid]; if(!v) return;
+    const lab=(MODEL[v.modelId]||{}).name||v.modelName;
+    const std=basePriceNoPxn(it.vid,currentBranch);
+    const dTag = num(it.p)<std-0.005 ? ' · ลดจาก ฿'+fmt(std) : '';
+    const payTag = it.pay ? (it.pay==="cash"?' · 💵':' · 💳') : '';
+    h+='<div class="bill-it"><div class="nm"><b>'+lab+'</b><small>'+(it.c?it.c+' · ':'')+'ไซส์ '+v.size+' · ฿'+fmt2(num(it.p))+dTag+payTag+'</small></div>'+
+      '<button type="button" data-bill="dec" data-i="'+i+'">−</button><span style="min-width:22px;text-align:center;font-weight:600">'+num(it.q)+'</span>'+
+      '<button type="button" data-bill="inc" data-i="'+i+'">+</button>'+
+      '<span class="am">฿'+fmt2(num(it.q)*num(it.p))+'</span>'+
+      '<button type="button" class="x" data-bill="del" data-i="'+i+'">✕</button></div>';
+  });
+  h+='<div class="bill-row"><span>รวม '+orderQty(o)+' ชิ้น</span><span>฿'+fmt2(sub)+'</span></div>';
+  h+='<div class="bill-row"><span>ส่วนลดทั้งบิล</span><span><input type="number" inputmode="decimal" id="billDisc" placeholder="0" value="'+(bill.disc||"")+'" autocomplete="off"> %'+
+     (num(bill.disc)>0?' <b style="color:var(--minus)">−฿'+fmt2(sub-tot)+'</b>':'')+'</span></div>';
+  if(isMain) h+='<div class="bill-row"><span>ชำระด้วย</span><span class="bill-pay">'+
+     '<button type="button" data-pay="cash" class="'+(bill.pay==="cash"?"on":"")+'">💵 เงินสด</button>'+
+     '<button type="button" data-pay="kshop" class="'+(bill.pay!=="cash"?"on":"")+'">💳 KSHOP</button></span></div>';
+  h+='<div class="bill-row"><span>เวลา <small style="color:var(--ink-soft)">(ไม่ใส่ก็ได้)</small></span><input type="time" id="billTime" value="'+(bill.t||"")+'" autocomplete="off"></div>';
+  h+='<div class="bill-tot"><span>ยอดบิล</span><b>฿'+fmt2(tot)+'</b></div>';
+  h+='<div class="bill-acts"><button type="button" data-bill="clear">'+(bill.editId?'ยกเลิก':'ล้างบิล')+'</button>'+
+     '<button type="button" class="save" data-bill="save"'+(bill.items.length?'':' disabled')+'>'+(bill.editId?'💾 บันทึกการแก้':'✓ บันทึกออเดอร์')+'</button></div>';
+  box.innerHTML=h;
+}
+function saveBill(){
+  if(!bill.items.length){ toast("บิลยังไม่มีสินค้า"); return; }
+  const br=currentBranch, dt=currentDate;
+  data.orders[br]=data.orders[br]||{};
+  if(!Array.isArray(data.orders[br][dt])){
+    // วันนี้มีข้อมูลแบบเดิมอยู่ -> เก็บเป็นบิล "ยอดก่อนแยกบิล" ก่อน กันยอดหาย
+    const leg=legacyToOrder(br,dt);
+    data.orders[br][dt]= leg ? [leg] : [];
+  }
+  const arr=data.orders[br][dt];
+  const o={id:bill.editId||newOrderId(), items:bill.items.map(it=>{ const x={vid:it.vid,q:num(it.q),p:num(it.p)}; if(it.c) x.c=it.c; if(it.pay) x.pay=it.pay; return x; }),
+           disc:num(bill.disc)||0, pay:(BRANCH_TYPE[br]==="main"?bill.pay:""), t:bill.t||"", ts:Date.now()};
+  const i=arr.findIndex(x=>x.id===o.id);
+  if(i>=0){ if(arr[i].legacy) o.legacy=true; arr[i]=o; } else arr.push(o);
+  if(data.orderDel) delete data.orderDel[o.id];
+  rebuildDay(br,dt); stampTs(br,dt); store.write(data);
+  const wasEdit=!!bill.editId, tot=orderTotal(o);
+  resetBill(); renderBill(); renderLines(); refreshSummary(); fitBottomPad();
+  toast((wasEdit?"แก้บิลแล้ว ":"บันทึกออเดอร์แล้ว ")+"฿"+fmt2(tot));
+}
+function editOrder(id){
+  const br=currentBranch, dt=currentDate;
+  data.orders[br]=data.orders[br]||{};
+  if(!Array.isArray(data.orders[br][dt]) && id.indexOf("LEG|")===0){
+    const leg=legacyToOrder(br,dt); data.orders[br][dt]= leg?[leg]:[];
+  }
+  const o=(ordersOf(br,dt)||[]).find(x=>x.id===id); if(!o) return;
+  bill={items:o.items.map(it=>Object.assign({},it)), disc:o.disc?String(o.disc):"", pay:o.pay||"kshop", t:o.t||"", editId:o.id, br, dt};
+  document.getElementById("billTtl").textContent="✏️ แก้บิล";
+  renderBill();
+  document.querySelector(".addsale").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function deleteOrder(id){
+  const br=currentBranch, dt=currentDate;
+  data.orders[br]=data.orders[br]||{};
+  if(!Array.isArray(data.orders[br][dt]) && id.indexOf("LEG|")===0){
+    const leg=legacyToOrder(br,dt); data.orders[br][dt]= leg?[leg]:[];
+  }
+  const arr=ordersOf(br,dt)||[], i=arr.findIndex(x=>x.id===id); if(i<0) return;
+  if(!confirm("ลบบิลนี้ ฿"+fmt2(orderTotal(arr[i]))+" ?")) return;
+  arr.splice(i,1);
+  data.orderDel=data.orderDel||{}; data.orderDel[id]=Date.now();   // กันบิลเด้งกลับตอนซิงค์
+  if(bill.editId===id) resetBill();
+  rebuildDay(br,dt); stampTs(br,dt); store.write(data);
+  renderBill(); renderLines(); refreshSummary(); fitBottomPad(); toast("ลบบิลแล้ว");
+}
+// ส่วนลดรายชิ้น: มีผลแค่ราคาในฟอร์ม (ไม่เขียนราคาทั้งวันแบบเดิม)
+function resetItemDisc(){
+  const chk=document.getElementById("dayPriceChk"); if(chk) chk.checked=false;
+  const row=document.getElementById("discRow"); if(row) row.style.display="none";
+  const pc=document.getElementById("discPct"); if(pc) pc.value="";
+  const vid=document.getElementById("selSize").value;
+  if(vid) document.getElementById("selPrice").value=basePriceNoPxn(vid,currentBranch);
 }
 
 /* ---------- render sold lines ---------- */
 function renderLines(){
-  const map=dayMap();
-  const vids=Object.keys(map).filter(v=>map[v]>0).sort((a,b)=>(VARORDER[a]??1e9)-(VARORDER[b]??1e9));
+  // เปลี่ยนวัน/สาขาระหว่างแก้บิล -> ยกเลิกการแก้ กันบิลไปลงผิดวัน
+  if(bill.editId && (bill.br!==currentBranch || bill.dt!==currentDate)){ resetBill(); }
+  renderBill();
   const box=document.getElementById("lines");
-  if(vids.length===0){ box.innerHTML='<div class="empty">ยังไม่มีรายการขายวันนี้<br>เลือกรุ่น/ไซส์ด้านบนแล้วกดเพิ่ม</div>'; return; }
-  const hide=data.hideCost;
-  box.innerHTML=vids.map(vid=>{
-    const v=VAR[vid]; if(!v) return "";
-    const q=map[vid], price=priceOfVar(vid,currentBranch);
-    const pay=payOf(vid);
-    const saleInc=q*price, base=price/(1+VAT), pcProfit=base-v.cost, profit=q*pcProfit, margin=base>0?pcProfit/base:0;
-    let money='<span>ขาย <b>฿'+fmt2(saleInc)+'</b></span>';
-    const payTxt=(BRANCH_TYPE[currentBranch]!=="main")?'':((pay.cash>0&&pay.kshop>0)?(' · 💵'+pay.cash+' / 💳'+pay.kshop):(pay.cash>0?' · 💵 เงินสด':(pay.kshop>0?' · 💳 KSHOP':'')));
-    if(!hide) money+=' · ทุน ฿'+fmt2(q*v.cost)+' · <span class="pf">กำไร ฿'+fmt2(profit)+' ('+(margin*100).toFixed(1)+'%)</span>';
-    const LN=linesOf(vid);
-    // แสดงแยกบรรทัดเมื่อมีหลายราคาในไซส์เดียวกัน
-    let sub="";
-    if(LN && LN.length>1){   // หลายราคา หรือหลายสีในไซส์เดียวกัน
-      sub='<div class="sub-lines">'+LN.map((x,li)=>{
-        const std=priceOfVar(vid,currentBranch,currentDate);
-        return '<div class="sub-line">'+(x.c?'<span class="sc">'+x.c+'</span>':'<span class="sc"></span>')+
-          '<span class="sp">฿'+fmt2(num(x.p))+'</span>'+
-          '<span class="sq">× '+num(x.q)+' ตัว</span>'+
-          '<span class="sa">฿'+fmt2(num(x.q)*num(x.p))+'</span>'+
-          '<button class="sl-b" data-sl="dec" data-v="'+vid+'" data-i="'+li+'">−</button>'+
-          '<button class="sl-b" data-sl="inc" data-v="'+vid+'" data-i="'+li+'">+</button>'+
-          '<button class="sl-x" data-sl="del" data-v="'+vid+'" data-i="'+li+'">✕</button></div>';
-      }).join("")+'</div>';
-    }
-    return '<div class="line">'+
-      '<div class="line-top"><div class="line-name">'+v.modelName+' <span class="sz">· ไซส์ '+v.size+'</span>'+
-        (LN&&LN.length>1?'<span class="multi-tag">'+LN.length+' รายการ</span>':'')+
-        (LN&&LN.length===1&&LN[0].c?'<span class="line-color">'+LN[0].c+'</span>':'')+'</div>'+
-      '<button class="del" data-del="'+vid+'">✕</button></div>'+
-      '<div class="line-money">'+money+'<span style="color:var(--accent-deep)">'+payTxt+'</span></div>'+
-      sub+
-      (LN&&LN.length>1 ? '<div class="line-qty"><span class="q">รวม '+q+' ตัว</span></div>'
-        : '<div class="line-qty"><button class="qs-minus" data-q="dec" data-v="'+vid+'">−</button>'+
-          '<span class="q">'+q+'</span>'+
-          '<button class="qs-plus" data-q="inc" data-v="'+vid+'">+</button></div>')+
-      '</div>';
-  }).join("");
+  const os=ordersOf(currentBranch,currentDate);
+  const isMain=BRANCH_TYPE[currentBranch]==="main";
+  const itemsTxt=o=>(o.items||[]).map(it=>{ const v=VAR[it.vid]; if(!v) return "";
+      const nm=((MODEL[v.modelId]||{}).code)||v.modelName;
+      return nm+(it.c?"-"+it.c:"")+"-"+v.size+" ×"+num(it.q)+(it.pay?(it.pay==="cash"?" 💵":" 💳"):""); }).filter(Boolean).join(", ");
+  let h="";
+  if(os){
+    const list=os.filter(o=>!(data.orderDel||{})[o.id]).slice().sort((a,b)=>(a.legacy?0:1)-(b.legacy?0:1) || (a.ts||0)-(b.ts||0));
+    let n=0, tot=0, q=0;
+    list.forEach(o=>{
+      const t=orderTotal(o); tot+=t; q+=orderQty(o);
+      const no = o.legacy ? "เดิม" : "#"+(++n);
+      const meta=[o.t||"", (isMain&&!o.legacy)?(o.pay==="cash"?"💵 เงินสด":"💳 KSHOP"):"", o.legacy?"ยอดก่อนแยกบิล":""].filter(Boolean).join(" · ");
+      h+='<div class="ord'+(o.legacy?' leg':'')+'"><div class="ord-h"><span class="ord-no">'+no+'</span><span class="ord-meta">'+meta+'</span><span class="ord-amt">฿'+fmt2(t)+'</span></div>'+
+        '<div class="ord-items">'+itemsTxt(o)+(num(o.disc)>0?'<span class="dc">ลด '+num(o.disc)+'%</span>':'')+'</div>'+
+        '<div class="ord-acts"><button type="button" data-oe="'+o.id+'">แก้</button><button type="button" class="del" data-od="'+o.id+'">ลบ</button></div></div>';
+    });
+    document.getElementById("ordersTtl").textContent = n ? "ออเดอร์วันนี้ ("+n+" บิล · "+fmt(q)+" ตัว · ฿"+fmt2(tot)+")" : "ออเดอร์วันนี้";
+    if(!list.length) h='<div class="empty">ยังไม่มีออเดอร์วันนี้<br>เลือกสินค้า → ใส่ในบิล → บันทึกออเดอร์</div>';
+  } else {
+    // วันที่ลงแบบเดิม (ก่อนมีระบบบิล) -> แสดงเป็นบิล "เดิม" แบบอ่านอย่างเดียว จนกว่าจะแก้/ลงบิลใหม่
+    const leg=legacyToOrder(currentBranch,currentDate);
+    document.getElementById("ordersTtl").textContent="ออเดอร์วันนี้";
+    if(leg){
+      h='<div class="ord leg"><div class="ord-h"><span class="ord-no">เดิม</span><span class="ord-meta">ลงก่อนมีระบบบิล · '+orderQty(leg)+' ตัว</span><span class="ord-amt">฿'+fmt2(orderTotal(leg))+'</span></div>'+
+        '<div class="ord-items">'+itemsTxt(leg)+'</div>'+
+        '<div class="ord-acts"><button type="button" data-oe="'+leg.id+'">แก้</button><button type="button" class="del" data-od="'+leg.id+'">ลบ</button></div></div>';
+    } else h='<div class="empty">ยังไม่มีออเดอร์วันนี้<br>เลือกสินค้า → ใส่ในบิล → บันทึกออเดอร์</div>';
+  }
+  box.innerHTML=h;
 }
 
 /* ---------- summary ---------- */
@@ -1666,7 +1848,9 @@ function refreshSummary(){
   document.getElementById("totalPieces").textContent=fmt(t.pieces);
   document.getElementById("totalBaht").textContent=fmt2(data.vatMode==="inc"?t.inc:t.base);
   document.getElementById("bahtLbl").textContent=data.vatMode==="inc"?"ยอดรวม (รวม VAT 7%)":"ยอดรวม (ก่อน VAT)";
-  document.getElementById("vatBreak").innerHTML="ก่อน VAT <b>฿"+fmt2(t.base)+"</b> · VAT 7% <b>฿"+fmt2(t.vat)+"</b> · รวม <b>฿"+fmt2(t.inc)+"</b>";
+  const _os=(ordersOf(currentBranch,currentDate)||[]).filter(o=>!o.legacy && !(data.orderDel||{})[o.id]);
+  document.getElementById("vatBreak").innerHTML="ก่อน VAT <b>฿"+fmt2(t.base)+"</b> · VAT 7% <b>฿"+fmt2(t.vat)+"</b> · รวม <b>฿"+fmt2(t.inc)+"</b>"+
+    (_os.length?" · 🧾 <b>"+_os.length+"</b> บิล (เฉลี่ย ฿"+fmt(_os.reduce((s,o)=>s+orderTotal(o),0)/_os.length)+")":"");
   const pb=document.getElementById("payBreak");
   if(pb){ pb.innerHTML="💵 เงินสด <b>฿"+fmt2(t.cash)+"</b> · 💳 KSHOP <b>฿"+fmt2(t.kshop)+"</b>"; pb.style.display=(BRANCH_TYPE[currentBranch]==="main")?"":"none"; }
   const pl=document.getElementById("profitLine");
@@ -1687,47 +1871,35 @@ function changeDay(delta){
 
 /* ---------- events: lines ---------- */
 document.getElementById("lines").addEventListener("click",e=>{
-  // ปุ่มรายบรรทัด (หลายราคาในไซส์เดียวกัน)
-  const sl=e.target.closest("button[data-sl]");
-  if(sl){
-    const vid=sl.dataset.v, i=+sl.dataset.i, act=sl.dataset.sl;
-    const L=ensureLines(vid); if(!L[i]) return;
-    const pm=document.getElementById("selPay").value||"kshop";
-    const before=qtyVar(vid);
-    if(act==="del"){ L.splice(i,1); }
-    else if(act==="inc"){ L[i].q=num(L[i].q)+1; }
-    else { L[i].q=num(L[i].q)-1; if(L[i].q<=0) L.splice(i,1); }
-    setLines(vid,L);
-    const after=qtyVar(vid);
-    if(BRANCH_TYPE[currentBranch]==="main"){
-      if(after>before) addPay(vid,pm,after-before);
-      trimPay(vid,after);
-      store.write(data);
-    }
-    renderLines(); refreshSummary(); fitBottomPad(); return;
+  const ed=e.target.closest("[data-oe]"); if(ed){ editOrder(ed.dataset.oe); return; }
+  const dl=e.target.closest("[data-od]"); if(dl){ deleteOrder(dl.dataset.od); return; }
+});
+// ปุ่มในกล่องบิล
+document.getElementById("billBox").addEventListener("click",e=>{
+  const pb=e.target.closest("[data-pay]"); if(pb){ bill.pay=pb.dataset.pay; renderBill(); return; }
+  const b=e.target.closest("[data-bill]"); if(!b) return;
+  const act=b.dataset.bill, i=+b.dataset.i;
+  if(act==="save"){ saveBill(); return; }
+  if(act==="cancel"||act==="clear"){
+    if(act==="clear" && !bill.editId && bill.items.length && !confirm("ล้างสินค้าในบิลนี้?")) return;
+    resetBill(); renderBill(); return; }
+  const it=bill.items[i]; if(!it) return;
+  if(act==="inc") it.q=num(it.q)+1;
+  else if(act==="dec"){ it.q=num(it.q)-1; if(it.q<=0) bill.items.splice(i,1); }
+  else if(act==="del") bill.items.splice(i,1);
+  renderBill();
+});
+document.getElementById("billBox").addEventListener("input",e=>{
+  if(e.target.id==="billDisc"){
+    bill.disc=e.target.value;
+    // อัปเดตยอดโดยไม่วาดช่องใหม่ (เคอร์เซอร์ไม่เด้ง)
+    const o={items:bill.items, disc:bill.disc};
+    const sub=r2(bill.items.reduce((s,it)=>s+num(it.q)*num(it.p),0)), tot=orderTotal(o);
+    const tb=document.querySelector("#billBox .bill-tot b"); if(tb) tb.textContent="฿"+fmt2(tot);
+    const sp=e.target.parentElement, old=sp.querySelector("b"); if(old) old.remove();
+    if(num(bill.disc)>0){ const bb=document.createElement("b"); bb.style.color="var(--minus)"; bb.textContent=" −฿"+fmt2(sub-tot); sp.appendChild(bb); }
   }
-  const del=e.target.closest("button[data-del]");
-  if(del){ const vid=del.dataset.del; const v=VAR[vid];
-    if(confirm("ลบ "+v.modelName+" ไซส์ "+v.size+" ?")){
-      setLines(vid,[]); setQtyVar(vid,0); renderLines(); refreshSummary(); fitBottomPad(); }
-    return; }
-  const b=e.target.closest("button[data-q]"); if(!b) return;
-  const vid=b.dataset.v; const pm=document.getElementById("selPay").value||"kshop";
-  const L=linesOf(vid);
-  if(L && L.length===1){
-    // มีบรรทัดเดียว: ปรับจำนวนในบรรทัดนั้น (คงราคาเดิม)
-    const before=qtyVar(vid);
-    L[0].q=num(L[0].q)+(b.dataset.q==="inc"?1:-1);
-    setLines(vid, L[0].q>0?L:[]);
-    const after=qtyVar(vid);
-    if(BRANCH_TYPE[currentBranch]==="main"){
-      if(after>before) addPay(vid,pm,after-before);
-      trimPay(vid,after); store.write(data);
-    }
-  } else {
-    setQtyVar(vid, qtyVar(vid)+(b.dataset.q==="inc"?1:-1), pm);
-  }
-  renderLines(); refreshSummary(); fitBottomPad();
+  if(e.target.id==="billTime") bill.t=e.target.value;
 });
 
 /* ---------- events: form ---------- */
@@ -1795,55 +1967,29 @@ function hasDayPrice(vid){
   const b=data.pxn[currentBranch], d=b&&b[currentDate];
   return !!(d && d[vid]!==undefined);
 }
-function refreshDiscUI(){
-  const vid=document.getElementById("selSize").value;
-  const chk=document.getElementById("dayPriceChk"), row=document.getElementById("discRow");
-  if(!chk) return;
-  const on=hasDayPrice(vid);
-  chk.checked=on; row.style.display=on?"flex":"none";
-  if(on && vid){
-    const base=basePriceNoPxn(vid,currentBranch), now=priceOfVar(vid,currentBranch,currentDate);
-    const pct=base>0?Math.round((1-now/base)*10000)/100:0;
-    document.getElementById("discPct").value=(pct>0?pct:"");
-    document.getElementById("discNet").textContent=fmt2(now);
-  }
-}
+function refreshDiscUI(){ resetItemDisc(); }
 document.getElementById("dayPriceChk").addEventListener("change",e=>{
   const vid=document.getElementById("selSize").value;
   if(!vid){ e.target.checked=false; return; }
   if(e.target.checked){
-    const cur=parseFloat(document.getElementById("selPrice").value)||basePriceNoPxn(vid,currentBranch);
-    setDayPrice(vid,cur);
     document.getElementById("discRow").style.display="flex";
     document.getElementById("discPct").value="";
-    document.getElementById("discNet").textContent=fmt2(cur);
-    toast("ใช้ราคาเฉพาะวันที่ "+currentDate);
-  } else {
-    clearDayPrice(vid);
-    document.getElementById("discRow").style.display="none";
-    document.getElementById("selPrice").value=priceOfVar(vid,currentBranch,currentDate);
-    toast("กลับไปใช้ราคาปกติ");
-  }
+    document.getElementById("discNet").textContent=fmt2(basePriceNoPxn(vid,currentBranch));
+    document.getElementById("discPct").focus();
+  } else resetItemDisc();
 });
-// ใส่ % ลด -> คำนวณราคาสุทธิให้
+// ใส่ % ลด -> คำนวณราคาสุทธิต่อชิ้น ใส่ช่องราคา
 function applyDiscPct(){
   const vid=document.getElementById("selSize").value; if(!vid) return;
   const base=basePriceNoPxn(vid,currentBranch);
   const pct=parseFloat(document.getElementById("discPct").value);
-  const net=isNaN(pct)?base:Math.round(base*(1-pct/100)*100)/100;
+  const net=isNaN(pct)?base:r2(base*(1-pct/100));
   document.getElementById("discNet").textContent=fmt2(net);
   document.getElementById("selPrice").value=net;
-  setDayPrice(vid,net);            // เขียน pxn + renderLines ให้บรรทัดอัปเดตทันที
 }
 ["input","change","blur","keyup"].forEach(ev=>
   document.getElementById("discPct").addEventListener(ev, applyDiscPct));
-document.getElementById("discClr").onclick=()=>{
-  const vid=document.getElementById("selSize").value;
-  document.getElementById("dayPriceChk").checked=false;
-  clearDayPrice(vid);
-  document.getElementById("discRow").style.display="none";
-  if(vid) document.getElementById("selPrice").value=priceOfVar(vid,currentBranch,currentDate);
-};
+document.getElementById("discClr").onclick=resetItemDisc;
 document.getElementById("brPriceChk").addEventListener("change",e=>{
   const mid=document.getElementById("selModel").value;
   const v=parseFloat(document.getElementById("selPrice").value);
@@ -1856,7 +2002,7 @@ document.getElementById("brPriceChk").addEventListener("change",e=>{
       if(!Object.keys(data.pbr[currentBranch]).length) delete data.pbr[currentBranch]; }
     // กลับไปใช้ราคาช่องทาง
     const vid=document.getElementById("selSize").value;
-    if(vid) document.getElementById("selPrice").value=priceOfVar(vid,currentBranch);
+    if(vid) document.getElementById("selPrice").value=basePriceNoPxn(vid,currentBranch);
     toast("กลับไปใช้ราคากลางของช่องทาง");
   }
   store.write(data); renderLines(); refreshSummary();
@@ -1887,18 +2033,36 @@ window.addEventListener("resize",fitBottomPad);
 
 /* ---------- clear / copy / csv ---------- */
 document.getElementById("clearBtn").onclick=()=>{
-  if(Object.keys(dayMap()).length===0){ toast("วันนี้ยังไม่มีรายการ"); return; }
-  if(confirm("ล้างรายการขายของ "+currentBranch+"\n"+thaiDate(currentDate)+" ?")){
-    if(data.branches[currentBranch]) delete data.branches[currentBranch][currentDate];
+  const os=ordersOf(currentBranch,currentDate);
+  if(Object.keys(dayMap()).length===0 && !(os&&os.length)){ toast("วันนี้ยังไม่มีรายการ"); return; }
+  if(confirm("ล้างออเดอร์ทั้งหมดของ "+currentBranch+"\n"+thaiDate(currentDate)+" ?")){
+    data.orders[currentBranch]=data.orders[currentBranch]||{};
+    data.orderDel=data.orderDel||{};
+    (os||[]).forEach(o=>{ data.orderDel[o.id]=Date.now(); });
+    data.orderDel["LEG|"+currentBranch+"|"+currentDate]=Date.now();
+    data.orders[currentBranch][currentDate]=[];
+    rebuildDay(currentBranch,currentDate);
     stampTs(currentBranch,currentDate);
-    store.write(data); renderLines(); refreshSummary(); fitBottomPad(); toast("ล้างเรียบร้อย");
+    resetBill(); store.write(data); renderLines(); refreshSummary(); fitBottomPad(); toast("ล้างเรียบร้อย");
   }
 };
 document.getElementById("copyBtn").onclick=()=>{
   const map=dayMap(); const vids=Object.keys(map).filter(v=>map[v]>0).sort((a,b)=>(VARORDER[a]??1e9)-(VARORDER[b]??1e9));
   if(vids.length===0){ toast("วันนี้ยังไม่มีรายการ"); return; }
   let L=["สรุปยอดขาย "+thaiDate(currentDate),currentChain+" · "+currentBranch,"CLOTHVIBES",""];
-  vids.forEach(vid=>{ const v=VAR[vid],q=map[vid]; L.push("• "+v.modelName+" ไซส์ "+v.size+" × "+q+" = ฿"+fmt2(q*priceOfVar(vid,currentBranch))); });
+  const _os=(ordersOf(currentBranch,currentDate)||[]).filter(o=>!(data.orderDel||{})[o.id]).sort((a,b)=>(a.legacy?0:1)-(b.legacy?0:1)||(a.ts||0)-(b.ts||0));
+  if(_os.length){
+    const real=_os.filter(o=>!o.legacy);
+    if(real.length) L.push("🧾 "+real.length+" บิล · เฉลี่ย ฿"+fmt(real.reduce((s,o)=>s+orderTotal(o),0)/real.length)+"/บิล","");
+    let n=0;
+    _os.forEach(o=>{
+      const its=(o.items||[]).map(it=>{ const v=VAR[it.vid]; return v?((MODEL[v.modelId]||{}).code||v.modelName)+(it.c?"-"+it.c:"")+"-"+v.size+" ×"+num(it.q):""; }).filter(Boolean).join(", ");
+      L.push((o.legacy?"(เดิม) ":"#"+(++n)+" ")+its+(num(o.disc)>0?" ลด "+num(o.disc)+"%":"")+" = ฿"+fmt2(orderTotal(o))+
+             (BRANCH_TYPE[currentBranch]==="main"&&!o.legacy?(o.pay==="cash"?" 💵":" 💳"):""));
+    });
+  } else {
+    vids.forEach(vid=>{ const v=VAR[vid],q=map[vid]; L.push("• "+v.modelName+" ไซส์ "+v.size+" × "+q+" = ฿"+fmt2(q*priceOfVar(vid,currentBranch))); });
+  }
   const t=dayTotals();
   L.push("","รวม "+fmt(t.pieces)+" ชิ้น","ก่อน VAT ฿"+fmt2(t.base)+" · VAT 7% ฿"+fmt2(t.vat)+" · รวม ฿"+fmt2(t.inc));
   if(BRANCH_TYPE[currentBranch]==="main") L.push("💵 เงินสด ฿"+fmt2(t.cash)+" · 💳 KSHOP ฿"+fmt2(t.kshop));
@@ -1975,6 +2139,20 @@ function mergeData(into,inc){
     const i=into.doccust.findIndex(x=>x.id===c.id);
     if(i<0) into.doccust.push(c); else into.doccust[i]=Object.assign(into.doccust[i],c);
   });
+  // บิล: รวมตามรหัสบิล (ตัวที่แก้ล่าสุดชนะ) · บิลที่ถูกลบไม่เอากลับ · แล้วสร้างยอดรายวันใหม่จากบิล
+  into.orderDel=Object.assign(into.orderDel||{}, inc.orderDel||{});
+  into.orders=into.orders||{};
+  const io=inc.orders||{}, touched=[];
+  for(const br in io){ into.orders[br]=into.orders[br]||{};
+    for(const dt in io[br]){
+      const cur=Array.isArray(into.orders[br][dt])?into.orders[br][dt]:[];
+      (io[br][dt]||[]).forEach(o=>{ const i=cur.findIndex(x=>x.id===o.id);
+        if(i<0) cur.push(o); else if((o.ts||0)>(cur[i].ts||0)) cur[i]=o; });
+      into.orders[br][dt]=cur; touched.push([br,dt]);
+    } }
+  for(const br in into.orders) for(const dt in into.orders[br]){
+    if(Array.isArray(into.orders[br][dt])) into.orders[br][dt]=into.orders[br][dt].filter(o=>!into.orderDel[o.id]);
+  }
   // บรรทัดแยกราคา: ยึดฝั่งที่ส่งมาถ้ามี (ไปคู่กับ branches/pxn ที่ merge ตาม ts อยู่แล้ว)
   into.lines=into.lines||{};
   const il=inc.lines||{};
@@ -2023,6 +2201,12 @@ function mergeData(into,inc){
       }
     });
   });
+  // วันที่ลงเป็นบิล: สร้างยอดรายวันใหม่จากบิลหลังรวมทุกอย่างเสร็จ (บิลคือข้อมูลจริง ยอดรายวันเป็นผลลัพธ์)
+  if(into===data){
+    for(const br in into.orders) for(const dt in into.orders[br]){
+      if(Array.isArray(into.orders[br][dt])){ rebuildDay(br,dt); into.ts[br]=into.ts[br]||{}; }
+    }
+  }
   return into;
 }
 function onRestoreFile(e){
@@ -2607,6 +2791,13 @@ function normColor(raw, M){
   return raw;                                                 // ไม่รู้จัก -> เก็บตามที่เขียนในไฟล์
 }
 // รวมบรรทัดสีจากรายการนำเข้า -> data.lines (ไม่แตะ branches/pxn ยอดเงินจึงเท่าเดิมทุกบาท)
+// นำเข้าไฟล์ทับวันไหน -> ลบบิลของวันนั้น (ไฟล์คือข้อมูลจริงของวันนั้นแทน)
+function dropOrdersForImport(br,dates){
+  if(!data.orders[br]) return;
+  data.orderDel=data.orderDel||{};
+  dates.forEach(d=>{ const os=data.orders[br][d];
+    if(Array.isArray(os)){ os.forEach(o=>{ data.orderDel[o.id]=Date.now(); }); delete data.orders[br][d]; } });
+}
 function writeImportLines(br, acc){
   // acc: { "วันที่|vid": { "สี": {q, amt} } }
   data.lines[br]=data.lines[br]||{};
@@ -2850,6 +3041,7 @@ function confirmImportOnline(){
   data.branches[br]=data.branches[br]||{}; data.pxn[br]=data.pxn[br]||{};
   data.lines[br]=data.lines[br]||{};
   dates.forEach(d=>{ data.branches[br][d]={}; data.pxn[br][d]={}; delete data.lines[br][d]; });
+  dropOrdersForImport(br,dates);
   const lineAcc={};
   // รวมยอด net ต่อ (วัน,vid) แล้วหาราคาต่อชิ้นจริง
   const netAcc={}, qtyAcc={};
@@ -3255,12 +3447,15 @@ function confirmImport(){
   let msg="นำเข้า "+all.length+" ออเดอร์ ลงที่ "+br+"\nเดือน "+chosenYm+" · "+dates.length+" วัน";
   if(chosenYm!==fileYm && fileYm) msg+="\n(ไฟล์ตรวจพบ "+fileYm+" → ลงเป็น "+chosenYm+")";
   if(dup.length) msg+="\n\n⚠️ "+dup.length+" วันมีข้อมูลอยู่แล้ว จะถูกแทนที่";
+  const _withOrders=dates.filter(d=>{ const o=(data.orders[br]||{})[d]; return Array.isArray(o)&&o.length; });
+  if(_withOrders.length) msg+="\n⚠️ "+_withOrders.length+" วันมีบิลที่ลงมือไว้ — บิลของวันนั้นจะถูกแทนที่ด้วยข้อมูลจากไฟล์";
   if(!confirm(msg+"\n\nยืนยัน?")) return;
 
   // เคลียร์วันที่ที่จะลง (แทนที่ ไม่บวกทับ)
   data.branches[br]=data.branches[br]||{}; data.pay[br]=data.pay[br]||{}; data.pxn[br]=data.pxn[br]||{};
   data.lines[br]=data.lines[br]||{};
   dates.forEach(d=>{ data.branches[br][d]={}; data.pay[br][d]={}; data.pxn[br][d]={}; delete data.lines[br][d]; });
+  dropOrdersForImport(br,dates);
 
   const amtAcc={}, qtyAcc={}, lineAcc={};
   all.forEach(o=>{
