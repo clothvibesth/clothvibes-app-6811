@@ -402,6 +402,18 @@
   .dash-card{background:linear-gradient(145deg,rgba(20,44,78,.5),rgba(13,31,58,.35));border:1px solid rgba(120,180,240,.12);border-radius:16px;margin:14px 16px 0;padding:15px;}
   .dash-card-t{font-family:"Bai Jamjuree",sans-serif;font-weight:600;font-size:14px;color:#8fd6ff;margin-bottom:14px;}
   /* bars */
+  .fee-row{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.07);}
+  .fee-row:last-child{border-bottom:none;}
+  .fee-row .sw{width:10px;height:34px;border-radius:4px;flex:none;}
+  .fee-row .mid{flex:1;min-width:0;}
+  .fee-row .nm{font-size:13.5px;color:#fff;font-weight:600;}
+  .fee-row .sb{font-size:11.5px;color:#9fb8d6;margin-top:2px;line-height:1.45;}
+  .fee-row .sb b{color:#ff9db8;font-weight:600;}
+  .fee-row .rt{text-align:right;flex:none;}
+  .fee-row .pc{font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:20px;color:#ffd54a;line-height:1.1;}
+  .fee-row .am{font-family:"Bai Jamjuree",sans-serif;font-size:12px;color:#c3d5ea;}
+  .fee-warn{font-size:12px;color:#ffb74d;background:rgba(255,170,51,.1);border-radius:8px;padding:7px 10px;margin-top:8px;}
+  .fee-note{font-size:10.5px;color:#7fa8d4;margin-top:10px;line-height:1.5;}
   .cbar{margin-bottom:13px;}
   .cbar:last-child{margin-bottom:0;}
   .cbar-top{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px;}
@@ -1234,6 +1246,13 @@
       <canvas id="dashDonut" width="240" height="240"></canvas>
       <div class="donut-legend" id="dashDonutLegend"></div>
     </div>
+  </div>
+
+  <!-- GP บูท / ค่าธรรมเนียมออนไลน์ (แยกกัน ไม่เฉลี่ยรวม) -->
+  <div class="dash-card" id="dashFeeCard" style="display:none">
+    <div class="dash-card-t">GP บูท / ค่าธรรมเนียมออนไลน์</div>
+    <div id="dashFeeRows"></div>
+    <div class="fee-note">% ใหญ่ = เทียบยอดของช่องทางนั้นเอง · GP บูทคิดจากยอดก่อน VAT (ตามที่ห้างคิด) · ค่าธรรมเนียมออนไลน์คิดจากยอดรวม VAT (ตามที่แพลตฟอร์มหัก)</div>
   </div>
 
   <!-- Top รุ่นขายดี -->
@@ -2524,6 +2543,7 @@ function overlapDays(ym,lo,hi){
 // คำนวณค่าใช้จ่ายรวมของช่วง (เฉลี่ยตามสัดส่วนวัน) + GP เฉลี่ยถ่วงน้ำหนักตามยอดขาย
 function expenseForRange(lo,hi,branchesInRange){
   let rent=0,elec=0,wage=0,comm=0,other=0,gpAmt=0;
+  const gpByBr={};   // {บูท:{amt, base}} — ใช้แยก GP บูทในรายงาน
   // ไล่ทุกเดือนที่คร่อมช่วง
   const months=new Set();
   let cur=monthOf(lo), _g=0;
@@ -2539,11 +2559,13 @@ function expenseForRange(lo,hi,branchesInRange){
       other+=othersSum(e)*ratio;
       if(!isMain){ // บูท: GP คิดจากยอดขายก่อน VAT ของสาขานั้นในเดือนนั้น
         const baseInMonth=branchesInRange[br].baseByMonth[ym]||0;
-        gpAmt += baseInMonth*((e.gp!==undefined&&e.gp!==null&&e.gp!==""?e.gp:(data.gp[br]||0))/100);
+        const g=baseInMonth*((e.gp!==undefined&&e.gp!==null&&e.gp!==""?e.gp:(data.gp[br]||0))/100);
+        gpAmt += g;
+        if(!isOnline(br)){ const o=(gpByBr[br]=gpByBr[br]||{amt:0,base:0}); o.amt+=g; o.base+=baseInMonth; }
       }
     });
   });
-  return {rent,elec,wage,comm,other,gpAmt};
+  return {rent,elec,wage,comm,other,gpAmt,gpByBr};
 }
 
 /* ---------- ค่าธรรมเนียมออนไลน์ (Shopee/TikTok) รายเดือน + เฉลี่ยตามวัน ---------- */
@@ -2557,6 +2579,7 @@ function setFee(plat,ym,f,v){
 // รวมค่าธรรมเนียมของช่วง (เฉลี่ยตามสัดส่วนวัน เหมือนค่าใช้จ่าย)
 function onlineFeesForRange(lo,hi,branchesInRange){
   let comm=0,txn=0,service=0,ship=0,order=0,ads=0,est=false;
+  const byPlat={}, adsByPlat={};   // {TikTok: ค่าธรรมเนียมรวม (ไม่รวมแอด)} / {TikTok: ค่าแอด}
   const months=new Set();
   let cur=monthOf(lo), guard=0;
   while(cur<=monthOf(hi)){ months.add(cur); if(++guard>240) break; cur=(()=>{const [y,m]=cur.split("-").map(Number); const d=new Date(y,m,1); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");})(); }
@@ -2568,10 +2591,12 @@ function onlineFeesForRange(lo,hi,branchesInRange){
       const e=feeOf(br,ym);
       comm+=(e.comm||0)*ratio; txn+=(e.txn||0)*ratio; service+=(e.service||0)*ratio;
       ship+=(e.ship||0)*ratio; order+=(e.order||0)*ratio; ads+=(e.ads||0)*ratio;
+      adsByPlat[br]=(adsByPlat[br]||0)+(e.ads||0)*ratio;
+      byPlat[br]=(byPlat[br]||0)+((e.comm||0)+(e.txn||0)+(e.service||0)+(e.ship||0)+(e.order||0))*ratio;
       if(e.est) est=true;
     });
   });
-  return {comm,txn,service,ship,order,ads,est};
+  return {comm,txn,service,ship,order,ads,est,byPlat,adsByPlat};
 }
 
 /* ---------- หน้าจอตั้งค่าค่าใช้จ่าย ---------- */
@@ -3774,7 +3799,13 @@ function dashData(arg){
   const gp=E.gpAmt;
   const opex=E.rent+E.elec+E.wage+E.comm+(E.other||0);
   const profit=base-gp-feeOnline-ads-opex-cost;
-  return {ym:(typeof arg==="string"?arg:""), lo, hi, sales,base,vat,cost,pieces,gp,feeOnline,ads,opex,profit,perChan,perBranch,byModel,byDay,est:F.est};
+  // แยก GP บูท vs ค่าธรรมเนียมออนไลน์ (คนละเรื่องกัน — ห้ามเฉลี่ยรวม)
+  let gpBoothBase=0; Object.values(E.gpByBr||{}).forEach(o=>{ gpBoothBase+=o.base; });
+  const noGp=Object.keys(E.gpByBr||{}).filter(b=>E.gpByBr[b].base>0.5 && E.gpByBr[b].amt<0.005);  // บูทที่ยังไม่ตั้ง GP
+  const plat={};   // {TikTok:{fee, sales}}
+  Object.keys(F.byPlat||{}).forEach(p=>{ plat[p]={fee:F.byPlat[p], ads:(F.adsByPlat||{})[p]||0, sales:(perBranch[p]||{}).sales||0}; });
+  return {ym:(typeof arg==="string"?arg:""), lo, hi, sales,base,vat,cost,pieces,gp,feeOnline,ads,opex,profit,perChan,perBranch,byModel,byDay,est:F.est,
+          gpBoothBase, gpByBr:E.gpByBr||{}, noGp, plat};
 }
 function prevYm(ym){ const [y,m]=ym.split("-").map(Number); const d=new Date(y,m-2,1); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); }
 
@@ -3837,12 +3868,14 @@ function renderDashboard(){
   const parts=[
     {n:"กำไรสุทธิ",v:Math.max(D.profit,0),c:"#42d392"},
     {n:"ต้นทุนสินค้า",v:D.cost,c:"#3fb2e8"},
-    {n:"ค่าธรรมเนียม/GP",v:D.gp+D.feeOnline,c:"#ffaa33"},
+    {n:"GP บูท",v:D.gp,c:"#ffaa33"},
+    {n:"ค่าธรรมเนียมออนไลน์",v:D.feeOnline,c:"#ffd54a"},
     {n:"ค่าโฆษณา (AD)",v:D.ads,c:"#ff5c8a"},
     {n:"ค่าใช้จ่าย (เช่า/ไฟ/จ้าง)",v:D.opex,c:"#c9459b"},
     {n:"VAT ขาย",v:D.vat,c:"#8fd6ff"},
   ].filter(x=>x.v>0.5);
   drawDonut("dashDonut","dashDonutLegend",parts,D.sales);
+  renderFeeCard(D);
 
   // Top รุ่น
   const mk=Object.keys(D.byModel).sort((a,b)=>D.byModel[b].amt-D.byModel[a].amt).slice(0,10);
@@ -3859,6 +3892,33 @@ function renderDashboard(){
  }
 }
 
+// การ์ด GP บูท / ค่าธรรมเนียมออนไลน์ — แต่ละแถวคิด % จากยอดของช่องทางตัวเอง
+function renderFeeCard(D){
+  const card=document.getElementById("dashFeeCard"), box=document.getElementById("dashFeeRows");
+  if(!card||!box) return;
+  const pc=(a,b)=>b>0?(a/b*100).toFixed(1)+"%":"–";
+  const rows=[];
+  const boothSales=D.gpBoothBase*(1+VAT);
+  if(D.gpBoothBase>0.5){
+    rows.push('<div class="fee-row"><span class="sw" style="background:#ffaa33"></span><div class="mid">'+
+      '<div class="nm">GP บูท</div>'+
+      '<div class="sb">ยอดบูทก่อน VAT ฿'+fmt(D.gpBoothBase)+' · '+pc(D.gp,D.sales)+' ของยอดรวม</div></div>'+
+      '<div class="rt"><div class="pc">'+pc(D.gp,D.gpBoothBase)+'</div><div class="am">฿'+fmt2(D.gp)+'</div></div></div>');
+  }
+  const PC={TikTok:"#3fb2e8",Shopee:"#ee4d2d"};
+  Object.keys(D.plat).sort().forEach(p=>{ const x=D.plat[p]; if(x.sales<=0.5 && x.fee<=0.005) return;
+    rows.push('<div class="fee-row"><span class="sw" style="background:'+(PC[p]||"#ffd54a")+'"></span><div class="mid">'+
+      '<div class="nm">ค่าธรรมเนียม '+p+'</div>'+
+      '<div class="sb">ยอด '+p+' ฿'+fmt(x.sales)+' · '+pc(x.fee,D.sales)+' ของยอดรวม'+
+        (x.ads>0.005?'<br>+ ค่าโฆษณา <b>฿'+fmt2(x.ads)+' ('+pc(x.ads,x.sales)+')</b> · รวม '+pc(x.fee+x.ads,x.sales):'')+'</div></div>'+
+      '<div class="rt"><div class="pc">'+pc(x.fee,x.sales)+'</div><div class="am">฿'+fmt2(x.fee)+'</div></div></div>');
+  });
+  let html=rows.join("");
+  if(D.noGp&&D.noGp.length) html+='<div class="fee-warn">⚠️ บูทยังไม่ตั้ง GP: '+D.noGp.join(", ")+' — ตั้งที่ ค่าใช้จ่าย → ⚙️ GP รายสาขา</div>';
+  if(D.est) html+='<div class="fee-note" style="margin-top:6px">⚠️ ค่าธรรมเนียมออนไลน์บางส่วนเป็นตัวประมาณ (ออเดอร์ที่ยังไม่ settle)</div>';
+  box.innerHTML=html;
+  card.style.display=rows.length?"block":"none";
+}
 function drawDonut(cvId,lgId,parts,total){
   const cv=document.getElementById(cvId),ctx=cv.getContext("2d");
   ctx.clearRect(0,0,cv.width,cv.height);
@@ -3929,7 +3989,13 @@ function dashCopySummary(){
   L.push("──────────────");
   L.push("💰 โครงสร้างเงิน");
   if(D.cost>0)      L.push("• ต้นทุนสินค้า: ฿"+fmt2(D.cost)+pct(D.cost));
-  if(D.gp+D.feeOnline>0) L.push("• ค่าธรรมเนียม/GP: ฿"+fmt2(D.gp+D.feeOnline)+pct(D.gp+D.feeOnline));
+  // GP บูท: % เทียบยอดบูทก่อน VAT (ตรงกับที่ห้างคิด)
+  if(D.gp>0) L.push("• GP บูท: ฿"+fmt2(D.gp)+" ("+(D.gpBoothBase>0?(D.gp/D.gpBoothBase*100).toFixed(1):"0")+"% ของยอดบูทก่อน VAT"+(D.sales>0?" · "+(D.gp/D.sales*100).toFixed(1)+"% ของยอดรวม":"")+")");
+  // ค่าธรรมเนียมออนไลน์: แยกแพลตฟอร์ม, % เทียบยอดของแพลตฟอร์มนั้น (รวม VAT ตามที่แพลตฟอร์มหัก)
+  Object.keys(D.plat).sort().forEach(p=>{ const x=D.plat[p]; if(x.fee<=0.005) return;
+    L.push("• ค่าธรรมเนียม "+p+": ฿"+fmt2(x.fee)+" ("+(x.sales>0?(x.fee/x.sales*100).toFixed(1):"0")+"% ของยอด "+p+(D.sales>0?" · "+(x.fee/D.sales*100).toFixed(1)+"% ของยอดรวม":"")+")"); });
+  // (ค่าแอดยังแสดงเป็นบรรทัดรวมด้านล่างเหมือนเดิม)
+  if(D.noGp.length) L.push("⚠️ บูทยังไม่ตั้ง GP: "+D.noGp.join(", "));
   if(D.ads>0)       L.push("• ค่าโฆษณา (AD): ฿"+fmt2(D.ads)+pct(D.ads));
   if(D.opex>0)      L.push("• ค่าใช้จ่าย(เช่า/ไฟ/จ้าง): ฿"+fmt2(D.opex)+pct(D.opex));
   L.push("• VAT ขาย: ฿"+fmt2(D.vat)+pct(D.vat));
