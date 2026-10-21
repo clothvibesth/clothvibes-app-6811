@@ -2596,7 +2596,7 @@ let expShowAll=false, expOpen=null;   // สาขาที่กางอยู
 function renderExp(){
   const ym=document.getElementById("expMonth").value||todayISO.slice(0,7);
   const box=document.getElementById("expList"); box.innerHTML="";
-  const ONLINE_FEES=[["comm","ค่าคอมมิชชั่น"],["txn","Transaction Fee"],["service","ค่าบริการ"],["order","ค่าธรรมเนียมคำสั่งซื้อ"],["ship","ค่าส่ง (ร้านจ่าย)"],["ads","ค่าโฆษณา (AD)"]];
+  const ONLINE_FEES=[["comm","ค่าคอมมิชชั่น"],["txn","Transaction Fee"],["service","ค่าบริการ"],["order","ค่าธรรมเนียมคำสั่งซื้อ"],["ship","ค่าส่ง (ร้านจ่าย)"]];
   let hidden=0;
   Object.keys(CHANNELS).forEach(key=>{
     const ch=CHANNELS[key];
@@ -2610,7 +2610,7 @@ function renderExp(){
     const sec=document.createElement("div"); sec.className="exp-sec"+(online?" exp-sec-online":"");
     const tot=rows.reduce((s,br)=>s+(online?feeTotalOf(br,ym):expTotalOf(ym,br)),0);
     sec.innerHTML='<div class="exp-sec-h"><span>'+ch.icon+' '+ch.label+'</span>'+
-      '<span class="exp-sec-t">฿'+fmt(tot)+(online?' <small>(จากไฟล์)</small>':'')+'</span></div>';
+      '<span class="exp-sec-t">฿'+fmt(tot)+(online?' <small>(ค่าธรรมเนียม + แอด)</small>':'')+'</span></div>';
     const list=document.createElement("div"); list.className="exp-rows";
     rows.forEach(br=>{
       const isOpen=(expOpen===br);
@@ -2624,9 +2624,14 @@ function renderExp(){
         const body=document.createElement("div"); body.className="exp-body";
         if(online){
           const e=feeOf(br,ym);
-          body.innerHTML='<div class="exp-hint">ปกติดึงจากไฟล์นำเข้าอัตโนมัติ — แก้มือได้ถ้าจำเป็น</div><div class="exp-fields">'+
+          const bq=br.replace(/"/g,"&quot;");
+          body.innerHTML='<div class="oth-sec" style="margin-top:0">📢 ค่าโฆษณา (AD) <small>(กรอกเองเท่านั้น — ไม่ดึงจากไฟล์)</small></div>'+
+            '<div class="exp-fields"><div class="exp-f" style="grid-column:1/-1"><label>ค่าโฆษณาทั้งเดือน (บาท)</label>'+
+              '<input type="number" inputmode="decimal" data-fee="'+bq+'" data-f="ads" value="'+(e.ads||"")+'" placeholder="0" autocomplete="off"></div></div>'+
+            '<div class="oth-sec">ค่าธรรมเนียมแพลตฟอร์ม <small>(ดึงจากไฟล์นำเข้า — แก้มือได้ถ้าจำเป็น)</small></div>'+
+            '<div class="exp-fields">'+
             ONLINE_FEES.map(f=>'<div class="exp-f"><label>'+f[1]+'</label>'+
-              '<input type="number" inputmode="decimal" data-fee="'+br.replace(/"/g,"&quot;")+'" data-f="'+f[0]+'" value="'+(e[f[0]]||"")+'" placeholder="0" autocomplete="off"></div>').join("")+
+              '<input type="number" inputmode="decimal" data-fee="'+bq+'" data-f="'+f[0]+'" value="'+(e[f[0]]||"")+'" placeholder="0" autocomplete="off"></div>').join("")+
             '</div>';
         } else {
           const e=expOf(ym,br), isMain=(key==="main");
@@ -3003,7 +3008,7 @@ function renderImportOnline(){
     byModel[k].q+=o.qty; byModel[k].amt+=o.net;
   });
   const base=netTot/(1+VAT);
-  const F=impData.fees, feeSum=F.comm+F.txn+F.service+F.order+F.ship+(F.ads||0);
+  const F=impData.fees, feeSum=F.comm+F.txn+F.service+F.order+F.ship;   // ไม่รวมค่าแอด (กรอกเอง)
   document.getElementById("impSummary").innerHTML=
     '<div class="lbl">'+br+' · '+(impData.ym||"—")+'</div>'+
     '<div class="big">฿'+fmt2(netTot)+'</div>'+
@@ -3012,7 +3017,8 @@ function renderImportOnline(){
     ((impData.ret&&impData.ret.qty>0)?'<div class="rep-vat" style="color:#c0392b">↩️ ตัดของตีกลับออกแล้ว '+fmt(impData.ret.qty)+' ชิ้น (฿'+fmt2(impData.ret.amt)+') — ไม่นับเป็นยอดขาย</div>':'')+
     '<div class="rep-vat">ค่าธรรมเนียม: คอมฯ ฿'+fmt2(F.comm)+' · txn ฿'+fmt2(F.txn)+' · บริการ ฿'+fmt2(F.service)+
       ((F.order||0)>0?' · ค่าคำสั่งซื้อ ฿'+fmt2(F.order):'')+((F.ship||0)>0?' · ค่าส่ง ฿'+fmt2(F.ship):'')+
-      ((F.ads||0)>0?' · <b>โฆษณา ฿'+fmt2(F.ads)+'</b>':'')+'</div>'+
+      '</div>'+
+    ((impData.adsInFile||0)>0?'<div class="rep-vat">ℹ️ ในไฟล์มีค่าโฆษณา GMV ฿'+fmt2(impData.adsInFile)+' — ไม่นำเข้า ให้กรอกค่าแอดเองที่หน้าค่าใช้จ่าย</div>':'')+
     '<div class="rep-pf">ยอดโอนสุทธิโดยประมาณ ฿'+fmt2(netTot-feeSum)+' ('+((netTot-feeSum)/netTot*100).toFixed(1)+'%)</div>';
 
   document.getElementById("impIssuesWrap").style.display="none";
@@ -3059,7 +3065,11 @@ function confirmImportOnline(){
   // ค่าธรรมเนียมรายเดือน
   if(impData.ym){
     data.fees[br]=data.fees[br]||{};
-    data.fees[br][impData.ym]=Object.assign({}, impData.fees, {est:!!impData.fees.est});
+    const prevFee=data.fees[br][impData.ym]||{};
+    const nf=Object.assign({}, impData.fees, {est:!!impData.fees.est});
+    delete nf.ads;                                   // ค่าแอดไม่มาจากไฟล์
+    if(prevFee.ads!==undefined) nf.ads=prevFee.ads;  // คงค่าแอดที่กรอกเองไว้
+    data.fees[br][impData.ym]=nf;
   }
   dates.forEach(d=>stampTs(br,d));
   store.write(data);
@@ -3325,11 +3335,11 @@ function buildImportTikTok(){
   const estShip = feeRealTotal>0 ? estFee*(feeShip/feeRealTotal) : 0;
   const estOther= feeRealTotal>0 ? estFee*(feeOther/feeRealTotal) : 0;
   const ym=Object.keys(months).sort((a,b)=>months[b]-months[a])[0]||"";
-  impData={platform:"TikTok", items, unmatched, ym, ret:{qty:tkRetQty, amt:Math.round(tkRetAmt*100)/100},
+  // ค่าโฆษณาไม่ดึงจากไฟล์แล้ว (ผู้ใช้กรอกเองที่หน้าค่าใช้จ่ายเท่านั้น) — เก็บยอด GMV ไว้โชว์เป็นข้อมูลอ้างอิงอย่างเดียว
+  impData={platform:"TikTok", items, unmatched, ym, adsInFile:Math.round(adsTotal*100)/100, ret:{qty:tkRetQty, amt:Math.round(tkRetAmt*100)/100},
     fees:{comm:Math.round((feeComm+estComm)*100)/100, order:Math.round((feeOrder+estOrder)*100)/100,
           ship:Math.round((feeShip+estShip)*100)/100, txn:0,
           service:Math.round((feeOther+estOther)*100)/100,   // ค่าบริการ/แคมเปญ/แอฟฟิลิเอต
-          ads:Math.round(adsTotal*100)/100,                  // ค่าโฆษณา GMV Max (ค่าการตลาด)
           est:netUnsettled>0.5},
     stat:{settled:settledIds.size, total:new Set(items.map(x=>x.oid)).size, netSettled, netUnsettled, pct,
           retQty:tkRetQty, retAmt:Math.round(tkRetAmt*100)/100}};
