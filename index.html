@@ -28,7 +28,9 @@
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html,body{margin:0;padding:0;}
-  body{font-family:"Prompt","Noto Sans Thai",system-ui,sans-serif;background:linear-gradient(180deg,#eaf4fd 0%,#f6fbff 55%,#eef6fd 100%);background-attachment:fixed;color:var(--ink);-webkit-font-smoothing:antialiased;}
+  html{background:#eef6fd;}
+  /* พื้นหลังไล่สีลื่นทั้งหน้า (ไม่ใช้ fixed — มือถือ iOS ไม่รองรับและทำให้เห็นรอยต่อ) */
+  body{font-family:"Prompt","Noto Sans Thai",system-ui,sans-serif;background:linear-gradient(180deg,#e6f1fc 0%,#f4f9ff 40%,#eef5fd 100%);min-height:100vh;color:var(--ink);-webkit-font-smoothing:antialiased;}
   .wrap{max-width:580px;margin:0 auto;padding:18px 14px 0;}
   .logo-img{display:block;height:38px;width:auto;max-width:80%;margin:0 auto;}
   .hlogo-img{height:21px;width:auto;display:block;}
@@ -70,10 +72,65 @@
   .chan-btn{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:11px;background:var(--cc,var(--accent));border:none;border-radius:20px;padding:18px 16px 16px;cursor:pointer;box-shadow:0 8px 20px rgba(10,110,190,.22);font-family:inherit;text-align:left;transition:transform .1s,box-shadow .15s,filter .15s;overflow:hidden;min-height:132px;}
   .chan-btn:active{transform:scale(.97);}
   .chan-btn:hover{filter:brightness(1.06);box-shadow:0 12px 26px rgba(0,0,0,.24);}
-  .chan-btn[data-c="main"]{--cc:#1ba672;}
-  .chan-btn[data-c="booth"]{--cc:#ff1a1a;}
-  .chan-btn[data-c="shopee"]{--cc:#ee4d2d;}
-  .chan-btn[data-c="tiktok"]{--cc:#141414;}
+  /* สีช่องทาง: โทนนุ่ม ไล่เฉดเข้าชุดกับแถบรายงาน — Shopee ส้ม / TikTok ดำ คงเอกลักษณ์ */
+  .chan-btn[data-c="main"]{--cc:linear-gradient(140deg,#0f9b7a 0%,#21b98f 100%);box-shadow:0 10px 22px rgba(18,160,120,.28);}
+  .chan-btn[data-c="booth"]{--cc:linear-gradient(140deg,#d93a5e 0%,#f2688a 100%);box-shadow:0 10px 22px rgba(220,60,95,.26);}
+  .chan-btn[data-c="shopee"]{--cc:linear-gradient(140deg,#ea5a2f 0%,#ff8a4c 100%);box-shadow:0 10px 22px rgba(238,90,45,.26);}
+  .chan-btn[data-c="tiktok"]{--cc:linear-gradient(140deg,#121318 0%,#2c2f3a 100%);box-shadow:0 10px 22px rgba(20,20,30,.30);}
+  .chan-btn{overflow:hidden;}
+  .chan-btn::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,0) 50%);pointer-events:none;}
+  .chan-btn[data-c="tiktok"]::after{content:"";position:absolute;right:-30px;bottom:-30px;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle,rgba(37,244,238,.22),rgba(254,44,85,.12) 55%,transparent 70%);pointer-events:none;}
+  /* หัวข้อหมวด */
+  .sec-h{max-width:580px;width:calc(100% - 28px);margin:26px auto 0;padding:0 4px;font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:13px;letter-spacing:.4px;color:#5d7390;display:flex;align-items:center;gap:8px;}
+  .sec-h small{font-family:"Prompt",sans-serif;font-weight:400;font-size:11.5px;color:#8fa3bb;letter-spacing:0;}
+  .sec-h::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,#cfe0f1,transparent);}
+  .sec-h + .chan-wrap,.sec-h + .import-section,.sec-h + .set-card{margin-top:10px;}
+  .sec-h + .report-entry.ramp.r1{margin-top:10px;}
+  /* แถบยอดขายใต้โลโก้ */
+  .hstat{position:relative;margin:14px auto 0;max-width:300px;}
+  .hs-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;border-radius:16px;background:rgba(255,255,255,.78);border:1px solid #dbe8f5;box-shadow:0 4px 14px rgba(10,110,190,.08);}
+  .hs-track::-webkit-scrollbar{display:none;}
+  .hs-card{flex:0 0 100%;scroll-snap-align:center;text-align:center;padding:9px 34px 10px;box-sizing:border-box;}
+  .hs-card small{display:block;font-size:11px;color:var(--ink-soft);}
+  .hs-card b{display:block;font-family:"Bai Jamjuree",sans-serif;font-size:19px;color:var(--accent-deep);margin-top:1px;}
+  .hs-card i{display:block;font-style:normal;font-size:11px;color:#8fa3bb;}
+  .hs-card .chg{display:inline-block;margin-top:4px;font-size:10.5px;font-weight:600;padding:1px 8px;border-radius:20px;}
+  .hs-card .chg.wn{color:#9a5b00;background:#fff3e0;}
+  .hs-card .chg.up{color:#0e7a52;background:#e2f7ee;} .hs-card .chg.dn{color:#c0392b;background:#ffe7e0;}
+  .hs-nav{position:absolute;top:0;bottom:14px;width:30px;border:none;background:none;font-size:22px;color:var(--accent);cursor:pointer;z-index:2;font-family:inherit;}
+  .hs-nav.prev{left:2px;} .hs-nav.next{right:2px;}
+  .hs-nav:disabled{opacity:.18;cursor:default;}
+  .hbr{max-width:580px;width:calc(100% - 28px);margin:12px auto 0;background:rgba(255,255,255,.82);border:1px solid #dbe8f5;border-radius:18px;padding:12px 14px 8px;box-shadow:0 4px 14px rgba(10,110,190,.07);box-sizing:border-box;}
+  .hbr:empty{display:none;}
+  .hbr-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+  .hbr-h b{font-family:"Bai Jamjuree",sans-serif;font-size:13.5px;color:var(--ink);}
+  .hbr-h small{font-size:11px;color:var(--ink-soft);}
+  .hbr-r{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-top:1px solid #eef3f8;}
+  .hbr-r:first-of-type{border-top:none;}
+  .hbr-r .n{flex:none;width:20px;height:20px;border-radius:7px;background:#eef5fc;color:#5d7390;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+  .hbr-r .m{flex:1;min-width:0;}
+  .hbr-r .t{display:flex;justify-content:space-between;gap:8px;font-size:13px;}
+  .hbr-r .nm{color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .hbr-r .nm em{font-style:normal;font-size:10.5px;font-weight:600;margin-left:3px;}
+  .hbr-r .v{font-family:"Bai Jamjuree",sans-serif;font-weight:700;color:var(--ink);flex:none;}
+  .hbr-r .bar{height:5px;background:#eef3f8;border-radius:5px;margin-top:5px;overflow:hidden;}
+  .hbr-r .bar i{display:block;height:100%;border-radius:5px;opacity:.85;transition:width .4s;}
+  .hbr-r .s{font-size:10.5px;color:#8fa3bb;margin-top:3px;}
+  .hbr-more{display:block;width:100%;margin-top:4px;background:none;border:none;border-top:1px solid #eef3f8;padding:9px 0 3px;font-family:inherit;font-size:12.5px;font-weight:600;color:var(--accent);cursor:pointer;}
+  .hs-dots{display:flex;justify-content:center;gap:5px;margin-top:7px;height:6px;}
+  .hs-dots span{width:5px;height:5px;border-radius:5px;background:#c8d9ea;transition:all .2s;}
+  .hs-dots span.on{width:14px;background:var(--accent);}
+  /* การ์ดตั้งค่า & สำรองข้อมูล */
+  .set-card{max-width:580px;width:calc(100% - 28px);margin:10px auto 0;background:var(--card);border-radius:18px;padding:12px;box-shadow:var(--shadow);box-sizing:border-box;}
+  .set-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+  .set-tile{display:flex;flex-direction:column;align-items:flex-start;gap:2px;background:#f5fafe;border:1px solid var(--line);border-radius:14px;padding:12px 12px 11px;font-family:inherit;text-align:left;cursor:pointer;transition:all .12s;}
+  .set-tile:hover{border-color:var(--accent);background:#eef7fe;}
+  .set-tile:active{transform:scale(.98);}
+  .set-tile .si{font-size:20px;margin-bottom:4px;}
+  .set-tile b{font-size:13.5px;font-weight:600;color:var(--ink);}
+  .set-tile small{font-size:11px;color:var(--ink-soft);}
+  .set-card .sync-box{max-width:none;margin:10px 0 0;padding:0;}
+  .set-card .save-status{max-width:none;margin:9px 0 2px;padding:0 4px;}
   .chan-btn .ic{font-size:30px;flex:none;width:54px;height:54px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.22);border-radius:15px;backdrop-filter:blur(2px);}
   .chan-btn .tx{flex:1;min-width:0;width:100%;}
   .chan-btn .tx b{display:block;font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:17px;color:#fff;}
@@ -480,6 +537,7 @@
   .imp-btn:active{transform:scale(.99);}
   .imp-btn:hover{border-color:var(--accent);background:#eef7fe;}
   .imp-btn .ic{font-size:24px;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:12px;box-shadow:0 2px 6px rgba(10,110,190,.1);}
+  #importBtn .ic{background:#e6f6f0;} #importShBtn .ic{background:#fff0e9;} #importTkBtn .ic{background:#eceef3;}
   .imp-btn .tx{flex:1;min-width:0;}
   .imp-btn .tx b{display:block;font-weight:600;font-size:14.5px;color:var(--ink);}
   .imp-btn .tx small{display:block;font-size:11.5px;color:var(--ink-soft);margin-top:2px;line-height:1.45;}
@@ -760,9 +818,12 @@
 <div id="screen-home">
   <div class="b-head">
     <img class="logo-img" id="logoHome" alt="CLOTHVIBES">
-    <h1>เลือกช่องทางการขาย</h1>
-    <p>สาขาหลัก หรือ บูท</p>
+    <!-- แถบยอดขาย (เฉพาะยอดขาย ไม่โชว์ต้นทุน/กำไร) -->
+    <div class="hstat" id="homeStats"></div>
   </div>
+  <!-- ยอดแยกสาขาของเดือนที่กำลังดู (เปลี่ยนตามแถบยอดด้านบน) -->
+  <div class="hbr" id="homeBr"></div>
+  <div class="sec-h">ลงยอดขาย <small>เลือกช่องทาง</small></div>
   <div class="chan-wrap">
     <button class="chan-btn" data-chan="main" data-c="main">
       <span class="ic">🏬</span>
@@ -782,38 +843,42 @@
     </button>
   </div>
   <button class="report-entry price-entry" id="priceBtnH">💡 ขายเท่าไหร่ดี?</button>
+  <div class="sec-h">รายงาน &amp; เอกสาร</div>
   <button class="report-entry alt ramp r1" id="reportBtnDetailH">📒 รายงานการขายแบบละเอียด</button>
   <button class="report-entry ramp r2" id="reportBtnSimpleH">📊 รายงาน / ดึงข้อมูลตามช่วงเวลา</button>
   <button class="report-entry prod-entry ramp r3" id="prodBtnH">👕 รายงานสินค้า (สี × ไซส์)</button>
   <button class="report-entry ghost ramp r4" id="accAppBtnH">📄 ไฟล์ส่งบัญชี (จากยอดที่ลงในแอป · สาขาหลัก)</button>
   <button class="report-entry doc-entry ramp r5" id="docBtnH">📄 เอกสารห้าง (ใบกำกับ/ใบลดหนี้)</button>
+  <div class="sec-h">นำเข้าไฟล์</div>
   <div class="import-section">
-    <div class="import-title">นำเข้าข้อมูลจากไฟล์</div>
-    <button class="imp-btn" id="importBtn">
+    <button class="imp-btn" id="importBtn" title="ไฟล์ POS: NewSaleOrderDetail + AllLiteDetailOrder">
       <span class="ic">📥</span>
-      <span class="tx"><b>นำเข้า POS หน้าร้าน</b><small>(ทางสำรอง / ใช้เทียบยอด) เลือกไฟล์ POS (แนบ 2 ไฟล์พร้อมกันได้: NewSaleOrderDetail + AllLiteDetailOrder)</small></span>
+      <span class="tx"><b>นำเข้า POS หน้าร้าน</b><small>ทางสำรอง · ใช้เทียบยอด · แนบได้ 2 ไฟล์</small></span>
     </button>
     <input type="file" id="posInput" accept=".xlsx,.xls" multiple hidden autocomplete="off">
-    <button class="imp-btn" id="importShBtn">
+    <button class="imp-btn" id="importShBtn" title="Shopee: Order.all + Income รายได้ที่โอนสำเร็จ">
       <span class="ic">🛒</span>
-      <span class="tx"><b>นำเข้า Shopee</b><small>เลือก 2 ไฟล์พร้อมกัน: Order.all + Income รายได้ที่โอนสำเร็จ</small></span>
+      <span class="tx"><b>นำเข้า Shopee</b><small>แนบ 2 ไฟล์: Order + Income</small></span>
     </button>
     <input type="file" id="shOrderInput" accept=".xlsx,.xls" multiple hidden autocomplete="off">
-    <button class="imp-btn" id="importTkBtn">
+    <button class="imp-btn" id="importTkBtn" title="TikTok: ทั้งหมดคำสั่งซื้อ + income">
       <span class="ic">🎵</span>
-      <span class="tx"><b>นำเข้า TikTok</b><small>เลือก 2 ไฟล์พร้อมกัน: ทั้งหมดคำสั่งซื้อ + income</small></span>
+      <span class="tx"><b>นำเข้า TikTok</b><small>แนบ 2 ไฟล์: คำสั่งซื้อ + Income</small></span>
     </button>
     <input type="file" id="tkOrderInput" accept=".xlsx,.xls" multiple hidden autocomplete="off">
   </div>
-  <button class="report-entry ghost" id="expBtn">⚙️ ตั้งค่าค่าใช้จ่ายรายสาขา</button>
-  <button class="report-entry ghost" id="cleanBtn">🧹 ตรวจ/ล้างข้อมูลเพี้ยน</button>
-  <div class="home-tools">
-    <button class="tool-btn" id="backupBtn">💾 เซฟไฟล์สำรอง</button>
-    <button class="tool-btn" id="restoreBtn">📂 เปิดไฟล์สำรอง</button>
+  <div class="sec-h">ตั้งค่า &amp; สำรองข้อมูล</div>
+  <div class="set-card">
+    <div class="set-grid">
+      <button class="set-tile" id="expBtn"><span class="si">⚙️</span><b>ค่าใช้จ่ายรายสาขา</b><small>ค่าเช่า · ไฟ · GP · แอด</small></button>
+      <button class="set-tile" id="cleanBtn"><span class="si">🧹</span><b>ตรวจ/ล้างข้อมูล</b><small>หาข้อมูลเพี้ยน</small></button>
+      <button class="set-tile" id="backupBtn"><span class="si">💾</span><b>เซฟไฟล์สำรอง</b><small>ดาวน์โหลด .json</small></button>
+      <button class="set-tile" id="restoreBtn"><span class="si">📂</span><b>เปิดไฟล์สำรอง</b><small>กู้คืนจาก .json</small></button>
+    </div>
     <input type="file" id="restoreInput" accept=".json,application/json" hidden autocomplete="off">
+    <div class="sync-box" id="syncBox"></div>
+    <div class="save-status" id="saveStatus">กำลังตรวจสอบการบันทึก…</div>
   </div>
-  <div class="save-status" id="saveStatus">กำลังตรวจสอบการบันทึก…</div>
-  <div class="sync-box" id="syncBox"></div>
   <div class="b-foot">CLOTHVIBES · บันทึกการขายรายวัน + กำไร</div>
 </div>
 
@@ -2446,6 +2511,79 @@ function repFilter(){ const f=toAD(document.getElementById("repFrom").value)||"0
 document.getElementById("reportBtnSimpleH").onclick=()=>openReport("simple");
 document.getElementById("reportBtnDetailH").onclick=openDashboard;
 document.querySelectorAll(".chan-btn").forEach(b=>b.onclick=()=>openChannel(b.dataset.chan));
+// แถบยอดขายหน้าแรก: เลื่อนดูยอดรายเดือนย้อนหลังได้ (รวม VAT · ทุกช่องทาง) — ไม่แสดงต้นทุน/กำไร
+// (ไม่โชว์ยอดวันนี้ เพราะยอดไม่ได้ลงแบบ real-time)
+const TH_MON=["","ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+function renderHomeStats(){
+  const box=document.getElementById("homeStats"); if(!box) return;
+  try{
+    const cur=todayISO.slice(0,7), M={};
+    Object.keys(data.branches||{}).forEach(br=>{ const days=data.branches[br]||{};
+      Object.keys(days).forEach(dt=>{ if(!isDateKey(dt)||dt.slice(0,7)>cur) return; const ym=dt.slice(0,7);
+        Object.keys(days[dt]).forEach(vid=>{ const q=days[dt][vid]; if(!VAR[vid]||q<=0) return;
+          const o=M[ym]=M[ym]||{a:0,q:0,ch:{},br:{}}; const a=q*priceOfVar(vid,br,dt);
+          o.a+=a; o.q+=q; o.ch[chanOfBranch(br)]=1;
+          const b=o.br[br]=o.br[br]||{a:0,q:0}; b.a+=a; b.q+=q; }); }); });
+    // เดือนตั้งแต่เดือนแรกที่มีข้อมูล ถึงเดือนปัจจุบัน (ย้อนได้สูงสุด 12 เดือน)
+    let ks=Object.keys(M).sort(); if(ks.indexOf(cur)<0) ks.push(cur);
+    const first=ks[0], list=[]; let y=+first.slice(0,4), m=+first.slice(5);
+    while(true){ const k=y+"-"+String(m).padStart(2,"0"); list.push(k); if(k>=cur) break; m++; if(m>12){m=1;y++;} }
+    const show=list.slice(-12);
+    const seen={};   // ช่องทางออนไลน์ที่เคยมีข้อมูลมาก่อน
+    const cards=show.map((k,ix)=>{ const o=M[k]||{a:0,q:0,ch:{}}; const pk=ix>0?show[ix-1]:null, p=pk?M[pk]:null;
+      const isCur=k===cur;
+      list.filter(x=>x<k).forEach(x=>{ const c=(M[x]||{}).ch||{}; ["shopee","tiktok"].forEach(n=>{ if(c[n]) seen[n]=1; }); });
+      // ถ้ายังไม่นำเข้า Shopee/TikTok ของเดือนนี้ ยอดจะต่ำผิดปกติ -> เตือน และไม่โชว์ % เทียบ
+      const miss=["shopee","tiktok"].filter(n=>seen[n]&&!o.ch[n]).map(n=>n==="shopee"?"Shopee":"TikTok");
+      let chg="";
+      if(miss.length) chg='<span class="chg wn">ยังไม่นำเข้า '+miss.join(" · ")+'</span>';
+      else if(!isCur && p && p.a>0){ const pc=(o.a-p.a)/p.a*100;
+        chg='<span class="chg '+(pc>=0?"up":"dn")+'">'+(pc>=0?"▲":"▼")+Math.abs(pc).toFixed(0)+'% จาก '+TH_MON[+pk.slice(5)]+'</span>'; }
+      return '<div class="hs-card"><small>ยอดขาย '+TH_MON[+k.slice(5)]+' '+k.slice(0,4)+(isCur?' (เท่าที่ลงแล้ว)':'')+'</small>'+
+             '<b>฿'+fmt(o.a)+'</b><i>'+fmt(o.q)+' ชิ้น · ทุกช่องทาง</i>'+chg+'</div>'; }).join("");
+    box.innerHTML='<button class="hs-nav prev" aria-label="เดือนก่อน">‹</button>'+
+      '<div class="hs-track" id="hsTrack">'+cards+'</div>'+
+      '<button class="hs-nav next" aria-label="เดือนถัดไป">›</button>'+
+      '<div class="hs-dots">'+show.map(()=>'<span></span>').join("")+'</div>';
+    const tr=box.querySelector(".hs-track"), dots=[...box.querySelectorAll(".hs-dots span")];
+    const idx=()=>Math.round(tr.scrollLeft/tr.clientWidth);
+    const upd=()=>{ const n=idx(); dots.forEach((d,k)=>d.classList.toggle("on",k===n));
+      renderHomeBr(show[n], M[show[n]]);
+      box.querySelector(".prev").disabled=n<=0; box.querySelector(".next").disabled=n>=show.length-1; };
+    // ใช้ลำดับเดือน (pos) เป็นหลัก — กดลูกศรรัว ๆ ก็ไม่ค้างกลางการ์ด
+    let pos=show.length-1;
+    const go=n=>{ pos=Math.max(0,Math.min(show.length-1,n)); tr.scrollTo({left:pos*tr.clientWidth,behavior:"smooth"});
+      dots.forEach((d,k)=>d.classList.toggle("on",k===pos)); box.querySelector(".prev").disabled=pos<=0; box.querySelector(".next").disabled=pos>=show.length-1;
+      renderHomeBr(show[pos], M[show[pos]]); };
+    tr.addEventListener("scroll",()=>{ clearTimeout(tr._t); tr._t=setTimeout(()=>{ const n=idx(); if(n!==pos){ pos=n; upd(); } },90); });
+    box.querySelector(".prev").onclick=()=>go(pos-1);
+    box.querySelector(".next").onclick=()=>go(pos+1);
+    requestAnimationFrame(()=>{ tr.scrollLeft=tr.scrollWidth; upd(); });   // เริ่มที่เดือนปัจจุบัน
+  }catch(e){ box.innerHTML=""; }
+}
+// รายการยอดขายแยกสาขา ของเดือนที่เลือก (เรียงมาก→น้อย · แถบยาวตามสัดส่วน)
+let homeBrAll=false;
+function renderHomeBr(ym, o){
+  const box=document.getElementById("homeBr"); if(!box) return;
+  const brs=Object.entries((o&&o.br)||{}).filter(([,v])=>v.a>0.5).sort((x,y)=>y[1].a-x[1].a);
+  if(!brs.length){ box.innerHTML=""; return; }
+  const max=brs[0][1].a, tot=brs.reduce((s,[,v])=>s+v.a,0);
+  const CC={main:"#17aa85",booth:"#e5517a",shopee:"#f06a3a",tiktok:"#22252e"};
+  const CN={main:"สาขาหลัก",booth:"บูท",shopee:"ออนไลน์",tiktok:"ออนไลน์"};
+  const LIM=5, rows=homeBrAll?brs:brs.slice(0,LIM);
+  box.innerHTML='<div class="hbr-h"><b>ยอดแยกสาขา · '+TH_MON[+ym.slice(5)]+' '+ym.slice(0,4)+'</b><small>'+brs.length+' สาขา/ช่องทาง</small></div>'+
+    rows.map(([br,v],i)=>{ const ch=chanOfBranch(br), c=CC[ch]||"#0a86cf";
+      return '<div class="hbr-r"><span class="n">'+(i+1)+'</span><div class="m"><div class="t"><span class="nm">'+br+
+        ' <em style="color:'+c+'">'+(CN[ch]||"")+'</em></span><span class="v">฿'+fmt(v.a)+'</span></div>'+
+        '<div class="bar"><i style="width:'+Math.max(2,v.a/max*100).toFixed(1)+'%;background:'+c+'"></i></div>'+
+        '<div class="s">'+fmt(v.q)+' ชิ้น · '+(v.a/tot*100).toFixed(1)+'% ของยอดเดือน</div></div></div>'; }).join("")+
+    (brs.length>LIM?'<button class="hbr-more" id="hbrMore">'+(homeBrAll?'ย่อ ▲':'ดูทั้งหมด '+brs.length+' รายการ ▼')+'</button>':'');
+  const mb=document.getElementById("hbrMore"); if(mb) mb.onclick=()=>{ homeBrAll=!homeBrAll; renderHomeBr(ym,o); };
+}
+renderHomeStats();
+// อัปเดตทุกครั้งที่กลับมาหน้าแรก (หลังลงยอด / ซิงค์)
+new MutationObserver(()=>{ if(document.getElementById("screen-home").style.display!=="none") renderHomeStats(); })
+  .observe(document.getElementById("screen-home"),{attributes:true,attributeFilter:["style"]});
 document.getElementById("backHome").onclick=backHome;
 document.getElementById("backReport").onclick=backFromReport;
 document.getElementById("repFrom").onchange=renderReport;
