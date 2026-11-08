@@ -519,6 +519,11 @@
   .aa-lbl{font-size:12px;color:#7b8794;margin:4px 0 5px;}
   .aa-brs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;max-height:120px;overflow:auto;}
   .aa-brs label{font-size:12.5px;background:#eef5fc;border-radius:9px;padding:6px 9px;display:flex;align-items:center;gap:5px;color:#14181f;}
+  .aa-pay{display:flex;gap:6px;margin-bottom:10px;}
+  .aa-pay label{flex:1;}
+  .aa-pay input{display:none;}
+  .aa-pay span{display:block;text-align:center;font-size:12.5px;padding:8px 4px;border-radius:10px;background:#eef5fc;color:#14181f;cursor:pointer;border:1.5px solid transparent;}
+  .aa-pay input:checked + span{background:#e3f1fc;border-color:var(--accent);color:var(--accent-deep);font-weight:600;}
   .aa-info{font-size:12.5px;line-height:1.55;background:#f4f8fc;border-radius:10px;padding:9px 11px;margin-bottom:12px;color:#14181f;}
   .aa-info .w{color:#c25e00;}
   .af-cancel{display:block;width:100%;background:none;border:none;color:#7b8794;font-family:inherit;font-size:13px;padding:8px;cursor:pointer;}
@@ -810,6 +815,26 @@
     .ivc{width:auto;padding:8mm 6mm;}
     @page{size:A4 portrait;margin:0;}
   }
+  /* ===== Liquid glass hover: ปุ่มลอยขึ้นแบบสปริง + แสงสะท้อนวิ่งตามเมาส์ + เอียงตามเมาส์เล็กน้อย ===== */
+  .glass{position:relative;overflow:hidden;}
+  .gl-sheen{position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;z-index:1;
+    transition:opacity .35s ease;
+    background:radial-gradient(160px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.42),rgba(255,255,255,.10) 40%,transparent 70%);}
+  .gl-sheen::after{content:"";position:absolute;inset:0;border-radius:inherit;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.65),inset 0 0 0 1px rgba(255,255,255,.28),inset 0 -10px 18px rgba(255,255,255,.06);}
+  .imp-btn .gl-sheen,.set-tile .gl-sheen{background:radial-gradient(150px circle at var(--mx,50%) var(--my,0%),rgba(10,134,207,.10),rgba(255,255,255,.0) 70%);}
+  .glass:active{transform:scale(.97)!important;transition:transform .12s ease!important;}
+  @media (hover:hover) and (pointer:fine){
+    .glass{transform:translateY(0) scale(1);
+      transition:transform .55s cubic-bezier(.2,.9,.22,1.3),box-shadow .35s ease,filter .3s ease,background .3s ease,border-color .3s ease;}
+    .glass:hover{transform:translateY(-4px) scale(1.02);filter:brightness(1.04) saturate(1.06);}
+    .glass:hover .gl-sheen{opacity:1;}
+    .imp-btn.glass:hover,.set-tile.glass:hover{background:rgba(255,255,255,.72);border-color:rgba(10,134,207,.35);
+      -webkit-backdrop-filter:blur(14px) saturate(170%);backdrop-filter:blur(14px) saturate(170%);
+      box-shadow:0 14px 30px rgba(10,80,150,.14),inset 0 1px 0 rgba(255,255,255,.9);}
+    .report-entry.ramp.glass:hover::after{transform:translate(4px,-50%);transition:transform .35s ease;}
+  }
+  @media (prefers-reduced-motion:reduce){ .glass,.glass:hover{transform:none!important;transition:none!important;} }
 </style>
 </head>
 <body>
@@ -1437,6 +1462,12 @@
     </div>
     <div class="aa-lbl">สาขา <small>(ไม่ติ๊ก = ทุกสาขาหลัก)</small></div>
     <div class="aa-brs" id="aaBrs"></div>
+    <div class="aa-lbl">วิธีชำระ</div>
+    <div class="aa-pay" id="aaPay">
+      <label><input type="radio" name="aaPay" value="all" checked><span>ทั้งหมด</span></label>
+      <label><input type="radio" name="aaPay" value="nocash"><span>ไม่เอาเงินสด</span></label>
+      <label><input type="radio" name="aaPay" value="cash"><span>เฉพาะเงินสด</span></label>
+    </div>
     <div class="aa-info" id="aaInfo"></div>
     <button class="af-btn af-x" id="aaXlsx"><b>📊 Excel (.xlsx)</b><small>มีชีตสรุปเงินสด/KSHOP รายวัน + ไฮไลต์แถวที่ต้องแก้</small></button>
     <button class="af-btn af-c" id="aaCsv"><b>📄 CSV (.csv)</b><small>เฉพาะชีตยอดขาย สำหรับนำเข้าโปรแกรมบัญชี</small></button>
@@ -2581,6 +2612,18 @@ function renderHomeBr(ym, o){
   const mb=document.getElementById("hbrMore"); if(mb) mb.onclick=()=>{ homeBrAll=!homeBrAll; renderHomeBr(ym,o); };
 }
 renderHomeStats();
+// Liquid glass: ใส่แสงสะท้อนให้ปุ่มหน้าแรก แสงวิ่งตามตำแหน่งเมาส์ (มือถือ = แค่ยุบตัวตอนกด)
+(function(){
+  document.querySelectorAll("#screen-home .chan-btn,#screen-home .report-entry,#screen-home .imp-btn,#screen-home .set-tile").forEach(el=>{
+    el.classList.add("glass");
+    if(!el.querySelector(".gl-sheen")){ const sp=document.createElement("span"); sp.className="gl-sheen"; el.appendChild(sp); }
+    el.addEventListener("pointermove",e=>{
+      if(e.pointerType!=="mouse") return;
+      const r=el.getBoundingClientRect(), x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
+      el.style.setProperty("--mx",(x*100).toFixed(1)+"%"); el.style.setProperty("--my",(y*100).toFixed(1)+"%");
+    });
+  });
+})();
 // อัปเดตทุกครั้งที่กลับมาหน้าแรก (หลังลงยอด / ซิงค์)
 new MutationObserver(()=>{ if(document.getElementById("screen-home").style.display!=="none") renderHomeStats(); })
   .observe(document.getElementById("screen-home"),{attributes:true,attributeFilter:["style"]});
@@ -4340,7 +4383,9 @@ document.getElementById("cleanBtn").onclick=cleanJunkRun;
 function mainBranches(){ return Object.keys(BRANCH_TYPE).filter(b=>BRANCH_TYPE[b]==="main"); }
 // รหัสสินค้าแบบ Peak: รหัสรุ่น-สี-ไซส์ (รุ่นที่ไม่มีสี = รหัสรุ่น-ไซส์)
 function peakSku(vid,c){ const v=VAR[vid]; return v.code+(c?"-"+c:"")+"-"+v.size; }
-function accAppCollect(lo,hi,brs){
+function accAppCollect(lo,hi,brs,payF){
+  payF=payF||"all";
+  const keep=t=> payF==="all" || (payF==="nocash" ? t!=="เงินสด" : t==="เงินสด");
   const rows=[], daily={}, noColor=[], bills=[];
   let totPaid=0,totCost=0,totQty=0,nBills=0,nLegacy=0;
   let seq=0;                                          // เลขบิลรันต่อเนื่องทั้งไฟล์ (ไม่เริ่มใหม่ทุกวัน)
@@ -4352,14 +4397,17 @@ function accAppCollect(lo,hi,brs){
       if(!os.length){ const L=legacyToOrder(br,dt); if(L) os=[L]; }   // วันเก่าที่ยังลงแบบยอดรวม
       os=os.slice().sort((a,b)=>String(a.t||"").localeCompare(String(b.t||""))||(a.ts||0)-(b.ts||0));
       os.forEach(o=>{
+        // บิลที่ไม่เหลือรายการหลังกรองวิธีชำระ -> ข้าม (ไม่ใช้เลขบิล)
+        const its=(o.items||[]).filter(it=>VAR[it.vid]&&num(it.q)>0&&keep(((it.pay||o.pay)==="cash")?"เงินสด":"KSHOP"));
+        if(!its.length) return;
         if(o.legacy) nLegacy++; else nBills++;
         const tm=o.t||"";                                   // เวลา (ไม่ใส่ = ว่าง)
         const dtS=dt.replace(/-/g,"/");                      // 2026/11/03
         const billNo=++seq;                                 // บิลที่ 1,2,3… ต่อเนื่องตลอดช่วงที่เลือก
         const B={no:billNo, br, dt, t:o.t||"", n:0, q:0, label:0, paid:0, cost:0, pay:"", legacy:!!o.legacy, miss:false};
         bills.push(B);
-        (o.items||[]).forEach(it=>{
-          const vid=it.vid, q=num(it.q); if(!VAR[vid]||q<=0) return;
+        its.forEach(it=>{
+          const vid=it.vid, q=num(it.q);
           const v=VAR[vid], M=MODEL[v.modelId], c=it.c||"";
           const paid=F(q*itemNet(it,o));
           // ราคาป้าย = ราคาตั้งของสาขา หรือราคาที่ใส่ในบิล (ก่อนลดทั้งบิล) แล้วแต่ตัวไหนสูงกว่า
@@ -4389,18 +4437,22 @@ function aaRange(){
   let lo=toAD(document.getElementById("aaFrom").value), hi=toAD(document.getElementById("aaTo").value);
   if(lo&&hi&&lo>hi){ const t=lo; lo=hi; hi=t; }
   const picked=[...document.querySelectorAll("#aaBrs input:checked")].map(x=>x.value);
-  return {lo,hi,brs:picked.length?picked:mainBranches()};
+  const pf=(document.querySelector('input[name="aaPay"]:checked')||{}).value||"all";
+  return {lo,hi,brs:picked.length?picked:mainBranches(),payF:pf};
 }
+const PAYF_TXT={all:"",nocash:"ไม่รวมเงินสด",cash:"เฉพาะเงินสด"};
 function aaRefresh(){
-  const {lo,hi,brs}=aaRange(), box=document.getElementById("aaInfo");
+  const {lo,hi,brs,payF}=aaRange(), box=document.getElementById("aaInfo");
   if(!lo||!hi){ box.innerHTML="เลือกช่วงวันที่"; return null; }
-  const R=accAppCollect(lo,hi,brs);
+  const R=accAppCollect(lo,hi,brs,payF);
   const cash=R.daily.reduce((s,d)=>s+d.cash,0), ks=R.daily.reduce((s,d)=>s+d.kshop,0);
   let h=R.rows.length
     ? "<b>"+R.rows.length+"</b> แถว · "+R.nBills+" บิล"+(R.nLegacy?" + "+R.nLegacy+" วันยอดรวม (ยอดเก่า)":"")+" · "+fmt(R.totQty)+" ชิ้น<br>"+
       "ยอดชำระ <b>฿"+fmt2(R.totPaid)+"</b> · 💵 ฿"+fmt2(cash)+" · 💳 ฿"+fmt2(ks)
     : "ไม่มียอดขายในช่วงนี้";
   if(R.noColor.length) h+='<br><span class="w">⚠️ '+R.noColor.length+' แถวไม่ได้เลือกสี (รหัส Peak ไม่ครบ) — ไฮไลต์สีส้มในไฟล์</span>';
+  if(payF==="nocash") h+='<br><span class="w">⚠️ ไม่รวมเงินสด — ยอดเงินสดต้องบันทึกบัญชีทางอื่นให้ครบ (รายได้/VAT ต้องตรงกับยอดขายจริงทั้งหมด)</span>';
+  if(payF==="cash")   h+='<br><span class="w">ℹ️ เฉพาะบิล/รายการที่จ่ายเงินสด</span>';
   box.innerHTML=h; return R;
 }
 function openAccApp(){
@@ -4414,8 +4466,8 @@ function openAccApp(){
 }
 function accAppDownload(fmtType){
   const R=aaRefresh(); if(!R||!R.rows.length){ toast("ไม่มียอดขายในช่วงที่เลือก"); return; }
-  const {lo,hi,brs}=aaRange();
-  const base="ไฟล์ส่งบัญชี_แอป_"+(brs.length===1?brs[0].replace(/\s/g,""):"สาขาหลัก")+"_"+lo+"_ถึง_"+hi;
+  const {lo,hi,brs,payF}=aaRange();
+  const base="ไฟล์ส่งบัญชี_แอป_"+(brs.length===1?brs[0].replace(/\s/g,""):"สาขาหลัก")+"_"+lo+"_ถึง_"+hi+(payF!=="all"?"_"+PAYF_TXT[payF]:"");
   if(fmtType==="csv"){
     const out=[ACC_HDR].concat(R.rows.map(r=>r.slice()));
     const csv="\ufeff"+out.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(",")).join("\n");
@@ -4454,7 +4506,7 @@ function accAppDownload(fmtType){
     XLSX.utils.book_append_sheet(wb, wB, "รายบิล");
     // ชีต 2: สรุปรายวัน เงินสด / KSHOP — ใช้เทียบกับเงินเข้าบัญชีธนาคารจริง
     const H2=["วันที่","สาขา","จำนวนบิล","จำนวนชิ้น","💵 เงินสด","💳 KSHOP","ยอดรวม","ต้นทุน","กำไรขั้นต้น","✔ เทียบ statement แล้ว"];
-    const a2=[["สรุปยอดรายวัน (จากยอดที่ลงในแอป) · "+lo+" ถึง "+hi],["ใช้เทียบกับเงินสดที่นำฝาก / ยอด KSHOP เข้าบัญชีจริง ทุกวัน"],[],H2];
+    const a2=[["สรุปยอดรายวัน (จากยอดที่ลงในแอป) · "+lo+" ถึง "+hi+(payF!=="all"?" · ⚠️ "+PAYF_TXT[payF]:"")],["ใช้เทียบกับเงินสดที่นำฝาก / ยอด KSHOP เข้าบัญชีจริง ทุกวัน"],[],H2];
     let tc=0,tk=0,tq=0,tb=0,tco=0;
     R.daily.forEach(d=>{ const tot=d.cash+d.kshop; a2.push([d.dt,d.br,d.bills.size,d.q,rnd(d.cash),rnd(d.kshop),rnd(tot),rnd(d.cost),rnd(tot-d.cost),""]);
       tc+=d.cash; tk+=d.kshop; tq+=d.q; tb+=d.bills.size; tco+=d.cost; });
@@ -4478,6 +4530,7 @@ function accAppDownload(fmtType){
 document.getElementById("accAppBtnH").onclick=openAccApp;
 ["aaFrom","aaTo"].forEach(id=>document.getElementById(id).addEventListener("change",aaRefresh));
 document.getElementById("aaBrs").addEventListener("change",aaRefresh);
+document.getElementById("aaPay").addEventListener("change",aaRefresh);
 document.getElementById("aaXlsx").onclick=()=>accAppDownload("xlsx");
 document.getElementById("aaCsv").onclick=()=>accAppDownload("csv");
 document.getElementById("aaCancel").onclick=()=>{ document.getElementById("accAppBox").style.display="none"; };
