@@ -3403,6 +3403,7 @@ function buildImportShopeeJoin(){
         kDate=keys.find(k=>k.indexOf("วันที่ทำการสั่งซื้อ")>=0),
         kSku=keys.find(k=>k.indexOf("เลขอ้างอิง SKU")>=0),
         kQty=keys.find(k=>k==="จำนวน")||keys[24], kNet=keys.find(k=>k.indexOf("ราคาขายสุทธิ")>=0),
+        kShpDisc=keys.find(k=>k.trim()==="ส่วนลดจาก Shopee"),   // ส่วนลดสินค้าที่ Shopee จ่ายคืนร้าน (ไม่ใช่โค้ด Shopee)
         kRetQ=keys.find(k=>k.indexOf("จำนวนที่ส่งคืน")>=0);   // ของตีกลับ
   const items=[], unmatched={}, months={};
   const settledIds=new Set(); let netAll=0, netSettled=0;
@@ -3410,7 +3411,8 @@ function buildImportShopeeJoin(){
   shOrderRows.forEach(r=>{
     const st=String(r[kStatus]||"");
     // นับเป็นยอดขาย: สำเร็จแล้ว + ผู้ซื้อได้รับสินค้าแล้ว
-    if(st!=="สำเร็จแล้ว" && st!=="ผู้ซื้อได้รับสินค้าแล้ว") return;
+    // (สถานะ "ผู้ซื้อได้รับสินค้าแล้ว โปรดทราบว่า…" มีข้อความต่อท้าย -> ใช้ขึ้นต้นด้วย)
+    if(!(st==="สำเร็จแล้ว" || st.indexOf("ผู้ซื้อได้รับสินค้าแล้ว")===0 || st==="จัดส่งสำเร็จแล้ว")) return;
     // ของตีกลับ: ตัดออกทั้งบรรทัด
     if(kRetQ && num(r[kRetQ])>0){ retQty+=parseInt(num(r[kRetQ]))||0; retAmt+=num(r[kNet]); return; }
     const oid=String(r[kOrder]||"").trim();
@@ -3418,7 +3420,9 @@ function buildImportShopeeJoin(){
     const q=parseInt(num(r[kQty]))||0; if(q<=0) return;
     const dt=String(r[kDate]||"").slice(0,10); if(!/^\d{4}-\d{2}-\d{2}$/.test(dt)) return;
     months[dt.slice(0,7)]=(months[dt.slice(0,7)]||0)+1;
-    const net=num(r[kNet]); netAll+=net;
+    // ยอดขาย = ราคาขายสุทธิ (ราคาหลังส่วนลดร้าน) + ส่วนลดที่ Shopee ออกให้
+    //   = ราคาปกติ − ส่วนลดจากผู้ขาย + ส่วนลดสินค้าที่ออกโดย Shopee ใน Income (โค้ดส่วนลด Shopee ไม่กระทบ ร้านได้ราคาเต็มอยู่แล้ว)
+    const net=num(r[kNet])+(kShpDisc?Math.abs(num(r[kShpDisc])):0); netAll+=net;
     if(!vid){ unmatched[sku]=(unmatched[sku]||0)+q; return; }
     items.push({dt,vid,qty:q,net,oid,c:colorOfSku(sku,vid)});
     if(inc[oid]) settledIds.add(oid);
@@ -3549,11 +3553,16 @@ function buildImportTikTok(){
     months[dt.slice(0,7)]=(months[dt.slice(0,7)]||0)+1;
     // ของตีกลับ: หักยอดคืนจริง (คอลัมน์ 23) — คืนเต็มจะตัดออกทั้งบรรทัด
     // (แถวยอด 0 ที่ไม่มีการคืน = สินค้าแถม ยังนับเป็นชิ้น เพราะมีต้นทุนจริง)
+    // ยอดขาย = ราคาก่อนลด (คอลัมน์ 12) − ส่วนลดที่ร้านจ่าย (คอลัมน์ 14)
+    //   = "รายได้ทั้งหมด" ใน Income TikTok · ส่วนลดที่ TikTok ออกให้ (คอลัมน์ 13) TikTok จ่ายคืนร้าน จึงยังนับเป็นรายได้
+    //   (เดิมใช้คอลัมน์ 15 = ยอดที่ลูกค้าจ่าย ทำให้ยอดขายต่ำไปเท่าส่วนลด TikTok)
     const refund=Math.abs(num(r[23]));
-    let nsale=num(r[15]);
+    const custPaid=num(r[15]);
+    let nsale=num(r[12])-Math.abs(num(r[14]));
+    if(!(nsale>0) && custPaid>0) nsale=custPaid;        // กันไฟล์ที่ไม่มีคอลัมน์ส่วนลด
     if(refund>0.01){
-      nsale-=refund;
-      if(nsale<=0.01){ tkRetQty+=q; tkRetAmt+=num(r[15]); continue; }
+      if(refund>=custPaid-0.01){ tkRetQty+=q; tkRetAmt+=nsale; continue; }   // คืนเต็ม = ตัดทั้งบรรทัด
+      nsale-=refund;                                      // คืนบางส่วน
     }
     netAll+=nsale;
     if(!vid){ unmatched[sku]=(unmatched[sku]||0)+q; continue; }
