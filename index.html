@@ -519,6 +519,12 @@
   .aa-lbl{font-size:12px;color:#7b8794;margin:4px 0 5px;}
   .aa-brs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;max-height:120px;overflow:auto;}
   .aa-brs label{font-size:12.5px;background:#eef5fc;border-radius:9px;padding:6px 9px;display:flex;align-items:center;gap:5px;color:#14181f;}
+  .imp-mt{margin-top:12px;background:rgba(255,255,255,.08);border-radius:12px;padding:8px 10px;text-align:left;}
+  .imp-mt-h{font-size:11.5px;opacity:.8;margin-bottom:4px;}
+  .imp-mt-r{display:grid;grid-template-columns:1fr .7fr 1.4fr 1.4fr .8fr .9fr;gap:4px;font-size:11.5px;padding:4px 0;border-top:1px solid rgba(255,255,255,.12);}
+  .imp-mt-r.hd{opacity:.7;border-top:none;}
+  .imp-mt-r span:not(:first-child){text-align:right;}
+  .imp-mt-r i{font-style:normal;color:#ffd166;}
   .aa-pay{display:flex;gap:6px;margin-bottom:10px;}
   .aa-pay label{flex:1;}
   .aa-pay input{display:none;}
@@ -3233,11 +3239,26 @@ function showImportOnline(){
   const mS=document.getElementById("impMonthSel"), yS=document.getElementById("impYearSel");
   if(mS) mS.disabled=true; if(yS) yS.disabled=true;
   const hint=document.getElementById("impDateHint");
-  if(hint) hint.innerHTML='เดือนจากไฟล์: <b>'+(impData.ym||"—")+'</b>';
+  const fy=Object.keys(impData.feesByYm||{}).sort();
+  if(hint) hint.innerHTML = fy.length>1 ? 'ไฟล์มี <b>'+fy.length+' เดือน</b>: '+fy[0]+' ถึง '+fy[fy.length-1]+' (ลงแยกรายเดือนอัตโนมัติ)'
+                                         : 'เดือนจากไฟล์: <b>'+(impData.ym||"—")+'</b>';
   const lg=document.getElementById("logoImp"); if(lg) lg.src=LOGO_SRC;
   document.getElementById("screen-home").style.display="none";
   document.getElementById("screen-import").style.display="block";
   renderImportOnline(); window.scrollTo(0,0);
+}
+// ตารางรายเดือน (แสดงเมื่อไฟล์มีมากกว่า 1 เดือน)
+function impMonthTable(){
+  const B=impData.feesByYm||{}, ks=Object.keys(B).sort(); if(ks.length<2) return "";
+  const q={}, sa={}; impData.items.forEach(o=>{ const ym=o.dt.slice(0,7); q[ym]=(q[ym]||0)+o.qty; sa[ym]=(sa[ym]||0)+o.net; });   // ยอดที่จะลงแอปจริง
+  const TH=["","ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+  let h='<div class="imp-mt"><div class="imp-mt-h">แยกรายเดือน (ค่าธรรมเนียมลงตามเดือนที่ลูกค้าสั่ง)</div>'+
+    '<div class="imp-mt-r hd"><span>เดือน</span><span>ชิ้น</span><span>ยอดขาย</span><span>ค่าธรรมเนียม</span><span>%</span><span>settle</span></div>';
+  ks.forEach(ym=>{ const o=B[ym], fee=(o.comm||0)+(o.txn||0)+(o.service||0)+(o.order||0)+(o.ship||0);
+    h+='<div class="imp-mt-r"><span>'+TH[+ym.slice(5)]+' '+ym.slice(2,4)+'</span><span>'+fmt(q[ym]||0)+'</span><span>฿'+fmt(sa[ym]||0)+'</span>'+
+       '<span>฿'+fmt(fee)+(o.est?' <i title="มีส่วนที่ประมาณ (ออเดอร์ยังไม่ settle)">≈</i>':'')+'</span>'+
+       '<span>'+((sa[ym]||0)>0?(fee/sa[ym]*100).toFixed(1):'0')+'%</span><span>'+o._settled+'/'+o._orders+'</span></div>'; });
+  return h+'</div>';
 }
 function renderImportOnline(){
   const br=impData.platform;
@@ -3250,7 +3271,7 @@ function renderImportOnline(){
   const base=netTot/(1+VAT);
   const F=impData.fees, feeSum=F.comm+F.txn+F.service+F.order+F.ship;   // ไม่รวมค่าแอด (กรอกเอง)
   document.getElementById("impSummary").innerHTML=
-    '<div class="lbl">'+br+' · '+(impData.ym||"—")+'</div>'+
+    '<div class="lbl">'+br+' · '+(Object.keys(impData.feesByYm||{}).length>1?Object.keys(impData.feesByYm).sort()[0]+' – '+Object.keys(impData.feesByYm).sort().slice(-1)[0]:(impData.ym||"—"))+'</div>'+
     '<div class="big">฿'+fmt2(netTot)+'</div>'+
     '<div class="sub">'+fmt(pieces)+' ชิ้น · '+impData.items.length+' รายการ</div>'+
     '<div class="rep-vat">ก่อน VAT ฿'+fmt2(base)+' · VAT 7% ฿'+fmt2(netTot-base)+'</div>'+
@@ -3259,7 +3280,8 @@ function renderImportOnline(){
       ((F.order||0)>0?' · ค่าคำสั่งซื้อ ฿'+fmt2(F.order):'')+((F.ship||0)>0?' · ค่าส่ง ฿'+fmt2(F.ship):'')+
       '</div>'+
     ((impData.adsInFile||0)>0?'<div class="rep-vat">ℹ️ ในไฟล์มีค่าโฆษณา GMV ฿'+fmt2(impData.adsInFile)+' — ไม่นำเข้า ให้กรอกค่าแอดเองที่หน้าค่าใช้จ่าย</div>':'')+
-    '<div class="rep-pf">ยอดโอนสุทธิโดยประมาณ ฿'+fmt2(netTot-feeSum)+' ('+((netTot-feeSum)/netTot*100).toFixed(1)+'%)</div>';
+    '<div class="rep-pf">ยอดโอนสุทธิโดยประมาณ ฿'+fmt2(netTot-feeSum)+' ('+((netTot-feeSum)/netTot*100).toFixed(1)+'%)</div>'+
+    impMonthTable();
 
   document.getElementById("impIssuesWrap").style.display="none";
   const uw=document.getElementById("impUnmatchWrap");
@@ -3281,7 +3303,9 @@ function confirmImportOnline(){
   const dup=dates.filter(d=>data.branches[br] && data.branches[br][d] && Object.keys(data.branches[br][d]).length);
   let msg="นำเข้า "+br+" · "+all.length+" รายการ · "+dates.length+" วัน";
   if(dup.length) msg+="\n\n⚠️ "+dup.length+" วันมีข้อมูลอยู่แล้ว จะถูกแทนที่";
-  if(impData.ym) msg+="\n\nค่าธรรมเนียมเดือน "+impData.ym+" จะถูกบันทึก/แทนที่";
+  const fYms=Object.keys(impData.feesByYm||{}).sort();
+  if(fYms.length>1) msg+="\n\nค่าธรรมเนียม "+fYms.length+" เดือน ("+fYms[0]+" ถึง "+fYms[fYms.length-1]+") จะถูกบันทึก/แทนที่ แยกรายเดือน";
+  else if(impData.ym) msg+="\n\nค่าธรรมเนียมเดือน "+(fYms[0]||impData.ym)+" จะถูกบันทึก/แทนที่";
   if(!confirm(msg+"\n\nยืนยัน?")) return;
 
   data.branches[br]=data.branches[br]||{}; data.pxn[br]=data.pxn[br]||{};
@@ -3302,15 +3326,16 @@ function confirmImportOnline(){
     const [d,vid]=k.split("|");
     data.pxn[br][d][vid]=Math.round((netAcc[k]/qtyAcc[k])*100)/100;   // ราคาขายจริงต่อชิ้น (จากแพลตฟอร์ม)
   });
-  // ค่าธรรมเนียมรายเดือน
-  if(impData.ym){
-    data.fees[br]=data.fees[br]||{};
-    const prevFee=data.fees[br][impData.ym]||{};
-    const nf=Object.assign({}, impData.fees, {est:!!impData.fees.est});
-    delete nf.ads;                                   // ค่าแอดไม่มาจากไฟล์
+  // ค่าธรรมเนียมรายเดือน — แยกตามเดือนของออเดอร์ (ไฟล์หลายเดือนก็ลงถูกทุกเดือน)
+  const byYm=impData.feesByYm || (impData.ym?{[impData.ym]:impData.fees}:{});
+  data.fees[br]=data.fees[br]||{};
+  Object.keys(byYm).forEach(ym=>{
+    const prevFee=data.fees[br][ym]||{};
+    const nf={}; ["comm","txn","service","order","ship"].forEach(k=>nf[k]=byYm[ym][k]||0);
+    nf.est=!!byYm[ym].est;                           // ค่าแอดไม่มาจากไฟล์
     if(prevFee.ads!==undefined) nf.ads=prevFee.ads;  // คงค่าแอดที่กรอกเองไว้
-    data.fees[br][impData.ym]=nf;
-  }
+    data.fees[br][ym]=nf;
+  });
   dates.forEach(d=>stampTs(br,d));
   store.write(data);
   toast("นำเข้า "+br+" สำเร็จ");
@@ -3334,6 +3359,35 @@ function confirmImportOnline(){
 }
 
 // ===== นำเข้า Shopee (ต้องใช้ 2 ไฟล์: Order + Income) =====
+/* แยกค่าธรรมเนียมตาม "เดือนที่ลูกค้าสั่ง" — รองรับไฟล์หลายเดือนในครั้งเดียว
+   - ค่าธรรมเนียมจริง (จาก Income) ของแต่ละออเดอร์ ลงเดือนของออเดอร์นั้น
+   - ออเดอร์ที่ยังไม่ settle: ประมาณด้วย % ของเดือนนั้น (ถ้าเดือนนั้นยังไม่มีออเดอร์ settle เลย ใช้ % เฉลี่ยทั้งไฟล์)
+   - ไฟล์เดือนเดียว -> ได้ผลเท่ากับวิธีเดิมทุกประการ */
+function splitFeesByMonth(items, settledIds, netAllYm, realOf, comps){
+  const oYm={}, R={}, NS={}, NO={}, SO={};
+  items.forEach(o=>{ const ym=o.dt.slice(0,7); oYm[o.oid]=ym; (NO[ym]=NO[ym]||new Set()).add(o.oid);
+    if(settledIds.has(o.oid)){ NS[ym]=(NS[ym]||0)+o.net; (SO[ym]=SO[ym]||new Set()).add(o.oid); } });
+  const allC={}; comps.forEach(c=>allC[c]=0);
+  settledIds.forEach(oid=>{ const ym=oYm[oid]; if(!ym) return; const fx=realOf(oid); const r=R[ym]=R[ym]||{};
+    comps.forEach(c=>{ r[c]=(r[c]||0)+(fx[c]||0); allC[c]+=(fx[c]||0); }); });
+  const rt=comps.reduce((a,c)=>a+allC[c],0), nst=Object.values(NS).reduce((a,v)=>a+v,0), pAll=nst>0?rt/nst:0;
+  const byYm={}, total={}; comps.forEach(c=>total[c]=0); let anyEst=false;
+  Object.keys(netAllYm).sort().forEach(ym=>{
+    const r=R[ym]||{}, real=comps.reduce((a,c)=>a+(r[c]||0),0), ns=NS[ym]||0;
+    const pct=ns>0?real/ns:pAll, un=Math.max(netAllYm[ym]-ns,0), est=un*pct;
+    const o={};
+    comps.forEach((c,ix)=>{ const share=real>0?(r[c]||0)/real:(rt>0?allC[c]/rt:(ix===0?1:0));
+      o[c]=Math.round(((r[c]||0)+est*share)*100)/100; total[c]+=o[c]; });
+    o.est=un>0.5; if(o.est) anyEst=true;
+    o._sales=Math.round(netAllYm[ym]*100)/100; o._pct=pct; o._orders=(NO[ym]||new Set()).size; o._settled=(SO[ym]||new Set()).size;
+    byYm[ym]=o;
+  });
+  comps.forEach(c=>total[c]=Math.round(total[c]*100)/100); total.est=anyEst;
+  return {byYm,total};
+}
+// ตัดแถวซ้ำ (เผื่อเลือกไฟล์ Order ที่ช่วงวันทับกัน)
+function dedupeRows(rows){ const seen=new Set(); return rows.filter(r=>{ const k=JSON.stringify(r); if(seen.has(k)) return false; seen.add(k); return true; }); }
+
 let shOrderRows=null, shIncomeSheet=null;
 // แยกชนิดไฟล์ Shopee เอง (สลับลำดับได้)
 function shKind(wb){
@@ -3348,10 +3402,10 @@ function shTake(file, cb, onErr){
     const kind=shKind(wb);
     if(kind==="order"){
       const sh=wb.Sheets["orders"]||wb.Sheets[wb.SheetNames[0]];
-      shOrderRows=XLSX.utils.sheet_to_json(sh,{defval:""});
+      shOrderRows=(shOrderRows||[]).concat(XLSX.utils.sheet_to_json(sh,{defval:""}));   // ต่อกันได้หลายไฟล์ (เช่น ทีละเดือน)
     } else if(kind==="income"){
       const sh=wb.Sheets["Income"]||wb.Sheets[wb.SheetNames[0]];
-      shIncomeSheet=XLSX.utils.sheet_to_json(sh,{header:1,defval:""});
+      (shIncomeSheet=shIncomeSheet||[]).push(XLSX.utils.sheet_to_json(sh,{header:1,defval:""}));   // เก็บเป็นรายการชีต
     } else {
       cb("unknown"); return;
     }
@@ -3381,22 +3435,25 @@ function shFinish(bad){
 }
 function buildImportShopeeJoin(){
   if(!shOrderRows||!shIncomeSheet){ alert("ต้องมีทั้งไฟล์ Order และ Income"); return; }
-  // Income: หัวตารางอยู่แถวที่มี "หมายเลขคำสั่งซื้อ" (ปกติแถว 6, index 5)
-  let hRow=-1;
-  for(let i=0;i<Math.min(shIncomeSheet.length,15);i++){
-    if((shIncomeSheet[i]||[]).some(c=>String(c).indexOf("หมายเลขคำสั่งซื้อ")>=0)){ hRow=i; break; }
-  }
-  if(hRow<0){ alert("ไฟล์ Income ไม่ถูกต้อง (หาหัวตารางไม่เจอ)"); return; }
-  const H=shIncomeSheet[hRow];
-  const col=name=>H.findIndex(c=>String(c).indexOf(name)>=0);
-  const cOrder=col("หมายเลขคำสั่งซื้อ"), cAms=col("ค่าคอมมิชชั่น AMS"), cComm=H.findIndex((c,i)=>String(c)==="ค่าคอมมิชชั่น"),
-        cSvc=col("ค่าบริการ"), cInfra=col("ค่าธรรมเนียมโครงสร้างพื้นฐาน"), cTxn=col("ค่าธุรกรรมการชำระเงิน");
+  // Income (อาจมีหลายไฟล์): หัวตารางอยู่แถวที่มี "หมายเลขคำสั่งซื้อ" (ปกติแถว 6, index 5)
   const inc={};
-  for(let i=hRow+1;i<shIncomeSheet.length;i++){
-    const r=shIncomeSheet[i]; const oid=String(r[cOrder]||"").trim(); if(!oid) continue;
-    inc[oid]={ams:Math.abs(num(r[cAms])), comm:Math.abs(num(r[cComm])), service:Math.abs(num(r[cSvc])),
-               infra:Math.abs(num(r[cInfra])), txn:Math.abs(num(r[cTxn]))};
+  for(const IS of shIncomeSheet){
+    let hRow=-1;
+    for(let i=0;i<Math.min(IS.length,15);i++){
+      if((IS[i]||[]).some(c=>String(c).indexOf("หมายเลขคำสั่งซื้อ")>=0)){ hRow=i; break; }
+    }
+    if(hRow<0){ alert("ไฟล์ Income ไม่ถูกต้อง (หาหัวตารางไม่เจอ)"); return; }
+    const H=IS[hRow];
+    const col=name=>H.findIndex(c=>String(c).indexOf(name)>=0);
+    const cOrder=col("หมายเลขคำสั่งซื้อ"), cAms=col("ค่าคอมมิชชั่น AMS"), cComm=H.findIndex((c,i)=>String(c)==="ค่าคอมมิชชั่น"),
+          cSvc=col("ค่าบริการ"), cInfra=col("ค่าธรรมเนียมโครงสร้างพื้นฐาน"), cTxn=col("ค่าธุรกรรมการชำระเงิน");
+    for(let i=hRow+1;i<IS.length;i++){
+      const r=IS[i]; const oid=String(r[cOrder]||"").trim(); if(!oid) continue;
+      inc[oid]={ams:Math.abs(num(r[cAms])), comm:Math.abs(num(r[cComm])), service:Math.abs(num(r[cSvc])),
+                 infra:Math.abs(num(r[cInfra])), txn:Math.abs(num(r[cTxn]))};
+    }
   }
+  shOrderRows=dedupeRows(shOrderRows);
   // Order: SKU + วันขาย + ยอดขายสุทธิ
   const keys=Object.keys(shOrderRows[0]);
   const kStatus=keys.find(k=>k.indexOf("สถานะการสั่งซื้อ")>=0), kOrder=keys[0],
@@ -3405,7 +3462,7 @@ function buildImportShopeeJoin(){
         kQty=keys.find(k=>k==="จำนวน")||keys[24], kNet=keys.find(k=>k.indexOf("ราคาขายสุทธิ")>=0),
         kShpDisc=keys.find(k=>k.trim()==="ส่วนลดจาก Shopee"),   // ส่วนลดสินค้าที่ Shopee จ่ายคืนร้าน (ไม่ใช่โค้ด Shopee)
         kRetQ=keys.find(k=>k.indexOf("จำนวนที่ส่งคืน")>=0);   // ของตีกลับ
-  const items=[], unmatched={}, months={};
+  const items=[], unmatched={}, months={}, netAllYm={};
   const settledIds=new Set(); let netAll=0, netSettled=0;
   let retQty=0, retAmt=0;                                   // สรุปของตีกลับ (ไม่นับเป็นยอดขาย)
   shOrderRows.forEach(r=>{
@@ -3424,21 +3481,19 @@ function buildImportShopeeJoin(){
     //   = ราคาปกติ − ส่วนลดจากผู้ขาย + ส่วนลดสินค้าที่ออกโดย Shopee ใน Income (โค้ดส่วนลด Shopee ไม่กระทบ ร้านได้ราคาเต็มอยู่แล้ว)
     const net=num(r[kNet])+(kShpDisc?Math.abs(num(r[kShpDisc])):0); netAll+=net;
     if(!vid){ unmatched[sku]=(unmatched[sku]||0)+q; return; }
+    netAllYm[dt.slice(0,7)]=(netAllYm[dt.slice(0,7)]||0)+net;   // เฉพาะสินค้าที่ลงแอปได้
     items.push({dt,vid,qty:q,net,oid,c:colorOfSku(sku,vid)});
     if(inc[oid]) settledIds.add(oid);
   });
-  // ค่าธรรมเนียมจริงจากออเดอร์ที่ settle
-  let comm=0,service=0,txn=0;
-  settledIds.forEach(oid=>{ const f=inc[oid]; comm+=f.comm+f.ams; service+=f.service+f.infra; txn+=f.txn; });
+  // ค่าธรรมเนียมจริงจากออเดอร์ที่ settle — แยกตามเดือนของออเดอร์
   items.forEach(o=>{ if(settledIds.has(o.oid)) netSettled+=o.net; });
-  const feeReal=comm+service+txn, pct=netSettled>0?feeReal/netSettled:0;
-  const netUnsettled=netAll-netSettled, estFee=netUnsettled*pct;
-  const eComm=feeReal>0?estFee*(comm/feeReal):estFee, eSvc=feeReal>0?estFee*(service/feeReal):0, eTxn=feeReal>0?estFee*(txn/feeReal):0;
+  const SP=splitFeesByMonth(items, settledIds, netAllYm,
+    oid=>{ const f=inc[oid]; return {comm:f.comm+f.ams, service:f.service+f.infra, txn:f.txn}; }, ["comm","service","txn"]);
+  Object.values(SP.byYm).forEach(o=>{ o.order=0; o.ship=0; });
   const ym=Object.keys(months).sort((a,b)=>months[b]-months[a])[0]||"";
   impData={platform:"Shopee", items, unmatched, ym, ret:{qty:retQty, amt:Math.round(retAmt*100)/100},
-    fees:{comm:Math.round((comm+eComm)*100)/100, service:Math.round((service+eSvc)*100)/100,
-          txn:Math.round((txn+eTxn)*100)/100, order:0, ship:0, est:netUnsettled>0.5},
-    stat:{settled:settledIds.size, netSettled, netUnsettled}};
+    fees:Object.assign({order:0, ship:0}, SP.total), feesByYm:SP.byYm,
+    stat:{settled:settledIds.size, netSettled, netUnsettled:netAll-netSettled}};
   shOrderRows=shIncomeSheet=null;
   showImportOnline();
 }
@@ -3490,8 +3545,11 @@ function tkStartFiles(fileList){
   files.forEach(f=>{
     readSheet(f, wb=>{
       const kind=tkKind(wb);
-      if(kind==="order") tkOrderRows=XLSX.utils.sheet_to_json(wb.Sheets["OrderSKUList"]||wb.Sheets[wb.SheetNames[0]],{header:1,defval:""});
-      else if(kind==="income") tkIncomeRows=XLSX.utils.sheet_to_json(wb.Sheets["รายละเอียดคำสั่งซื้อ"]||wb.Sheets[wb.SheetNames[0]],{header:1,defval:""});
+      // หลายไฟล์ต่อกันได้ (ไฟล์ถัดไปตัดแถวหัวตารางออก)
+      if(kind==="order"){ const rr=XLSX.utils.sheet_to_json(wb.Sheets["OrderSKUList"]||wb.Sheets[wb.SheetNames[0]],{header:1,defval:""});
+        tkOrderRows=tkOrderRows?tkOrderRows.concat(rr.slice(1)):rr; }
+      else if(kind==="income"){ const rr=XLSX.utils.sheet_to_json(wb.Sheets["รายละเอียดคำสั่งซื้อ"]||wb.Sheets[wb.SheetNames[0]],{header:1,defval:""});
+        tkIncomeRows=tkIncomeRows?tkIncomeRows.concat(rr.slice(1)):rr; }
       else bad.push(f.name);
       if(++done===files.length) tkFinish(bad);
     });
@@ -3538,7 +3596,8 @@ function buildImportTikTok(){
     inc[oid]={feeTotal:total, feeOrder:fOrder, feeComm:fComm, ship:fShip, other:other};
   }
   // Order: SKU + วันขาย (ข้ามหัว 1 แถว)
-  const items=[], unmatched={}, months={};
+  tkOrderRows=[tkOrderRows[0]].concat(dedupeRows(tkOrderRows.slice(1)));
+  const items=[], unmatched={}, months={}, netAllYm={};
   const settledIds=new Set(); let netSettled=0, netAll=0;
   let tkRetQty=0, tkRetAmt=0;                     // สรุปของตีกลับ
   const feeCommTot={v:0}, feeOrderTot={v:0}, feeShipTot={v:0};
@@ -3566,6 +3625,7 @@ function buildImportTikTok(){
     }
     netAll+=nsale;
     if(!vid){ unmatched[sku]=(unmatched[sku]||0)+q; continue; }
+    netAllYm[dt.slice(0,7)]=(netAllYm[dt.slice(0,7)]||0)+nsale;   // เฉพาะสินค้าที่ลงแอปได้
     items.push({dt,vid,qty:q,net:nsale,oid,c:colorOfSku(sku,vid)});
     if(inc[oid]) settledIds.add(oid);
   }
@@ -3584,12 +3644,13 @@ function buildImportTikTok(){
   const estShip = feeRealTotal>0 ? estFee*(feeShip/feeRealTotal) : 0;
   const estOther= feeRealTotal>0 ? estFee*(feeOther/feeRealTotal) : 0;
   const ym=Object.keys(months).sort((a,b)=>months[b]-months[a])[0]||"";
+  // แยกค่าธรรมเนียมตามเดือนของออเดอร์ (ไฟล์เดือนเดียว = ผลเท่าเดิม)
+  const SP=splitFeesByMonth(items, settledIds, netAllYm,
+    oid=>{ const f=inc[oid]; return {comm:f.feeComm, order:f.feeOrder, ship:f.ship, service:f.other||0}; }, ["comm","order","ship","service"]);
+  Object.values(SP.byYm).forEach(o=>{ o.txn=0; });
   // ค่าโฆษณาไม่ดึงจากไฟล์แล้ว (ผู้ใช้กรอกเองที่หน้าค่าใช้จ่ายเท่านั้น) — เก็บยอด GMV ไว้โชว์เป็นข้อมูลอ้างอิงอย่างเดียว
   impData={platform:"TikTok", items, unmatched, ym, adsInFile:Math.round(adsTotal*100)/100, ret:{qty:tkRetQty, amt:Math.round(tkRetAmt*100)/100},
-    fees:{comm:Math.round((feeComm+estComm)*100)/100, order:Math.round((feeOrder+estOrder)*100)/100,
-          ship:Math.round((feeShip+estShip)*100)/100, txn:0,
-          service:Math.round((feeOther+estOther)*100)/100,   // ค่าบริการ/แคมเปญ/แอฟฟิลิเอต
-          est:netUnsettled>0.5},
+    fees:Object.assign({txn:0}, SP.total), feesByYm:SP.byYm,   // service = ค่าบริการ/แคมเปญ/แอฟฟิลิเอต
     stat:{settled:settledIds.size, total:new Set(items.map(x=>x.oid)).size, netSettled, netUnsettled, pct,
           retQty:tkRetQty, retAmt:Math.round(tkRetAmt*100)/100}};
   tkOrderRows=tkIncomeRows=null;
