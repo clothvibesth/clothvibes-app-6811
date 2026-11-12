@@ -87,10 +87,39 @@
   .sec-h + .chan-wrap,.sec-h + .import-section,.sec-h + .set-card{margin-top:10px;}
   .sec-h + .report-entry.ramp.r1{margin-top:10px;}
   /* แถบยอดขายใต้โลโก้ */
-  .hstat{position:relative;margin:14px auto 0;max-width:300px;}
+  .hrow{display:flex;gap:10px;align-items:stretch;justify-content:center;margin:14px auto 0;max-width:580px;width:100%;}
+  .hstat{position:relative;margin:0;flex:1.25;min-width:0;max-width:300px;display:flex;flex-direction:column;}
+  .hstat .hs-track{flex:1;}
+  .hyear{flex:1;min-width:0;max-width:240px;text-align:center;border-radius:16px;padding:9px 10px 10px;box-sizing:border-box;
+    display:flex;flex-direction:column;justify-content:center;margin-bottom:13px;   /* สูงเท่าการ์ดเดือน (เว้นที่จุดด้านล่าง) */
+    background:linear-gradient(140deg,#0a6fb0 0%,#0a8fd6 100%);color:#fff;box-shadow:0 6px 16px rgba(10,110,190,.22);}
+  .hyear:empty{display:none;}
+  .hyear{cursor:pointer;transition:transform .2s ease,box-shadow .2s ease;}
+  .hyear:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(10,110,190,.30);}
+  .hyear:active{transform:scale(.97);}
+  .hyear .hy-more{display:block;margin-top:5px;font-size:10.5px;font-weight:600;opacity:.9;}
+  .ys-box{max-width:460px!important;width:calc(100% - 24px);max-height:86vh;overflow:auto;text-align:left;}
+  .ys-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .ys-top .af-t,.ys-top .af-s{text-align:left;}
+  .ys-x{border:none;background:#eef5fc;color:#5d7390;width:32px;height:32px;border-radius:10px;font-size:15px;cursor:pointer;flex:none;}
+  .ys-total{margin:12px 0 10px;padding:12px 14px;border-radius:14px;background:linear-gradient(140deg,#0a6fb0,#0a8fd6);color:#fff;}
+  .ys-total b{display:block;font-family:"Bai Jamjuree",sans-serif;font-size:24px;}
+  .ys-total small{font-size:11.5px;opacity:.85;}
+  .ys-chan{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px;}
+  .ys-c{background:#f5fafe;border:1px solid var(--line);border-radius:12px;padding:8px 9px;}
+  .ys-c span{display:inline-block;width:8px;height:8px;border-radius:3px;margin-right:4px;}
+  .ys-c small{font-size:11px;color:var(--ink-soft);}
+  .ys-c b{display:block;font-family:"Bai Jamjuree",sans-serif;font-size:13.5px;color:var(--ink);margin-top:2px;}
+  .ys-c i{font-style:normal;font-size:10.5px;color:#8fa3bb;}
+  .ys-list{width:100%!important;margin:0!important;box-shadow:none!important;}
+  .hyear small{display:block;font-size:11px;opacity:.85;}
+  .hyear b{display:block;font-family:"Bai Jamjuree",sans-serif;font-size:19px;margin-top:1px;}
+  .hyear i{display:block;font-style:normal;font-size:10.5px;opacity:.8;}
+  .hyear .chg{display:inline-block;margin-top:4px;font-size:10.5px;font-weight:600;padding:1px 8px;border-radius:20px;background:rgba(255,255,255,.18);color:#fff;}
   .hs-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;border-radius:16px;background:rgba(255,255,255,.78);border:1px solid #dbe8f5;box-shadow:0 4px 14px rgba(10,110,190,.08);}
   .hs-track::-webkit-scrollbar{display:none;}
-  .hs-card{flex:0 0 100%;scroll-snap-align:center;text-align:center;padding:9px 34px 10px;box-sizing:border-box;}
+  .hs-card{flex:0 0 100%;scroll-snap-align:center;text-align:center;padding:9px 26px 10px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;align-items:center;}
+  @media (max-width:380px){ .hs-card b,.hyear b{font-size:16.5px;} .hs-card small,.hyear small{font-size:10px;} }
   .hs-card small{display:block;font-size:11px;color:var(--ink-soft);}
   .hs-card b{display:block;font-family:"Bai Jamjuree",sans-serif;font-size:19px;color:var(--accent-deep);margin-top:1px;}
   .hs-card i{display:block;font-style:normal;font-size:11px;color:#8fa3bb;}
@@ -850,7 +879,11 @@
   <div class="b-head">
     <img class="logo-img" id="logoHome" alt="CLOTHVIBES">
     <!-- แถบยอดขาย (เฉพาะยอดขาย ไม่โชว์ต้นทุน/กำไร) -->
-    <div class="hstat" id="homeStats"></div>
+    <div class="hrow">
+      <div class="hstat" id="homeStats"></div>
+      <!-- ยอดขายรวมทั้งปี (ปีของเดือนที่กำลังดู) -->
+      <div class="hyear" id="homeYear" role="button" tabindex="0" title="กดดูยอดทั้งปีแยกสาขา"></div>
+    </div>
   </div>
   <!-- ยอดแยกสาขาของเดือนที่กำลังดู (เปลี่ยนตามแถบยอดด้านบน) -->
   <div class="hbr" id="homeBr"></div>
@@ -1455,6 +1488,16 @@
     <button class="af-btn af-x" id="posDoImport"><b>📊 บันทึกยอดเข้าระบบ</b><small>ตัดบิลผิดปกติออก · ใช้ทำรายงาน</small></button>
     <button class="af-btn af-c" id="posDoAcc"><b>📄 ดาวน์โหลดไฟล์ส่งบัญชี</b><small>ครบทุกบิลตาม POS · ส่งให้บัญชี</small></button>
     <button class="af-cancel" id="posChoiceCancel">ยกเลิก</button>
+  </div>
+</div>
+<!-- ยอดขายทั้งปีแยกสาขา (เปิดจากการ์ดปีหน้าแรก) -->
+<div id="yearSheet" class="acc-fmt" style="display:none">
+  <div class="af-box ys-box">
+    <div class="ys-top"><div><div class="af-t" id="ysTitle">ยอดขายปี</div><div class="af-s" id="ysSub"></div></div>
+      <button class="ys-x" id="ysClose" aria-label="ปิด">✕</button></div>
+    <div class="ys-total" id="ysTotal"></div>
+    <div class="ys-chan" id="ysChan"></div>
+    <div class="ys-list hbr" id="ysList"></div>
   </div>
 </div>
 <!-- ไฟล์ส่งบัญชีจากยอดที่ลงในแอป (สาขาหลัก) -->
@@ -2573,7 +2616,7 @@ function renderHomeStats(){
       // ถ้ายังไม่นำเข้า Shopee/TikTok ของเดือนนี้ ยอดจะต่ำผิดปกติ -> เตือน และไม่โชว์ % เทียบ
       const miss=["shopee","tiktok"].filter(n=>seen[n]&&!o.ch[n]).map(n=>n==="shopee"?"Shopee":"TikTok");
       let chg="";
-      if(miss.length) chg='<span class="chg wn">ยังไม่นำเข้า '+miss.join(" · ")+'</span>';
+      if(miss.length) chg='<span class="chg wn">ยังไม่มี '+miss.join("/")+'</span>';
       else if(!isCur && p && p.a>0){ const pc=(o.a-p.a)/p.a*100;
         chg='<span class="chg '+(pc>=0?"up":"dn")+'">'+(pc>=0?"▲":"▼")+Math.abs(pc).toFixed(0)+'% จาก '+TH_MON[+pk.slice(5)]+'</span>'; }
       return '<div class="hs-card"><small>ยอดขาย '+TH_MON[+k.slice(5)]+' '+k.slice(0,4)+(isCur?' (เท่าที่ลงแล้ว)':'')+'</small>'+
@@ -2585,19 +2628,63 @@ function renderHomeStats(){
     const tr=box.querySelector(".hs-track"), dots=[...box.querySelectorAll(".hs-dots span")];
     const idx=()=>Math.round(tr.scrollLeft/tr.clientWidth);
     const upd=()=>{ const n=idx(); dots.forEach((d,k)=>d.classList.toggle("on",k===n));
-      renderHomeBr(show[n], M[show[n]]);
+      renderHomeBr(show[n], M[show[n]]); renderHomeYear(show[n], M);
       box.querySelector(".prev").disabled=n<=0; box.querySelector(".next").disabled=n>=show.length-1; };
     // ใช้ลำดับเดือน (pos) เป็นหลัก — กดลูกศรรัว ๆ ก็ไม่ค้างกลางการ์ด
     let pos=show.length-1;
     const go=n=>{ pos=Math.max(0,Math.min(show.length-1,n)); tr.scrollTo({left:pos*tr.clientWidth,behavior:"smooth"});
       dots.forEach((d,k)=>d.classList.toggle("on",k===pos)); box.querySelector(".prev").disabled=pos<=0; box.querySelector(".next").disabled=pos>=show.length-1;
-      renderHomeBr(show[pos], M[show[pos]]); };
+      renderHomeBr(show[pos], M[show[pos]]); renderHomeYear(show[pos], M); };
     tr.addEventListener("scroll",()=>{ clearTimeout(tr._t); tr._t=setTimeout(()=>{ const n=idx(); if(n!==pos){ pos=n; upd(); } },90); });
     box.querySelector(".prev").onclick=()=>go(pos-1);
     box.querySelector(".next").onclick=()=>go(pos+1);
     requestAnimationFrame(()=>{ tr.scrollLeft=tr.scrollWidth; upd(); });   // เริ่มที่เดือนปัจจุบัน
   }catch(e){ box.innerHTML=""; }
 }
+// การ์ดยอดขายทั้งปี: รวมทุกเดือนของปีเดียวกับเดือนที่กำลังดู (เท่าที่ลงแล้ว)
+function renderHomeYear(ym, M){
+  const box=document.getElementById("homeYear"); if(!box) return;
+  const y=ym.slice(0,4), ks=Object.keys(M).filter(k=>k.slice(0,4)===y && M[k].a>0.5).sort();
+  let a=0,q=0; ks.forEach(k=>{ a+=M[k].a; q+=M[k].q; });
+  const py=String(+y-1), pks=ks.map(k=>py+k.slice(4)).filter(k=>M[k]&&M[k].a>0.5);   // ช่วงเดียวกันของปีก่อน
+  let cmp="";
+  if(pks.length===ks.length && ks.length){ const pa=pks.reduce((s,k)=>s+M[k].a,0);
+    if(pa>0){ const pc=(a-pa)/pa*100; cmp='<span class="chg '+(pc>=0?"up":"dn")+'">'+(pc>=0?"▲":"▼")+Math.abs(pc).toFixed(0)+'% จาก '+py+'</span>'; } }
+  const rng=ks.length?(ks.length>1?TH_MON[+ks[0].slice(5)]+'–'+TH_MON[+ks[ks.length-1].slice(5)]:TH_MON[+ks[0].slice(5)]):'';
+  box.innerHTML='<small>ยอดขายปี '+y+'</small><b>฿'+fmt(a)+'</b>'+
+    '<i>'+(rng?rng+' · ':'')+fmt(q)+' ชิ้น</i>'+cmp+'<span class="hy-more">ดูแยกสาขา ›</span>';
+  box._y=y; box._M=M;
+  box.onclick=()=>openYearSheet(y,M);
+  box.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openYearSheet(y,M); } };
+}
+// หน้าต่างยอดขายทั้งปีแยกสาขา (เฉพาะยอดขาย ไม่แสดงต้นทุน/กำไร)
+function openYearSheet(y,M){
+  const ks=Object.keys(M).filter(k=>k.slice(0,4)===y).sort();
+  const B={}; let tot=0,tq=0;
+  ks.forEach(k=>Object.entries(M[k].br||{}).forEach(([br,v])=>{ const o=B[br]=B[br]||{a:0,q:0,m:0}; o.a+=v.a; o.q+=v.q; if(v.a>0.5) o.m++; tot+=v.a; tq+=v.q; }));
+  const brs=Object.entries(B).filter(([,v])=>v.a>0.5).sort((x,z)=>z[1].a-x[1].a);
+  const CC={main:"#17aa85",booth:"#e5517a",shopee:"#f06a3a",tiktok:"#22252e"};
+  const CN={main:"สาขาหลัก",booth:"บูท",shopee:"ออนไลน์",tiktok:"ออนไลน์"};
+  const ks2=ks.filter(k=>M[k].a>0.5);
+  document.getElementById("ysTitle").textContent="ยอดขายปี "+y;
+  document.getElementById("ysSub").textContent=(ks2.length?TH_MON[+ks2[0].slice(5)]+(ks2.length>1?"–"+TH_MON[+ks2[ks2.length-1].slice(5)]:"")+" "+y+" · ":"")+"รวม VAT · เท่าที่ลงในแอป";
+  document.getElementById("ysTotal").innerHTML='<b>฿'+fmt(tot)+'</b><small>'+fmt(tq)+' ชิ้น · '+brs.length+' สาขา/ช่องทาง</small>';
+  // สรุปตามประเภทช่องทาง
+  const G={main:0,booth:0,online:0};
+  brs.forEach(([br,v])=>{ const c=chanOfBranch(br); G[(c==="shopee"||c==="tiktok")?"online":(c==="main"?"main":"booth")]+=v.a; });
+  document.getElementById("ysChan").innerHTML=[["main","สาขาหลัก","#17aa85"],["booth","บูท","#e5517a"],["online","ออนไลน์","#f06a3a"]]
+    .filter(x=>G[x[0]]>0.5).map(x=>'<div class="ys-c"><span style="background:'+x[2]+'"></span><small>'+x[1]+'</small><b>฿'+fmt(G[x[0]])+'</b><i>'+(G[x[0]]/tot*100).toFixed(1)+'%</i></div>').join("");
+  const max=brs.length?brs[0][1].a:1;
+  document.getElementById("ysList").innerHTML=brs.map(([br,v],i)=>{ const ch=chanOfBranch(br), c=CC[ch]||"#0a86cf";
+    return '<div class="hbr-r"><span class="n">'+(i+1)+'</span><div class="m"><div class="t"><span class="nm">'+br+
+      ' <em style="color:'+c+'">'+(CN[ch]||"")+'</em></span><span class="v">฿'+fmt(v.a)+'</span></div>'+
+      '<div class="bar"><i style="width:'+Math.max(2,v.a/max*100).toFixed(1)+'%;background:'+c+'"></i></div>'+
+      '<div class="s">'+fmt(v.q)+' ชิ้น · '+(v.a/tot*100).toFixed(1)+'% ของทั้งปี · มียอด '+v.m+' เดือน</div></div></div>'; }).join("")
+    || '<div class="s" style="padding:10px 0;color:#8fa3bb">ยังไม่มียอดขายในปีนี้</div>';
+  document.getElementById("yearSheet").style.display="flex";
+}
+document.getElementById("ysClose").onclick=()=>{ document.getElementById("yearSheet").style.display="none"; };
+document.getElementById("yearSheet").addEventListener("click",e=>{ if(e.target.id==="yearSheet") e.target.style.display="none"; });
 // รายการยอดขายแยกสาขา ของเดือนที่เลือก (เรียงมาก→น้อย · แถบยาวตามสัดส่วน)
 let homeBrAll=false;
 function renderHomeBr(ym, o){
