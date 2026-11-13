@@ -3771,6 +3771,17 @@ function fillImportMonthYear(defYm){
   if(defYm && /^\d{4}-\d{2}$/.test(defYm)){ ySel.value=defYm.slice(0,4); mSel.value=defYm.slice(5,7); }
   else { ySel.value=todayISO.slice(0,4); mSel.value=todayISO.slice(5,7); }
 }
+// ไฟล์ POS หลายเดือน: คืนรายการเดือนที่มีในไฟล์ (เรียง)
+function posFileMonths(){
+  if(!impData||impData.platform) return [];
+  return [...new Set(impData.items.concat(impData.issues||[]).map(o=>String(o.dt||"").slice(0,7)).filter(x=>/^\d{4}-\d{2}$/.test(x)))].sort();
+}
+// ทุกวันในช่วง lo..hi (รวมวันที่ไม่มียอด) — ใช้ล้างข้อมูลเก่าในช่วงที่ไฟล์ครอบคลุม
+function datesBetween(lo,hi){
+  const out=[]; let d=new Date(lo+"T00:00:00Z"); const e=new Date(hi+"T00:00:00Z");
+  while(d<=e){ out.push(d.toISOString().slice(0,10)); d.setUTCDate(d.getUTCDate()+1); }
+  return out;
+}
 function importChosenYm(){
   return document.getElementById("impYearSel").value+"-"+document.getElementById("impMonthSel").value;
 }
@@ -3780,6 +3791,16 @@ function showImportScreen(){
   const sel=document.getElementById("impBranch"); sel.disabled=false;
   sel.innerHTML=allBranchNames().map(n=>'<option value="'+n.replace(/"/g,"&quot;")+'">'+n+'</option>').join("");
   fillImportMonthYear(impData.ym);
+  const pm=posFileMonths();
+  if(pm.length>1){   // ไฟล์หลายเดือน: ล็อกเดือนไว้ ลงตามวันที่จริงในไฟล์
+    if(mS) mS.disabled=true; if(yS) yS.disabled=true;
+    const hint0=document.getElementById("impDateHint");
+    if(hint0) hint0.innerHTML='ไฟล์มี <b>'+pm.length+' เดือน</b>: '+pm[0]+' ถึง '+pm[pm.length-1]+' — ลงตามวันที่จริงในไฟล์';
+    const lg0=document.getElementById("logoImp"); if(lg0) lg0.src=LOGO_SRC;
+    document.getElementById("screen-home").style.display="none";
+    document.getElementById("screen-import").style.display="block";
+    renderImport(); window.scrollTo(0,0); return;
+  }
   const hint=document.getElementById("impDateHint");
   if(hint) hint.innerHTML = impData.ym ? ('เดือนที่ตรวจพบในไฟล์: <b>'+impData.ym+'</b> — เลือกใหม่ได้') : 'เลือกเดือนที่ต้องการลงข้อมูล';
   const lg=document.getElementById("logoImp"); if(lg) lg.src=LOGO_SRC;
@@ -3808,7 +3829,7 @@ function renderImport(){
   });
   const base=calcTot/(1+VAT);
   document.getElementById("impSummary").innerHTML=
-    '<div class="lbl">'+br+' · '+chName+' · เดือน '+importChosenYm()+'</div>'+
+    '<div class="lbl">'+br+' · '+chName+' · '+(posFileMonths().length>1?posFileMonths()[0]+' – '+posFileMonths().slice(-1)[0]:'เดือน '+importChosenYm())+'</div>'+
     '<div class="big">฿'+fmt2(calcTot)+'</div>'+
     '<div class="sub">'+fmt(pieces)+' ชิ้น · '+impData.items.length+' ออเดอร์</div>'+
     '<div class="rep-vat">ก่อน VAT ฿'+fmt2(base)+' · VAT 7% ฿'+fmt2(calcTot-base)+'</div>'+
@@ -3851,27 +3872,32 @@ function confirmImport(){
   if(!all.length){ toast("ไม่มีรายการให้นำเข้า"); return; }
 
   // ใช้เดือนที่เลือก: คงวันเดิมในไฟล์ แต่เปลี่ยนเป็น ปี-เดือน ที่เลือก
+  // (ไฟล์หลายเดือน: ไม่ย้ายเดือน — ลงตามวันที่จริง)
   const fileYm=impData.ym||"";
-  if(chosenYm && chosenYm!==fileYm){
+  const multi=posFileMonths().length>1;
+  if(!multi && chosenYm && chosenYm!==fileYm){
     const dim=daysInMonth(chosenYm);
     all=all.map(o=>{ let day=parseInt(o.dt.slice(8,10))||1; if(day>dim) day=dim;
       return Object.assign({},o,{dt:chosenYm+"-"+String(day).padStart(2,"0")}); });
   }
 
-  const dates=[...new Set(all.map(o=>o.dt))];
-  const dup=dates.filter(d=>data.branches[br] && data.branches[br][d] && Object.keys(data.branches[br][d]).length);
-  let msg="นำเข้า "+all.length+" ออเดอร์ ลงที่ "+br+"\nเดือน "+chosenYm+" · "+dates.length+" วัน";
-  if(chosenYm!==fileYm && fileYm) msg+="\n(ไฟล์ตรวจพบ "+fileYm+" → ลงเป็น "+chosenYm+")";
-  if(dup.length) msg+="\n\n⚠️ "+dup.length+" วันมีข้อมูลอยู่แล้ว จะถูกแทนที่";
-  const _withOrders=dates.filter(d=>{ const o=(data.orders[br]||{})[d]; return Array.isArray(o)&&o.length; });
+  const dates=[...new Set(all.map(o=>o.dt))].sort();
+  // ไฟล์ POS = ข้อมูลจริงของทุกวันในช่วงที่ไฟล์ครอบคลุม -> ล้างทุกวันในช่วง (กันยอดเก่าที่ลงเป็นก้อน/คนละวันซ้อน)
+  const rangeDates=dates.length?datesBetween(dates[0],dates[dates.length-1]):[];
+  const dup=rangeDates.filter(d=>data.branches[br] && data.branches[br][d] && Object.keys(data.branches[br][d]).length);
+  const extra=dup.filter(d=>dates.indexOf(d)<0);   // วันที่มีข้อมูลในแอป แต่ไฟล์ไม่มียอด
+  let msg="นำเข้า "+all.length+" ออเดอร์ ลงที่ "+br+"\n"+(multi?("ช่วง "+dates[0]+" ถึง "+dates[dates.length-1]+" ("+posFileMonths().length+" เดือน)"):("เดือน "+chosenYm))+" · "+dates.length+" วันที่มียอด";
+  if(!multi && chosenYm!==fileYm && fileYm) msg+="\n(ไฟล์ตรวจพบ "+fileYm+" → ลงเป็น "+chosenYm+")";
+  if(dup.length) msg+="\n\n⚠️ "+dup.length+" วันในช่วงนี้มีข้อมูลอยู่แล้ว จะถูกแทนที่ด้วยยอดจากไฟล์"+(extra.length?" (ในนี้ "+extra.length+" วันที่ไฟล์ไม่มียอด จะถูกล้างเป็น 0)":"");
+  const _withOrders=rangeDates.filter(d=>{ const o=(data.orders[br]||{})[d]; return Array.isArray(o)&&o.length; });
   if(_withOrders.length) msg+="\n⚠️ "+_withOrders.length+" วันมีบิลที่ลงมือไว้ — บิลของวันนั้นจะถูกแทนที่ด้วยข้อมูลจากไฟล์";
   if(!confirm(msg+"\n\nยืนยัน?")) return;
 
   // เคลียร์วันที่ที่จะลง (แทนที่ ไม่บวกทับ)
   data.branches[br]=data.branches[br]||{}; data.pay[br]=data.pay[br]||{}; data.pxn[br]=data.pxn[br]||{};
   data.lines[br]=data.lines[br]||{};
-  dates.forEach(d=>{ data.branches[br][d]={}; data.pay[br][d]={}; data.pxn[br][d]={}; delete data.lines[br][d]; });
-  dropOrdersForImport(br,dates);
+  rangeDates.forEach(d=>{ data.branches[br][d]={}; data.pay[br][d]={}; data.pxn[br][d]={}; delete data.lines[br][d]; });
+  dropOrdersForImport(br,rangeDates);
 
   const amtAcc={}, qtyAcc={}, lineAcc={};
   all.forEach(o=>{
@@ -3898,7 +3924,7 @@ function confirmImport(){
     const unit=Math.round((amtAcc[k]/qtyAcc[k])*100)/100;
     if(Math.abs(unit-priceLabel(vid,br))>0.005) data.pxn[br][d][vid]=unit;
   });
-  dates.forEach(d=>stampTs(br,d));
+  rangeDates.forEach(d=>stampTs(br,d));   // ประทับเวลาทุกวันในช่วง ให้ Sync ส่งการล้างไปเครื่องอื่นด้วย
   store.write(data);
   toast("นำเข้าสำเร็จ "+all.length+" ออเดอร์");
   impData=null; backFromImport();
