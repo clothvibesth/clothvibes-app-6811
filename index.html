@@ -4254,6 +4254,12 @@ function backFromDash(){
 }
 
 // รวมข้อมูลของเดือน+ช่องทางที่เลือก
+function dashAllBranches(){
+  if(dashPickedBranches.size===0) return true;
+  // เทียบกับรายชื่อสาขาในเมนู (CHANNELS) — ไม่นับชื่อเก่าที่ค้างในข้อมูล
+  const names=[]; Object.keys(CHANNELS).forEach(k=>CHANNELS[k].groups.forEach(g=>g.items.forEach(n=>names.push(n))));
+  return names.every(b=>dashPickedBranches.has(b));
+}
 function dashBranchPass(br){ return dashPickedBranches.size===0 || dashPickedBranches.has(br); }
 // รับได้ทั้ง "2026-08" (ทั้งเดือน) หรือ {lo,hi} (ช่วงวันที่)
 function dashRange(arg){
@@ -4305,7 +4311,7 @@ function dashData(arg){
   const gp=E.gpAmt;
   const opex=E.rent+E.elec+E.wage+E.comm+(E.other||0);
   // ค่าใช้จ่ายสำนักงานใหญ่: หักเฉพาะตอนดูทุกสาขา (ไม่ได้กรองสาขา)
-  const hq=(dashPickedBranches.size===0)?hqForRange(lo,hi):0;
+  const hq=dashAllBranches()?hqForRange(lo,hi):0;
   const profit=base-gp-feeOnline-ads-opex-hq-cost;
   // แยก GP บูท vs ค่าธรรมเนียมออนไลน์ (คนละเรื่องกัน — ห้ามเฉลี่ยรวม)
   let gpBoothBase=0; Object.values(E.gpByBr||{}).forEach(o=>{ gpBoothBase+=o.base; });
@@ -4485,41 +4491,43 @@ function dashCopySummary(){
     : D.lo+" ถึง "+D.hi;
   const pct=x=>D.sales>0?" ("+(x/D.sales*100).toFixed(1)+"%)":"";
   const cmp=(cur,prev)=>{ if(prev<=0) return ""; const d=(cur-prev)/prev*100; return " "+(d>=0?"▲":"▼")+Math.abs(d).toFixed(1)+"%"; };
-  // ขอบเขตสาขาที่เลือก
-  let scope="ทุกสาขา";
-  if(dashPickedBranches.size>0) scope=[...dashPickedBranches].join(", ");
-  const L=[];
+  // ขอบเขตสาขาที่เลือก (ติ๊กครบทุกสาขา = "ทุกสาขา")
+  const scope=dashAllBranches()?"ทุกสาขา":[...dashPickedBranches].join(", ");
+  const L=[], SEP="──────────────";
   L.push("📊 สรุปยอดขาย CLOTHVIBES");
   L.push((typeof arg==="string"?"เดือน ":"ช่วง ")+moTxt+" · "+scope);
-  L.push("──────────────");
-  L.push("ยอดขาย (รวม VAT): ฿"+fmt2(D.sales)+cmp(D.sales,P.sales));
-  L.push("ฐานภาษี: ฿"+fmt2(D.base)+" · VAT: ฿"+fmt2(D.vat));
-  L.push("จำนวน: "+fmt(D.pieces)+" ชิ้น"+cmp(D.pieces,P.pieces));
-  L.push("──────────────");
-  L.push("💰 โครงสร้างเงิน");
+  L.push(SEP);
+  // ตัวเลขหลัก 3 บรรทัด
+  L.push("💰 ยอดขาย (รวม VAT): ฿"+fmt2(D.sales)+cmp(D.sales,P.sales));
+  L.push("🧾 ฐานภาษี: ฿"+fmt2(D.base)+" · VAT ฿"+fmt2(D.vat));
+  L.push("✅ กำไรสุทธิ: ฿"+fmt2(D.profit)+pct(D.profit)+cmp(D.profit,P.profit));
+  L.push(SEP);
+  L.push("💸 ค่าใช้จ่าย (% ของยอดขาย)");
   if(D.cost>0)      L.push("• ต้นทุนสินค้า: ฿"+fmt2(D.cost)+pct(D.cost));
   // GP บูท: % เทียบยอดบูทก่อน VAT (ตรงกับที่ห้างคิด)
-  if(D.gp>0) L.push("• GP บูท: ฿"+fmt2(D.gp)+" ("+(D.gpBoothBase>0?(D.gp/D.gpBoothBase*100).toFixed(1):"0")+"% ของยอดบูทก่อน VAT"+(D.sales>0?" · "+(D.gp/D.sales*100).toFixed(1)+"% ของยอดรวม":"")+")");
-  // ค่าธรรมเนียมออนไลน์: แยกแพลตฟอร์ม, % เทียบยอดของแพลตฟอร์มนั้น (รวม VAT ตามที่แพลตฟอร์มหัก)
-  Object.keys(D.plat).sort().forEach(p=>{ const x=D.plat[p]; if(x.fee<=0.005) return;
-    L.push("• ค่าธรรมเนียม "+p+": ฿"+fmt2(x.fee)+" ("+(x.sales>0?(x.fee/x.sales*100).toFixed(1):"0")+"% ของยอด "+p+(D.sales>0?" · "+(x.fee/D.sales*100).toFixed(1)+"% ของยอดรวม":"")+")"); });
-  // (ค่าแอดยังแสดงเป็นบรรทัดรวมด้านล่างเหมือนเดิม)
-  if(D.noGp.length) L.push("⚠️ บูทยังไม่ตั้ง GP: "+D.noGp.join(", "));
+  if(D.gp>0) L.push("• GP บูท: ฿"+fmt2(D.gp)+pct(D.gp)+" · "+(D.gpBoothBase>0?(D.gp/D.gpBoothBase*100).toFixed(1):"0")+"% ของยอดบูท");
+  // ค่าธรรมเนียมออนไลน์: Shopee ก่อน TikTok, % เทียบยอดของแพลตฟอร์มนั้น
+  ["Shopee","TikTok"].concat(Object.keys(D.plat).filter(p=>p!=="Shopee"&&p!=="TikTok")).forEach(p=>{ const x=D.plat[p]; if(!x||x.fee<=0.005) return;
+    L.push("• ค่าธรรมเนียม "+p+": ฿"+fmt2(x.fee)+pct(x.fee)+" · "+(x.sales>0?(x.fee/x.sales*100).toFixed(1):"0")+"% ของยอด "+p); });
   if(D.ads>0)       L.push("• ค่าโฆษณา (AD): ฿"+fmt2(D.ads)+pct(D.ads));
-  if(D.opex>0)      L.push("• ค่าใช้จ่าย(เช่า/ไฟ/จ้าง): ฿"+fmt2(D.opex)+pct(D.opex));
-  if(D.hq>0)        L.push("• ค่าใช้จ่ายสำนักงานใหญ่: ฿"+fmt2(D.hq)+pct(D.hq));
-  else if(dashPickedBranches.size>0 && hqForRange(D.lo,D.hi)>0) L.push("• (ไม่หักค่าใช้จ่ายสำนักงานใหญ่ — ดูเฉพาะบางสาขา)");
+  if(D.opex>0)      L.push("• ค่าใช้จ่ายสาขา (เช่า/ไฟ/จ้าง): ฿"+fmt2(D.opex)+pct(D.opex));
+  // ค่าใช้จ่ายสำนักงานใหญ่: บรรทัดแยก (ดูทุกสาขา = หัก · ดูบางสาขา = ไม่หัก)
+  if(dashAllBranches()) L.push("• ค่าใช้จ่ายสำนักงานใหญ่: "+(D.hq>0?"฿"+fmt2(D.hq)+pct(D.hq):"ยังไม่กรอก"));
+  else if(hqForRange(D.lo,D.hi)>0) L.push("• ค่าใช้จ่ายสำนักงานใหญ่: ไม่หัก (ดูเฉพาะบางสาขา)");
   L.push("• VAT ขาย: ฿"+fmt2(D.vat)+pct(D.vat));
-  L.push("✅ กำไรสุทธิ: ฿"+fmt2(D.profit)+pct(D.profit)+cmp(D.profit,P.profit));
+  if(D.noGp.length) L.push("⚠️ บูทยังไม่ตั้ง GP: "+D.noGp.join(", "));
   if(D.est) L.push("⚠️ ค่าธรรมเนียมบางส่วนเป็นตัวประมาณ");
-  // แยกช่องทาง
-  const chans=Object.keys(D.perChan).sort((a,b)=>D.perChan[b].sales-D.perChan[a].sales);
+  // แยกช่องทาง: เรียง Shopee → TikTok → บูท → สาขาหลัก (ที่เหลือต่อท้าย)
+  const ORDER=["shopee","tiktok","booth","main"];
+  const chans=Object.keys(D.perChan).sort((a,b)=>{
+    const ia=ORDER.indexOf(a), ib=ORDER.indexOf(b);
+    return (ia<0?99:ia)-(ib<0?99:ib) || D.perChan[b].sales-D.perChan[a].sales; });
   if(chans.length){
-    L.push("──────────────");
-    L.push("📍 แยกช่องทาง / สาขา");
+    L.push(SEP);
+    L.push("📍 แยกช่องทาง · รวม "+fmt(D.pieces)+" ชิ้น"+cmp(D.pieces,P.pieces));
     chans.forEach(c=>{
       const m=CHAN_META[c]||{n:c};
-      L.push("• "+m.n+": ฿"+fmt(D.perChan[c].sales)+" ("+fmt(D.perChan[c].pieces)+" ชิ้น)");
+      L.push("• "+m.n+": ฿"+fmt(D.perChan[c].sales)+pct(D.perChan[c].sales)+" · "+fmt(D.perChan[c].pieces)+" ชิ้น");
       // แตกรายสาขาในช่องทางนี้
       const brs=Object.keys(D.perBranch||{}).filter(b=>D.perBranch[b].ch===c)
         .sort((a,b)=>D.perBranch[b].sales-D.perBranch[a].sales);
@@ -4532,7 +4540,7 @@ function dashCopySummary(){
   // สินค้าทุกรายการ (เรียงตามยอดขาย)
   const mk=Object.keys(D.byModel).sort((a,b)=>D.byModel[b].amt-D.byModel[a].amt);
   if(mk.length){
-    L.push("──────────────");
+    L.push(SEP);
     L.push("🏆 สินค้าที่ขายได้ ("+mk.length+" รุ่น)");
     let tq=0, ta=0;
     mk.forEach((k,i)=>{ const x=D.byModel[k]; tq+=x.q; ta+=x.amt;
