@@ -168,7 +168,8 @@
   .hs-dots span.on{width:14px;background:var(--accent);}
   /* การ์ดตั้งค่า & สำรองข้อมูล */
   .set-card{max-width:580px;width:calc(100% - 28px);margin:10px auto 0;background:var(--card);border-radius:18px;padding:12px;box-shadow:var(--shadow);box-sizing:border-box;}
-  .set-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+  .set-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+  @media (max-width:360px){ .set-grid{grid-template-columns:1fr 1fr;} }
   .set-tile{display:flex;flex-direction:column;align-items:flex-start;gap:2px;background:#f5fafe;border:1px solid var(--line);border-radius:14px;padding:12px 12px 11px;font-family:inherit;text-align:left;cursor:pointer;transition:all .12s;}
   .set-tile:hover{border-color:var(--accent);background:#eef7fe;}
   .set-tile:active{transform:scale(.98);}
@@ -369,6 +370,11 @@
   #screen-price .rep-logo{height:30px;width:auto;max-width:150px;flex:none;}
   #screen-price .rep-ttl{font-family:"Bai Jamjuree",sans-serif;font-weight:700;font-size:19px;color:var(--ink);}
   .price-entry{background:linear-gradient(135deg,#ffb020,#ff8a00)!important;color:#fff!important;}
+  .exp-sec-hq .exp-sec-h{color:#5b4d8a;}
+  .exp-sec-hq .exp-sec-h small{font-weight:400;font-size:11.5px;opacity:.8;}
+  .exp-entry{background:linear-gradient(135deg,#4a5568,#2d3748)!important;color:#fff!important;border:none!important;margin-top:20px;box-shadow:0 8px 18px rgba(45,55,72,.25);}
+  .exp-entry small{font-weight:400;font-size:11.5px;opacity:.75;margin-left:6px;}
+  .exp-entry + .price-entry{margin-top:10px;}
   .pr-chk{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-soft);margin-top:4px;cursor:pointer;user-select:none;}
   .pr-chk input{width:17px;height:17px;accent-color:var(--accent);}
   .pr-note{font-size:11.5px;color:var(--ink-soft);margin-top:8px;line-height:1.55;}
@@ -925,6 +931,7 @@
       <span class="tx"><b>TikTok</b><small>ออนไลน์ · หักค่าธรรมเนียม</small></span>
     </button>
   </div>
+  <button class="report-entry exp-entry" id="expBtn">⚙️ ค่าใช้จ่ายรายสาขา <small>ค่าเช่า · ไฟ · GP · แอด</small></button>
   <button class="report-entry price-entry" id="priceBtnH">💡 ขายเท่าไหร่ดี?</button>
   <div class="sec-h">รายงาน &amp; เอกสาร</div>
   <button class="report-entry alt ramp r1" id="reportBtnDetailH">📒 รายงานการขายแบบละเอียด</button>
@@ -953,10 +960,9 @@
   <div class="sec-h">ตั้งค่า &amp; สำรองข้อมูล</div>
   <div class="set-card">
     <div class="set-grid">
-      <button class="set-tile" id="expBtn"><span class="si">⚙️</span><b>ค่าใช้จ่ายรายสาขา</b><small>ค่าเช่า · ไฟ · GP · แอด</small></button>
-      <button class="set-tile" id="cleanBtn"><span class="si">🧹</span><b>ตรวจ/ล้างข้อมูล</b><small>หาข้อมูลเพี้ยน</small></button>
-      <button class="set-tile" id="backupBtn"><span class="si">💾</span><b>เซฟไฟล์สำรอง</b><small>ดาวน์โหลด .json</small></button>
-      <button class="set-tile" id="restoreBtn"><span class="si">📂</span><b>เปิดไฟล์สำรอง</b><small>กู้คืนจาก .json</small></button>
+      <button class="set-tile" id="cleanBtn"><span class="si">🧹</span><b>ตรวจข้อมูล</b><small>หาข้อมูลเพี้ยน</small></button>
+      <button class="set-tile" id="backupBtn"><span class="si">💾</span><b>เซฟสำรอง</b><small>ดาวน์โหลด .json</small></button>
+      <button class="set-tile" id="restoreBtn"><span class="si">📂</span><b>เปิดสำรอง</b><small>กู้คืน .json</small></button>
     </div>
     <input type="file" id="restoreInput" accept=".json,application/json" hidden autocomplete="off">
     <div class="sync-box" id="syncBox"></div>
@@ -2884,6 +2890,19 @@ function startSyncLoop(){
 
 /* ---------- ค่าใช้จ่ายรายสาขา (รายเดือน) + เฉลี่ยตามวัน ---------- */
 const EXP_FIELDS=[["gp","GP %"],["rent","ค่าเช่า"],["elec","ค่าไฟ"],["wage","ค่าจ้าง"],["comm","คอมมิชชั่น"]];
+// ค่าใช้จ่ายสำนักงานใหญ่ (ส่วนกลาง) — เก็บใน data.expenses[ym]["สำนักงานใหญ่"] (โครงเดียวกับสาขา, Sync ได้เลย)
+// รายงาน: หักเฉพาะตอนดู "ทุกสาขา" (ไม่กรองสาขา) — กรองบางสาขาจะไม่หัก เพื่อเห็นกำไรของสาขานั้นจริง ๆ
+const HQ_KEY="สำนักงานใหญ่";
+const HQ_FIELDS=[["hq_wage","เงินเดือนพนักงานออฟฟิศ"],["hq_rent","ค่าเช่าออฟฟิศ / โกดัง"],["hq_util","ค่าน้ำ ไฟ เน็ต โทรศัพท์"],
+                 ["hq_acct","ค่าทำบัญชี / สอบบัญชี"],["hq_mkt","ค่าการตลาดส่วนกลาง"]];
+function hqTotalOf(ym){ const e=expOf(ym,HQ_KEY); return HQ_FIELDS.reduce((s,f)=>s+(num(e[f[0]])||0),0)+othersSum(e); }
+// ค่าใช้จ่ายส่วนกลางของช่วงวันที่ (เฉลี่ยตามสัดส่วนวันในเดือน เหมือนค่าใช้จ่ายสาขา)
+function hqForRange(lo,hi){
+  let t=0, cur=monthOf(lo), g=0;
+  while(cur<=monthOf(hi)){ const {days,dim}=overlapDays(cur,lo,hi); if(days>0) t+=hqTotalOf(cur)*days/dim;
+    if(++g>240) break; const [y,m]=cur.split("-").map(Number); const d=new Date(y,m,1); cur=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); }
+  return t;
+}
 function monthOf(iso){ return iso.slice(0,7); }
 // ถ้าเบราว์เซอร์ให้ค่าปีเป็น พ.ศ. (ปฏิทินไทย) ให้แปลงเป็น ค.ศ.
 function toAD(iso){
@@ -2993,6 +3012,31 @@ function renderExp(){
   const box=document.getElementById("expList"); box.innerHTML="";
   const ONLINE_FEES=[["comm","ค่าคอมมิชชั่น"],["txn","Transaction Fee"],["service","ค่าบริการ"],["order","ค่าธรรมเนียมคำสั่งซื้อ"],["ship","ค่าส่ง (ร้านจ่าย)"]];
   let hidden=0;
+  // ===== สำนักงานใหญ่ (ส่วนกลาง) =====
+  (function(){
+    const br=HQ_KEY, bq=br.replace(/"/g,"&quot;"), isOpen=(expOpen===br), t=hqTotalOf(ym), e=expOf(ym,br);
+    const sec=document.createElement("div"); sec.className="exp-sec exp-sec-hq";
+    sec.innerHTML='<div class="exp-sec-h"><span>🏢 สำนักงานใหญ่ <small>(ส่วนกลาง)</small></span><span class="exp-sec-t">฿'+fmt(t)+'</span></div>';
+    const list=document.createElement("div"); list.className="exp-rows";
+    const row=document.createElement("div"); row.className="exp-row"+(isOpen?" open":"");
+    row.innerHTML='<button type="button" class="exp-head" data-open="'+bq+'"><span class="nm">ค่าใช้จ่ายส่วนกลาง</span>'+
+      '<span class="vl'+(t>0?"":" none")+'">'+(t>0?"฿"+fmt(t):"ยังไม่กรอก")+'</span><span class="chev">'+(isOpen?"⌄":"›")+'</span></button>';
+    if(isOpen){
+      const body=document.createElement("div"); body.className="exp-body";
+      body.innerHTML='<div class="exp-fields">'+
+        HQ_FIELDS.map(f=>'<div class="exp-f"><label>'+f[1]+' (บาท/เดือน)</label>'+
+          '<input type="number" inputmode="decimal" data-br="'+bq+'" data-f="'+f[0]+'" value="'+(e[f[0]]||"")+'" placeholder="0" autocomplete="off"></div>').join("")+
+        '</div><div class="oth-sec">ค่าใช้จ่ายอื่น ๆ <small>(ตั้งชื่อเองได้)</small></div><div class="oth-list">'+
+        (e.others||[]).map((o,oi)=>'<div class="oth-row">'+
+          '<input type="text" class="oth-n" data-obr="'+bq+'" data-oi="'+oi+'" data-of="n" value="'+String(o.n||"").replace(/"/g,"&quot;")+'" placeholder="ระบุชื่อค่าใช้จ่าย" autocomplete="off">'+
+          '<input type="number" class="oth-v" inputmode="decimal" data-obr="'+bq+'" data-oi="'+oi+'" data-of="v" value="'+(o.v||"")+'" placeholder="0" autocomplete="off">'+
+          '<button type="button" class="oth-del" data-odel="'+bq+'|'+oi+'">×</button></div>').join("")+
+        '</div><button type="button" class="oth-add" data-oadd="'+bq+'">+ เพิ่มค่าใช้จ่ายอื่น</button>'+
+        '<div class="exp-hint">หักในรายงานเฉพาะตอนดู "ทุกสาขา" · ถ้ากรองดูบางสาขาจะไม่หักส่วนนี้</div>';
+      row.appendChild(body);
+    }
+    list.appendChild(row); sec.appendChild(list); box.appendChild(sec);
+  })();
   Object.keys(CHANNELS).forEach(key=>{
     const ch=CHANNELS[key];
     const online=(key==="shopee"||key==="tiktok");
@@ -3096,7 +3140,7 @@ document.getElementById("gpBtn").onclick=()=>{
 };
 function hasExpData(ym,br){ const e=expOf(ym,br); return (e.rent||0)+(e.elec||0)+(e.wage||0)+(e.comm||0)>0; }
 function othersSum(e){ return (e.others||[]).reduce((s,o)=>s+(num(o.v)||0),0); }
-function expTotalOf(ym,br){ const e=expOf(ym,br); return (e.rent||0)+(e.elec||0)+(e.wage||0)+(e.comm||0)+othersSum(e); }
+function expTotalOf(ym,br){ if(br===HQ_KEY) return hqTotalOf(ym); const e=expOf(ym,br); return (e.rent||0)+(e.elec||0)+(e.wage||0)+(e.comm||0)+othersSum(e); }
 function feeTotalOf(br,ym){ const e=feeOf(br,ym); return (e.comm||0)+(e.txn||0)+(e.service||0)+(e.order||0)+(e.ship||0)+(e.ads||0); }
 
 document.getElementById("expList").addEventListener("click",e=>{
@@ -3136,6 +3180,8 @@ document.getElementById("expList").addEventListener("input",e=>{
   } else return;
   const vl=row.querySelector(".exp-head .vl");
   if(vl){ vl.textContent="฿"+fmt(tot); vl.classList.toggle("none",!(tot>0)); }
+  // สำนักงานใหญ่มีแถวเดียว -> อัปเดตยอดหัวส่วนด้วย
+  const hqT=row.closest(".exp-sec-hq"); if(hqT){ const st=hqT.querySelector(".exp-sec-t"); if(st) st.textContent="฿"+fmt(tot); }
 });
 document.getElementById("expMonth").onchange=renderExp;
 document.getElementById("expBtn").onclick=openExp;
@@ -4258,13 +4304,15 @@ function dashData(arg){
   const feeOnline=F.comm+F.txn+F.service+F.ship+F.order;  // ค่าธรรมเนียมแพลตฟอร์ม (ไม่รวมโฆษณา)
   const gp=E.gpAmt;
   const opex=E.rent+E.elec+E.wage+E.comm+(E.other||0);
-  const profit=base-gp-feeOnline-ads-opex-cost;
+  // ค่าใช้จ่ายสำนักงานใหญ่: หักเฉพาะตอนดูทุกสาขา (ไม่ได้กรองสาขา)
+  const hq=(dashPickedBranches.size===0)?hqForRange(lo,hi):0;
+  const profit=base-gp-feeOnline-ads-opex-hq-cost;
   // แยก GP บูท vs ค่าธรรมเนียมออนไลน์ (คนละเรื่องกัน — ห้ามเฉลี่ยรวม)
   let gpBoothBase=0; Object.values(E.gpByBr||{}).forEach(o=>{ gpBoothBase+=o.base; });
   const noGp=Object.keys(E.gpByBr||{}).filter(b=>E.gpByBr[b].base>0.5 && E.gpByBr[b].amt<0.005);  // บูทที่ยังไม่ตั้ง GP
   const plat={};   // {TikTok:{fee, sales}}
   Object.keys(F.byPlat||{}).forEach(p=>{ plat[p]={fee:F.byPlat[p], ads:(F.adsByPlat||{})[p]||0, sales:(perBranch[p]||{}).sales||0}; });
-  return {ym:(typeof arg==="string"?arg:""), lo, hi, sales,base,vat,cost,pieces,gp,feeOnline,ads,opex,profit,perChan,perBranch,byModel,byDay,est:F.est,
+  return {ym:(typeof arg==="string"?arg:""), lo, hi, sales,base,vat,cost,pieces,gp,feeOnline,ads,opex,hq,profit,perChan,perBranch,byModel,byDay,est:F.est,
           gpBoothBase, gpByBr:E.gpByBr||{}, noGp, plat};
 }
 function prevYm(ym){ const [y,m]=ym.split("-").map(Number); const d=new Date(y,m-2,1); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); }
@@ -4332,6 +4380,7 @@ function renderDashboard(){
     {n:"ค่าธรรมเนียมออนไลน์",v:D.feeOnline,c:"#ffd54a"},
     {n:"ค่าโฆษณา (AD)",v:D.ads,c:"#ff5c8a"},
     {n:"ค่าใช้จ่าย (เช่า/ไฟ/จ้าง)",v:D.opex,c:"#c9459b"},
+    {n:"ค่าใช้จ่ายสำนักงานใหญ่",v:D.hq||0,c:"#8e7cc3"},
     {n:"VAT ขาย",v:D.vat,c:"#8fd6ff"},
   ].filter(x=>x.v>0.5);
   drawDonut("dashDonut","dashDonutLegend",parts,D.sales);
@@ -4458,6 +4507,8 @@ function dashCopySummary(){
   if(D.noGp.length) L.push("⚠️ บูทยังไม่ตั้ง GP: "+D.noGp.join(", "));
   if(D.ads>0)       L.push("• ค่าโฆษณา (AD): ฿"+fmt2(D.ads)+pct(D.ads));
   if(D.opex>0)      L.push("• ค่าใช้จ่าย(เช่า/ไฟ/จ้าง): ฿"+fmt2(D.opex)+pct(D.opex));
+  if(D.hq>0)        L.push("• ค่าใช้จ่ายสำนักงานใหญ่: ฿"+fmt2(D.hq)+pct(D.hq));
+  else if(dashPickedBranches.size>0 && hqForRange(D.lo,D.hi)>0) L.push("• (ไม่หักค่าใช้จ่ายสำนักงานใหญ่ — ดูเฉพาะบางสาขา)");
   L.push("• VAT ขาย: ฿"+fmt2(D.vat)+pct(D.vat));
   L.push("✅ กำไรสุทธิ: ฿"+fmt2(D.profit)+pct(D.profit)+cmp(D.profit,P.profit));
   if(D.est) L.push("⚠️ ค่าธรรมเนียมบางส่วนเป็นตัวประมาณ");
