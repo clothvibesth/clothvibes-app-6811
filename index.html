@@ -90,7 +90,10 @@
   /* ปุ่มลูกตาซ่อนยอด */
   .eye-btn{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:13px;border:1px solid #dbe8f5;background:rgba(255,255,255,.85);
     color:var(--accent-deep);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(10,110,190,.10);transition:transform .15s,background .2s;}
-  .eye-btn:hover{background:#fff;} .eye-btn:active{transform:scale(.92);}
+  .eye-btn:hover{background:#fff;}
+  .ref-btn{right:62px;}
+  .ref-btn.spin svg{animation:refspin .9s linear infinite;}
+  @keyframes refspin{to{transform:rotate(360deg);}} .eye-btn:active{transform:scale(.92);}
   .eye-btn svg{width:21px;height:21px;}
   body.hide-amt .eye-btn{background:var(--accent-deep);color:#fff;border-color:transparent;}
   /* โหมดซ่อนยอด: แทนตัวเลขเงินด้วย ฿ ****** (ซ่อนตัวเลขจริงด้วย font-size 0 แล้วแสดงดอกจันแทน) */
@@ -903,6 +906,8 @@
     <img class="logo-img" id="logoHome" alt="CLOTHVIBES">
     <!-- ปุ่มลูกตา: ซ่อน/แสดงตัวเลขยอดขายบนหน้าแรก (จำค่าไว้ในเครื่องนี้) -->
     <button class="eye-btn" id="eyeBtn" aria-label="ซ่อน/แสดงยอดขาย" title="ซ่อน/แสดงยอดขาย"></button>
+    <!-- ปุ่มรีเฟรช: ดึงข้อมูลล่าสุดจาก Google Sheet แล้ววาดหน้าใหม่ (ไม่ต้องปิด-เปิดแอป) -->
+    <button class="eye-btn ref-btn" id="refBtn" aria-label="รีเฟรช" title="ดึงข้อมูลล่าสุด"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg></button>
     <!-- แถบยอดขาย (เฉพาะยอดขาย ไม่โชว์ต้นทุน/กำไร) -->
     <div class="hrow">
       <div class="hstat" id="homeStats"></div>
@@ -2652,7 +2657,8 @@ function renderHomeStats(){
       '<button class="hs-nav next" aria-label="เดือนถัดไป">›</button>'+
       '<div class="hs-dots">'+show.map(()=>'<span></span>').join("")+'</div>';
     const tr=box.querySelector(".hs-track"), dots=[...box.querySelectorAll(".hs-dots span")];
-    const idx=()=>Math.round(tr.scrollLeft/tr.clientWidth);
+    // ตอนหน้าแรกถูกซ่อน clientWidth = 0 -> ใช้เดือนล่าสุด (กัน error)
+    const idx=()=>{ const n=tr.clientWidth>0?Math.round(tr.scrollLeft/tr.clientWidth):show.length-1; return Math.max(0,Math.min(show.length-1,isFinite(n)?n:show.length-1)); };
     const upd=()=>{ const n=idx(); dots.forEach((d,k)=>d.classList.toggle("on",k===n));
       renderHomeBr(show[n], M[show[n]]); renderHomeYear(show[n], M);
       box.querySelector(".prev").disabled=n<=0; box.querySelector(".next").disabled=n>=show.length-1; };
@@ -2670,7 +2676,7 @@ function renderHomeStats(){
 function maskAmt(v){ let n=0; return "฿"+fmt(v).replace(/\d/g,d=>(++n<=2?d:"*")); }
 // การ์ดยอดขายทั้งปี: รวมทุกเดือนของปีเดียวกับเดือนที่กำลังดู (เท่าที่ลงแล้ว)
 function renderHomeYear(ym, M){
-  const box=document.getElementById("homeYear"); if(!box) return;
+  const box=document.getElementById("homeYear"); if(!box || !ym) return;
   const y=ym.slice(0,4), ks=Object.keys(M).filter(k=>k.slice(0,4)===y && M[k].a>0.5).sort();
   let a=0,q=0; ks.forEach(k=>{ a+=M[k].a; q+=M[k].q; });
   const py=String(+y-1), pks=ks.map(k=>py+k.slice(4)).filter(k=>M[k]&&M[k].a>0.5);   // ช่วงเดียวกันของปีก่อน
@@ -2763,6 +2769,18 @@ function renderHomeBr(ym, o){
   const mb=document.getElementById("hbrMore"); if(mb) mb.onclick=()=>{ homeBrAll=!homeBrAll; renderHomeBr(ym,o); };
 }
 renderHomeStats();
+// ปุ่มรีเฟรช: ดึงข้อมูลล่าสุดจาก Google Sheet (ที่น้องบัญชีเพิ่งลง) แล้ววาดหน้าใหม่ทันที
+async function refreshAll(){
+  const b=document.getElementById("refBtn"); if(b&&b.classList.contains("spin")) return;
+  if(!syncCfg){ toast("เครื่องนี้ยังไม่ได้ตั้งค่า Sync"); return; }
+  if(b) b.classList.add("spin");
+  try{ await syncNow(); refreshCurrent(); toast("อัปเดตข้อมูลล่าสุดแล้ว"); }
+  catch(e){ toast("รีเฟรชไม่สำเร็จ (ออฟไลน์?)"); }
+  finally{ if(b) b.classList.remove("spin"); }
+}
+document.getElementById("refBtn").onclick=refreshAll;
+// กลับเข้าแอป (สลับแอป/ปลดล็อกจอ) -> ดึงข้อมูลล่าสุดให้เองอัตโนมัติ
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible" && syncCfg && !syncBusy) syncPull(); });
 // ปุ่มลูกตา: ซ่อน/แสดงยอดเงินบนหน้าแรก + หน้ายอดทั้งปี (การคัดลอกยังได้ตัวเลขจริง)
 (function(){
   const EYE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
@@ -2852,7 +2870,15 @@ function setupSync(){
 }
 function disableSync(){ if(confirm("ปิดซิงค์เฉพาะเครื่องนี้? (ข้อมูลในเครื่องยังอยู่ครบ)")){ syncCfg=null; try{localStorage.removeItem(SYNC_KEY);}catch(e){} rebuildSyncUI(); toast("ปิดซิงค์แล้ว"); } }
 function schedulePush(){ if(!syncCfg) return; clearTimeout(pushTimer); pushTimer=setTimeout(syncPush, 1500); }
+const isShown=id=>{ const el=document.getElementById(id); return !!el && getComputedStyle(el).display!=="none"; };
 function refreshCurrent(){
+  try{
+    if(isShown("screen-home") && typeof renderHomeStats==="function") renderHomeStats();
+    if(isShown("screen-dash") && typeof renderDashboard==="function") renderDashboard();
+    if(isShown("screen-prod") && typeof renderProd==="function") renderProd();
+    if(isShown("screen-exp") && typeof renderExp==="function") renderExp();
+    if(isShown("yearSheet") && window._ysData) { const h=document.getElementById("homeYear"); if(h&&h._M) openYearSheet(h._y,h._M); }
+  }catch(e){ console.warn("refresh",e); }
   if(document.getElementById("screen-app").style.display==="block"){ renderLines(); refreshSummary(); fitBottomPad(); }
   if(document.getElementById("screen-report").style.display==="block"){ renderReport(); }
 }
@@ -2885,7 +2911,8 @@ async function syncPush(){
 async function syncNow(){ if(!syncCfg) return; setSyncStatus("กำลังซิงค์…"); await syncPull(); await syncPush(); }
 function startSyncLoop(){
   if(syncCfg) syncPull();
-  setInterval(()=>{ if(syncCfg && !syncBusy && document.getElementById("screen-app").style.display==="block") syncPull(); }, 20000);
+  setInterval(()=>{ if(syncCfg && !syncBusy && document.visibilityState==="visible" &&
+      (isShown("screen-app")||isShown("screen-home")||isShown("screen-dash")||isShown("screen-prod"))) syncPull(); }, 20000);
 }
 
 /* ---------- ค่าใช้จ่ายรายสาขา (รายเดือน) + เฉลี่ยตามวัน ---------- */
