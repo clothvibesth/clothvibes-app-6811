@@ -827,6 +827,16 @@
   .dc-ret{color:#e0403a;}.dc-ret b{font-family:"Bai Jamjuree",sans-serif;}
   .dc-amt{margin-left:auto;font-family:"Bai Jamjuree",sans-serif;font-weight:600;color:var(--accent-deep);font-size:13px;}
   #docPrintArea{display:none;}
+  /* บีบระยะเมื่อรายการเยอะ (ตัวอักษรขนาดเดิม ลดแค่ช่องไฟ) */
+  .ivc.cmp1 .iv-right .sr{padding:1.5px 7px;}
+  .ivc.cmp1 .iv-right .sr span br{display:none;}
+  .ivc.cmp1 .iv-right .sr span small{margin-left:4px;}
+  .ivc.cmp2 .iv-tb th,.ivc.cmp2 .iv-tb td{padding:1px 4px;}
+  .ivc.cmp3 .iv-title{margin:3px 0 4px;} .ivc.cmp3 .iv-info td{padding:1px 4px;}
+  .ivc.cmp3 .iv-sign .ttl{margin-bottom:4px;min-height:14px;} .ivc.cmp3 .iv-sign .lb{margin:1px 0 4px;}
+  /* โหมดวัดขนาด (นอกจอ) ให้ตรงกับตอนพิมพ์ A4 */
+  body.doc-measure #docPrintArea{display:block!important;position:absolute;left:-10000px;top:0;width:210mm;}
+  body.doc-measure #docPrintArea .ivc{width:auto;padding:8mm 6mm;box-sizing:border-box;}
   .cn-pull{margin-top:6px;border:none;border-radius:9px;padding:7px 11px;font-family:inherit;font-size:12.5px;font-weight:600;color:#fff;background:var(--accent-deep);cursor:pointer;}
   /* เทมเพลตพิมพ์ */
   .ivc{width:200mm;padding:6mm;font-family:"Prompt",sans-serif;font-size:9pt;color:#000;background:#fff;}
@@ -842,7 +852,7 @@
   .iv-info td{padding:2px 4px;vertical-align:top;}
   .iv-info .k{width:88px;color:#333;}
   .iv-info .v{border-bottom:1px dotted #999;}
-  .iv-info .k2{width:82px;text-align:right;white-space:nowrap;}   /* กว้างพอให้ "อ้างอิงใบกำกับ" อยู่บรรทัดเดียว */
+  .iv-info .k2{width:52px;text-align:right;}
   .iv-info .v2{width:110px;border-bottom:1px dotted #999;font-weight:600;}
   .iv-tb{width:100%;border-collapse:collapse;font-size:8pt;}
   .iv-tb th,.iv-tb td{border:1px solid #000;padding:2.5px 4px;}
@@ -5843,7 +5853,7 @@ function docPrint(){
       '<td class="r">'+fmt(q)+'</td><td class="c">ตัว</td><td class="r">'+fmt2(num(r.price))+'</td>'+
       '<td class="r">'+fmt2(q*num(r.price))+'</td></tr>';
   });
-  for(let i=n;i<18;i++) rows+='<tr><td class="c">&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
+  for(let i=n;i<18;i++) rows+='<tr class="fill"><td class="c">&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
   const html=
   '<div class="ivc">'+
     '<div class="iv-h"><img src="'+LOGO_CO+'" class="iv-logo">'+
@@ -5909,8 +5919,22 @@ function docPrint(){
     '</div>'+
   '</div>';
   document.getElementById("docPrintArea").innerHTML=html;
+  docFitPage();
   document.body.classList.add("doc-printing");
   setTimeout(()=>{ window.print(); setTimeout(()=>document.body.classList.remove("doc-printing"),300); },150);
+}
+// ให้เอกสารพอดี A4 หน้าเดียว: วัดความสูงจริงแบบหน้าพิมพ์ แล้วตัดแถวว่างท้ายตารางออกทีละแถวจนพอดี
+// (ใบลดหนี้มีแถวยอดมากกว่าใบกำกับ จึงต้องเหลือแถวว่างน้อยกว่า)
+function docFitPage(){
+  const area=document.getElementById("docPrintArea"), ivc=area.querySelector(".ivc"); if(!ivc) return;
+  document.body.classList.add("doc-measure");
+  const probe=document.createElement("div"); probe.style.cssText="height:297mm;position:absolute;visibility:hidden";
+  area.appendChild(probe); const lim=probe.offsetHeight-6; probe.remove();   // เผื่อขอบ 6px
+  let fills=ivc.querySelectorAll("tr.fill");
+  for(let i=fills.length-1;i>=0 && ivc.offsetHeight>lim;i--) fills[i].remove();
+  // ยังล้น (รายการเยอะ) -> บีบระยะทีละขั้น: กล่องยอดด้านขวา -> แถวตาราง -> หัว/ช่องเซ็น (ขนาดตัวอักษรเท่าเดิม)
+  ["cmp1","cmp2","cmp3"].forEach(c=>{ if(ivc.offsetHeight>lim) ivc.classList.add(c); });
+  document.body.classList.remove("doc-measure");
 }
 function bahtTextDoc(n){
   n=Math.round(n*100)/100;
