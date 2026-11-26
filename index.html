@@ -792,6 +792,7 @@
   .hist-badge{display:inline-block;font-size:9.5px;padding:1px 7px;border-radius:20px;margin-right:5px;vertical-align:middle;}
   .hist-badge.iv{background:#e3f1fc;color:#0466a8;}
   .hist-badge.cn{background:#ffe7e0;color:#c0392b;}
+  .hist-badge.cnp{background:#fff1d6;color:#a86500;}
   .hist-acts{display:flex;gap:6px;width:100%;margin-top:4px;}
   .hist-acts button{flex:1;background:#fff;border:1px solid #d5dee8;border-radius:9px;padding:7px;font-family:inherit;font-size:11.5px;cursor:pointer;color:var(--accent-deep);}
   .hist-acts .del{color:var(--minus);border-color:#f3c8bd;}
@@ -852,7 +853,7 @@
   .iv-info td{padding:2px 4px;vertical-align:top;}
   .iv-info .k{width:88px;color:#333;}
   .iv-info .v{border-bottom:1px dotted #999;}
-  .iv-info .k2{width:52px;text-align:right;}
+  .iv-info .k2{width:82px;text-align:right;white-space:nowrap;}   /* กว้างพอให้ "อ้างอิงใบกำกับ" อยู่บรรทัดเดียว */
   .iv-info .v2{width:110px;border-bottom:1px dotted #999;font-weight:600;}
   .iv-tb{width:100%;border-collapse:collapse;font-size:8pt;}
   .iv-tb th,.iv-tb td{border:1px solid #000;padding:2.5px 4px;}
@@ -1265,6 +1266,13 @@
       <div class="rep-field"><label>วันที่</label><input type="date" id="docDate" autocomplete="off"></div>
       <div class="rep-field" id="docCreditF"><label>เครดิต (วัน)</label><input type="number" id="docCredit" value="91" autocomplete="off"></div>
       <div class="rep-field"><label>ส่วนลด/GP %</label><input type="number" id="docDisc" value="25" autocomplete="off"></div>
+    </div>
+    <!-- ใบลดหนี้: เลือกประเภท รับคืนสินค้า / ลดราคาสินค้า (ส่วนลดหน้าร้าน) -->
+    <div class="rep-row" id="docKindRow" style="display:none">
+      <div class="rep-field"><label>ประเภทใบลดหนี้</label><select id="docCnKind" autocomplete="off">
+        <option value="ret">รับคืนสินค้า (ของที่ขายไม่ได้)</option>
+        <option value="price">ลดราคาสินค้า (ขายต่ำกว่าราคาในใบกำกับ)</option>
+      </select></div>
     </div>
     <div class="rep-row" id="docRefRow" style="display:none">
       <div class="rep-field"><label>อ้างอิงใบกำกับเลขที่</label><input type="text" id="docRef" placeholder="IVCVTM-003" autocomplete="off"></div>
@@ -5505,7 +5513,13 @@ function fillDocCust(){
   const sel=document.getElementById("docCust");
   sel.innerHTML=data.doccust.map(c=>'<option value="'+c.id+'">'+c.name+'</option>').join("");
 }
-function docNewRow(){ return {code:"", name:"", qty:0, price:0, sold:0}; }
+function docNewRow(){ return {code:"", name:"", qty:0, price:0, sold:0, np:0}; }
+/* ประเภทใบลดหนี้: "ret" = รับคืนสินค้า (ค่าเดิม) · "price" = ลดราคาสินค้า (ส่วนลดหน้าร้าน) */
+const CN_REASON={ret:"รับคืนสินค้าฝากขายที่จำหน่ายไม่หมด", price:"ลดราคาสินค้าตามรายการส่งเสริมการขายหน้าร้าน"};
+function cnKind(){ const el=document.getElementById("docCnKind"); return el && el.value==="price" ? "price" : "ret"; }
+function isPriceCN(){ return docMode==="cn" && cnKind()==="price"; }
+// ราคาต่อหน่วยที่ใช้คิดเงิน: ใบลดราคา = ราคาเดิม − ราคาขายจริง (ส่วนต่างต่อตัว)
+function docUnit(r){ return isPriceCN() ? num(r.price)-num(r.np) : num(r.price); }
 
 /* ---- จัดการทะเบียนลูกค้า ---- */
 const CUST_FIELDS=[["name","ชื่อลูกค้า (นิติบุคคล + สาขา)","text"],["addr","ที่อยู่","area"],
@@ -5549,30 +5563,39 @@ function toggleCustPanel(on){
 function renderDocItems(){
   const box=document.getElementById("docItems");
   if(!docRows.length){ box.innerHTML='<div class="empty">ยังไม่มีรายการ — กด "เพิ่มรายการ"</div>'; renderDocSum(); return; }
-  const isCN=(docMode==="cn");
+  const isCN=(docMode==="cn"), isP=isPriceCN();
   box.innerHTML='<div class="pr-tb">'+docRows.map((r,i)=>
     '<div class="doc-row"><div class="doc-r1">'+
       '<input type="text" class="dc-code" data-i="'+i+'" data-f="code" value="'+String(r.code).replace(/"/g,"&quot;")+'" placeholder="รหัสสินค้า" autocomplete="off">'+
       '<input type="text" class="dc-name" data-i="'+i+'" data-f="name" value="'+String(r.name).replace(/"/g,"&quot;")+'" placeholder="รายละเอียด" autocomplete="off">'+
       '<button class="dc-del" data-del="'+i+'">×</button></div>'+
     '<div class="doc-r2">'+
-      (isCN
+      (isP
+        ? '<label>จำนวนที่ขาย <input type="number" class="dc-n" data-i="'+i+'" data-f="qty" value="'+(r.qty||"")+'" inputmode="numeric" autocomplete="off"></label>'+
+          '<label>ราคาในใบกำกับ <input type="number" class="dc-n" data-i="'+i+'" data-f="price" value="'+(r.price||"")+'" inputmode="decimal" autocomplete="off"></label>'+
+          '<label>ราคาขายจริง <input type="number" class="dc-n" data-i="'+i+'" data-f="np" value="'+(r.np||"")+'" inputmode="decimal" autocomplete="off"></label>'+
+          '<span class="dc-ret">'+docRowNote(r)+'</span>'
+        : isCN
         ? '<label>ส่งไป <input type="number" class="dc-n" data-i="'+i+'" data-f="qty" value="'+(r.qty||"")+'" autocomplete="off"></label>'+
           '<label>ขายได้ <input type="number" class="dc-n" data-i="'+i+'" data-f="sold" value="'+(r.sold||"")+'" autocomplete="off"></label>'+
-          '<span class="dc-ret">คืน <b>'+fmt(Math.max(num(r.qty)-num(r.sold),0))+'</b></span>'
+          '<span class="dc-ret">'+docRowNote(r)+'</span>'
         : '<label>จำนวน <input type="number" class="dc-n" data-i="'+i+'" data-f="qty" value="'+(r.qty||"")+'" autocomplete="off"></label>')+
-      '<label>ราคา/หน่วย <input type="number" class="dc-n" data-i="'+i+'" data-f="price" value="'+(r.price||"")+'" autocomplete="off"></label>'+
-      '<span class="dc-amt">฿'+fmt2(docQty(r)*num(r.price))+'</span>'+
+      (isP?'':'<label>ราคา/หน่วย <input type="number" class="dc-n" data-i="'+i+'" data-f="price" value="'+(r.price||"")+'" autocomplete="off"></label>')+
+      '<span class="dc-amt">฿'+fmt2(docQty(r)*docUnit(r))+'</span>'+
     '</div></div>').join("")+'</div>';
   box.querySelectorAll("[data-f]").forEach(inp=>{
     inp.oninput=()=>{
       const r=docRows[+inp.dataset.i]; if(!r) return;
       r[inp.dataset.f]= inp.type==="number" ? num(inp.value) : inp.value;
       saveDocDraft();
-      if(inp.type==="number"){ const pos=inp.selectionStart; renderDocItems();
-        const again=document.querySelector('#docItems [data-i="'+inp.dataset.i+'"][data-f="'+inp.dataset.f+'"]');
-        if(again){ again.focus(); try{ again.setSelectionRange(pos,pos); }catch(e){} }
-      } else renderDocSum();
+      // แก้บั๊กเคอร์เซอร์เด้งไปหน้าสุด: เดิมสร้างรายการใหม่ทั้งหมดทุกครั้งที่พิมพ์ (ช่อง number คืนตำแหน่งเคอร์เซอร์ไม่ได้)
+      // ตอนนี้อัปเดตแค่ตัวเลขคำนวณของแถวนั้น ช่องที่กำลังพิมพ์ไม่ถูกแตะ
+      if(inp.type==="number"){ const row=inp.closest(".doc-row");
+        const ret=row&&row.querySelector(".dc-ret"), amt=row&&row.querySelector(".dc-amt");
+        if(ret) ret.innerHTML=docRowNote(r);
+        if(amt) amt.textContent="฿"+fmt2(docQty(r)*docUnit(r));
+      }
+      renderDocSum();
     };
   });
   box.querySelectorAll("[data-del]").forEach(b=>{
@@ -5580,11 +5603,20 @@ function renderDocItems(){
   });
   renderDocSum();
 }
-function docQty(r){ return docMode==="cn" ? Math.max(num(r.qty)-num(r.sold),0) : num(r.qty); }
+function docQty(r){ return docMode==="cn" && !isPriceCN() ? Math.max(num(r.qty)-num(r.sold),0) : num(r.qty); }
+// ข้อความคำนวณในแถว (ใบลดหนี้): รับคืน = จำนวนคืน · ลดราคา = ส่วนต่างต่อตัว
+function docRowNote(r){
+  if(isPriceCN()){
+    if(!(num(r.np)>0) || !(num(r.price)>0)) return 'ลด <b>–</b>/ตัว';
+    const d=num(r.price)-num(r.np);
+    return d>0 ? 'ลด <b>'+fmt2(d)+'</b>/ตัว' : '<b style="color:#c0392b">⚠️ ไม่ต่ำกว่าราคาเดิม</b>';
+  }
+  return 'คืน <b>'+fmt(Math.max(num(r.qty)-num(r.sold),0))+'</b>';
+}
 function docTotals(){
   const disc=num(document.getElementById("docDisc").value)||0;
   let qty=0, gross=0;
-  docRows.forEach(r=>{ const q=docQty(r); qty+=q; gross+=q*num(r.price); });
+  docRows.forEach(r=>{ const q=docQty(r); qty+=q; gross+=q*docUnit(r); });
   const r2=x=>Math.round(x*100)/100;
   gross=r2(gross);
   const dAmt=r2(gross*disc/100);
@@ -5608,7 +5640,7 @@ function cnPriorList(){
 // รุ่นในใบกำกับเดิมที่ยังไม่อยู่ในใบลดหนี้นี้ (ไม่นับรุ่นที่เคยคืนในใบลดหนี้ก่อนหน้าแล้ว)
 function cnMissing(iv){
   if(!iv) return [];
-  const done=new Set(); cnPriorList().forEach(d=>(d.rows||[]).forEach(r=>{ if(r.code) done.add(normNo(r.code)); }));
+  const done=new Set(); cnPriorList().filter(d=>d.cnKind!=="price").forEach(d=>(d.rows||[]).forEach(r=>{ if(r.code) done.add(normNo(r.code)); }));
   return (iv.rows||[]).filter(r=>num(r.qty)>0 && r.code && !done.has(normNo(r.code)) && !docRows.some(x=>normNo(x.code)===normNo(r.code)));
 }
 function cnCalc(){
@@ -5625,7 +5657,7 @@ function renderCnInfo(){
   const box=document.getElementById("docRefInfo"); if(!box) return;
   if(docMode!=="cn"){ box.innerHTML=""; return; }
   const iv=cnRefIV(), C=cnCalc(); let h="";
-  if(iv){
+  if(iv && !isPriceCN()){
     const missing=cnMissing(iv), first=!cnPriorList().length;
     h+='<div class="pr-note">📎 พบ '+iv.no+' ในประวัติ (ลว. '+thDateFull(iv.date)+' · ฿'+fmt2(iv.total)+') '+
        (first?'<button type="button" class="cn-pull" id="cnPull">ดึงรายการทั้งหมดจากใบกำกับเดิม</button>':'')+
@@ -5673,7 +5705,8 @@ function saveDocDraft(){
     credit:document.getElementById("docCredit").value, disc:document.getElementById("docDisc").value,
     cust:document.getElementById("docCust").value,
     ref:document.getElementById("docRef").value, reason:document.getElementById("docReason").value,
-    refDate:toAD(document.getElementById("docRefDate").value), refAmt:document.getElementById("docRefAmt").value};
+    refDate:toAD(document.getElementById("docRefDate").value), refAmt:document.getElementById("docRefAmt").value,
+    cnKind:cnKind()};
   store.write(data);
 }
 function loadDocDraft(){
@@ -5683,6 +5716,7 @@ function loadDocDraft(){
   const set=(id,v)=>{ const el=document.getElementById(id); if(el&&v!==undefined) el.value=v; };
   set("docNo",d.no); set("docDate",d.date); set("docCredit",d.credit); set("docDisc",d.disc);
   set("docRef",d.ref); set("docReason",d.reason); set("docRefDate",d.refDate||""); set("docRefAmt",d.refAmt||"");
+  set("docCnKind",d.cnKind||"ret");
   if(d.cust) set("docCust",d.cust);
 }
 function setDocMode(m){
@@ -5696,13 +5730,18 @@ function setDocMode(m){
     document.querySelectorAll(".doc-tab").forEach(b=>b.classList.toggle("on",b.dataset.dt==="hist"));
     return; }
   docShowCnFields(m==="cn");
-  document.getElementById("docHint").innerHTML= m==="cn"
-    ? '📌 ใบลดหนี้: กรอก <b>ส่งไป</b> และ <b>ขายได้</b> ระบบจะคำนวณจำนวนคืนให้ (ม.86/10 ต้องออกในเดือนที่รับคืนจริง)'
-    : '📌 ใบกำกับภาษี: ราคา/หน่วยเป็น<b>ราคารวม VAT</b> · ส่วนลดหักจากยอดรวม · VAT ถอดจากยอดหลังหักส่วนลด';
-  loadDocDraft(); renderDocItems();
+  loadDocDraft(); docSetHint(); renderDocItems();
+}
+function docSetHint(){
+  document.getElementById("docHint").innerHTML= docMode!=="cn"
+    ? '📌 ใบกำกับภาษี: ราคา/หน่วยเป็น<b>ราคารวม VAT</b> · ส่วนลดหักจากยอดรวม · VAT ถอดจากยอดหลังหักส่วนลด'
+    : cnKind()==="price"
+    ? '📌 ใบลดหนี้ลดราคา: กรอก <b>จำนวนที่ขาย</b> · <b>ราคาในใบกำกับ</b> · <b>ราคาขายจริง</b> ระบบคิดส่วนต่างให้ (ออกในเดือนที่ขายจริง · ถ้าขายสูงกว่าราคาเดิมต้องเป็นใบเพิ่มหนี้)'
+    : '📌 ใบลดหนี้รับคืน: กรอก <b>ส่งไป</b> และ <b>ขายได้</b> ระบบจะคำนวณจำนวนคืนให้ (ม.86/10 ต้องออกในเดือนที่รับคืนจริง)';
 }
 // ใบลดหนี้: โชว์ช่องอ้างอิง/ใบเดิม · ซ่อนช่องเครดิต (ใบลดหนี้ไม่มีเงื่อนไขเครดิต)
 function docShowCnFields(on){
+  document.getElementById("docKindRow").style.display=on?"flex":"none";
   document.getElementById("docRefRow").style.display=on?"flex":"none";
   document.getElementById("docRefRow2").style.display=on?"flex":"none";
   document.getElementById("docCreditF").style.display=on?"none":"";
@@ -5716,6 +5755,7 @@ function docSnapshot(){
     cust:document.getElementById("docCust").value, custName:c.name||"",
     ref:document.getElementById("docRef").value, reason:document.getElementById("docReason").value,
     refDate:toAD(document.getElementById("docRefDate").value), refAmt:document.getElementById("docRefAmt").value,
+    cnKind:docMode==="cn"?cnKind():undefined,
     qty:t.qty, total:t.after, saved:Date.now()};
 }
 function saveDocFinal(){
@@ -5740,7 +5780,7 @@ function renderHist(){
   if(!list.length){ box.innerHTML='<div class="empty">'+(data.docs.length?"ไม่พบเอกสารที่ค้นหา":"ยังไม่มีเอกสารที่บันทึก — กรอกแล้วกด \"บันทึกเอกสาร\"")+'</div>'; return; }
   box.innerHTML=list.map(d=>
     '<div class="hist-r"><div class="hist-i">'+
-      '<b><span class="hist-badge '+d.type+'">'+(d.type==="cn"?"ใบลดหนี้":"ใบกำกับ")+'</span>'+(d.no||"-")+'</b>'+
+      '<b><span class="hist-badge '+(d.cnKind==="price"?"cnp":d.type)+'">'+(d.type==="cn"?(d.cnKind==="price"?"ใบลดหนี้ (ลดราคา)":"ใบลดหนี้"):"ใบกำกับ")+'</span>'+(d.no||"-")+'</b>'+
       '<small>'+thDate(d.date)+' · '+(d.custName||"")+'<br>'+fmt(d.qty)+' ตัว'+(d.ref?' · อ้างอิง '+d.ref:'')+'</small></div>'+
     '<div class="hist-amt">฿'+fmt2(d.total)+'</div>'+
     '<div class="hist-acts"><button data-hopen="'+d.id+'">เปิด</button>'+
@@ -5763,8 +5803,9 @@ function loadDoc(id, doPrint){
   const set=(i,v)=>{ const el=document.getElementById(i); if(el&&v!==undefined) el.value=v; };
   set("docNo",d.no); set("docDate",d.date); set("docCredit",d.credit); set("docDisc",d.disc);
   set("docRef",d.ref); set("docReason",d.reason); set("docRefDate",d.refDate||""); set("docRefAmt",d.refAmt||"");
+  set("docCnKind",d.cnKind||"ret");
   if(d.cust && data.doccust.some(c=>c.id===d.cust)) set("docCust",d.cust);
-  docShowCnFields(d.type==="cn");
+  docShowCnFields(d.type==="cn"); docSetHint();
   renderDocItems();
   if(doPrint) setTimeout(docPrint,200); else { window.scrollTo(0,0); toast("เปิดเอกสาร "+d.no); }
 }
@@ -5793,6 +5834,11 @@ document.getElementById("docClear").onclick=()=>{
   el.addEventListener("input",()=>{ saveDocDraft(); renderDocSum(); });
   el.addEventListener("change",()=>{ saveDocDraft(); renderDocSum(); });
 });
+document.getElementById("docCnKind").addEventListener("change",()=>{
+  const rs=document.getElementById("docReason"), k=cnKind();
+  if(!rs.value.trim() || Object.values(CN_REASON).includes(rs.value.trim())) rs.value=CN_REASON[k];
+  saveDocDraft(); docSetHint(); renderDocItems();
+});
 document.getElementById("docSave").onclick=saveDocFinal;
 document.getElementById("docNew").onclick=()=>{
   if(docRows.length && !confirm("เริ่มใบใหม่? (รายการปัจจุบันจะถูกล้าง)")) return;
@@ -5820,10 +5866,16 @@ function thDate(iso){
 }
 // ตรวจก่อนพิมพ์ -> คืนรายการคำเตือน (ว่าง = ผ่าน)
 function docPrintCheck(){
-  const W=[], isCN=(docMode==="cn");
+  const W=[], isCN=(docMode==="cn"), isP=isPriceCN();
   if(!document.getElementById("docNo").value.trim()) W.push("ยังไม่ใส่เลขที่เอกสาร");
   const noQty=docRows.filter(r=>(r.code||r.name) && !(num(r.qty)>0));
-  if(noQty.length) W.push((isCN?"ยังไม่กรอก \"ส่งไป\"":"ยังไม่กรอกจำนวน")+" "+noQty.length+" รายการ: "+noQty.map(r=>r.code||r.name).join(", "));
+  if(noQty.length) W.push((isP?"ยังไม่กรอก \"จำนวนที่ขาย\"":isCN?"ยังไม่กรอก \"ส่งไป\"":"ยังไม่กรอกจำนวน")+" "+noQty.length+" รายการ: "+noQty.map(r=>r.code||r.name).join(", "));
+  if(isP){
+    const noNp=docRows.filter(r=>num(r.qty)>0 && !(num(r.np)>0));
+    if(noNp.length) W.push("ยังไม่กรอกราคาขายจริง "+noNp.length+" รายการ: "+noNp.map(r=>r.code||r.name).join(", "));
+    const up=docRows.filter(r=>num(r.qty)>0 && num(r.np)>0 && num(r.np)>=num(r.price));
+    if(up.length) W.push("ราคาขายจริงไม่ต่ำกว่าราคาในใบกำกับ "+up.length+" รายการ ("+up.map(r=>r.code||r.name).join(", ")+") — ไม่ใช่ใบลดหนี้ ถ้าขายสูงกว่าต้องออกใบเพิ่มหนี้แยก");
+  }
   const noPrice=docRows.filter(r=>num(r.qty)>0 && !(num(r.price)>0));
   if(noPrice.length) W.push("ยังไม่ใส่ราคา "+noPrice.length+" รายการ: "+noPrice.map(r=>r.code||r.name).join(", "));
   if(isCN){
@@ -5833,7 +5885,7 @@ function docPrintCheck(){
     if(!C.has) W.push("ยังไม่ใส่ยอดตามใบกำกับเดิม — ใบลดหนี้จะไม่มีมูลค่าเดิม/มูลค่าที่ถูกต้อง/ผลต่าง (ม.86/10)");
     else if(C.correct<-0.005) W.push("มูลค่าที่ลดลงเกินมูลค่าใบกำกับเดิม");
     const iv=cnRefIV();
-    if(iv){ const miss=cnMissing(iv);
+    if(iv && !isP){ const miss=cnMissing(iv);
       if(miss.length) W.push("มี "+miss.length+" รุ่นในใบกำกับเดิมที่ไม่อยู่ในใบลดหนี้ (ถ้าขายได้ 0 ต้องคืนทั้งหมด): "+miss.map(r=>r.code).join(", ")); }
   }
   return W;
@@ -5842,16 +5894,18 @@ function docPrint(){
   if(!docRows.length){ toast("ยังไม่มีรายการ"); return; }
   const W=docPrintCheck();
   if(W.length && !confirm("⚠️ ตรวจพบ "+W.length+" จุด\n\n• "+W.join("\n• ")+"\n\nพิมพ์ต่อหรือไม่?")) return;
-  const t=docTotals(), c=docCust(), isCN=(docMode==="cn");
-  const title = isCN ? "ใบลดหนี้ / ใบรับคืนสินค้า" : "ใบกำกับภาษี / ใบส่งสินค้า / ใบแจ้งหนี้";
-  const titleEn= isCN ? "CREDIT NOTE / GOODS RETURN" : "TAX INVOICE/ DELIVERY ORDER / INVOICE";
+  const t=docTotals(), c=docCust(), isCN=(docMode==="cn"), isP=isPriceCN();
+  const title = isP ? "ใบลดหนี้" : isCN ? "ใบลดหนี้ / ใบรับคืนสินค้า" : "ใบกำกับภาษี / ใบส่งสินค้า / ใบแจ้งหนี้";
+  const titleEn= isP ? "CREDIT NOTE" : isCN ? "CREDIT NOTE / GOODS RETURN" : "TAX INVOICE/ DELIVERY ORDER / INVOICE";
   let rows="", n=0;
   docRows.forEach(r=>{
     const q=docQty(r); if(q<=0) return;               // ไม่พิมพ์แถวจำนวน 0 (เช่น รุ่นที่ขายหมดในใบลดหนี้)
     n++;
-    rows+='<tr><td class="c">'+n+'</td><td>'+(r.code||"")+'</td><td>'+(r.name||"")+'</td>'+
-      '<td class="r">'+fmt(q)+'</td><td class="c">ตัว</td><td class="r">'+fmt2(num(r.price))+'</td>'+
-      '<td class="r">'+fmt2(q*num(r.price))+'</td></tr>';
+    // ใบลดราคา: รายละเอียดบอกราคาเดิม → ราคาขายจริง · ช่องราคา/หน่วย = ส่วนต่างต่อตัว
+    const desc=(r.name||"")+(isP?' <small>(ราคาเดิม '+fmt2(num(r.price))+' → ขายจริง '+fmt2(num(r.np))+')</small>':'');
+    rows+='<tr><td class="c">'+n+'</td><td>'+(r.code||"")+'</td><td>'+desc+'</td>'+
+      '<td class="r">'+fmt(q)+'</td><td class="c">ตัว</td><td class="r">'+fmt2(docUnit(r))+'</td>'+
+      '<td class="r">'+fmt2(q*docUnit(r))+'</td></tr>';
   });
   for(let i=n;i<18;i++) rows+='<tr class="fill"><td class="c">&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
   const html=
@@ -5892,7 +5946,8 @@ function docPrint(){
       '</div>'+
       '<div class="iv-right">'+
         (isCN ? (function(){ const C=cnCalc();
-          return '<div class="sr"><span>มูลค่าสินค้ารับคืน<br><small>RETURN AMOUNT</small></span><b>'+fmt2(t.gross)+'</b></div>'+
+          return (isP?'<div class="sr"><span>มูลค่าส่วนลดราคา<br><small>PRICE REDUCTION</small></span><b>'+fmt2(t.gross)+'</b></div>'
+                     :'<div class="sr"><span>มูลค่าสินค้ารับคืน<br><small>RETURN AMOUNT</small></span><b>'+fmt2(t.gross)+'</b></div>')+
             '<div class="sr"><span>หักส่วนลด '+fmt(t.disc)+'%<br><small>DISCOUNT</small></span><b>'+fmt2(t.dAmt)+'</b></div>'+
             '<div class="sr"><span>มูลค่าตามใบกำกับภาษีเดิม<br><small>ORIGINAL VALUE (EXCL. VAT)</small></span><b>'+(C.has?fmt2(C.origBase):"")+'</b></div>'+
             (C.prior.length?'<div class="sr"><span>หัก ใบลดหนี้ก่อนหน้า<br><small>'+C.prior.map(d=>d.no).join(", ")+'</small></span><b>'+fmt2(C.priorBase)+'</b></div>':'')+
@@ -5910,10 +5965,10 @@ function docPrint(){
     '</div>'+
     '<div class="iv-qty">รวมจำนวนสินค้า <b>'+fmt(t.qty)+'</b> ตัว</div>'+
     '<div class="iv-sign">'+
-      '<div class="sg"><div class="ttl">'+(isCN?'ได้รับคืนสินค้าตามรายการข้างบนนี้เรียบร้อยแล้ว':'ได้รับสินค้าตามรายการข้างบนนี้ไว้เรียบร้อยแล้ว')+'</div>'+
-        '<div class="ln"></div><div class="lb">'+(isCN?'ผู้รับคืนสินค้า':'ผู้รับสินค้า')+'</div><div class="ln"></div><div class="lb">วันที่</div></div>'+
+      '<div class="sg"><div class="ttl">'+(isP?'ได้รับใบลดหนี้ฉบับนี้เรียบร้อยแล้ว':isCN?'ได้รับคืนสินค้าตามรายการข้างบนนี้เรียบร้อยแล้ว':'ได้รับสินค้าตามรายการข้างบนนี้ไว้เรียบร้อยแล้ว')+'</div>'+
+        '<div class="ln"></div><div class="lb">'+(isP?'ผู้รับเอกสาร':isCN?'ผู้รับคืนสินค้า':'ผู้รับสินค้า')+'</div><div class="ln"></div><div class="lb">วันที่</div></div>'+
       '<div class="sg"><div class="ttl">&nbsp;</div>'+
-        '<div class="ln"></div><div class="lb">'+(isCN?'ผู้ส่งคืนสินค้า':'ผู้ส่งสินค้า')+'</div><div class="ln"></div><div class="lb">วันที่</div></div>'+
+        '<div class="ln"></div><div class="lb">'+(isP?'ผู้ส่งเอกสาร':isCN?'ผู้ส่งคืนสินค้า':'ผู้ส่งสินค้า')+'</div><div class="ln"></div><div class="lb">วันที่</div></div>'+
       '<div class="sg"><div class="ttl">ในนาม '+CO_INFO.nameTh+'</div>'+
         '<div class="ln"></div><div class="lb">ผู้มีอำนาจลงนาม</div></div>'+
     '</div>'+
